@@ -54,11 +54,7 @@ void      relation_destruct (Relation* rptr);
 void add_relation(Node* node, Relation* rel);
 
 int main(void)
-{
-	//Need to fix memory
-	//free nodes in struct relation(not working)
-	//fix recursive
-	
+{	
 	Node* root;
 	Node* root1;
 	Node* root2;
@@ -68,21 +64,24 @@ int main(void)
 
 	root  = node_construct(data_construct((void*)(&a), b));	
 	root1 = node_construct(data_construct((void*)(&a), b));	
-	root2 = node_construct(data_construct((void*)(&a), b));	
+	//root2 = node_construct(data_construct((void*)(&a), b));	
 	
+		
 	root->add_relation(root,
 			           relation_construct("Root to Root 1", 
 								           root,   root1));	
+	/*	
 	root1->add_relation(root1,
 		                relation_construct("Root1 to Root 2", 
 							                root1,    root2));	
 	root2->add_relation(root2, 
 			            relation_construct("Root2 to Root ", 
 							                root2,   root));	
-	
+	*/
+
 	root->destruct(root);
 	root1->destruct(root1);
-	root2->destruct(root2);
+	//root2->destruct(root2);
 
 	return 0;
 }
@@ -156,8 +155,25 @@ void relation_destruct(Relation* rptr)
 
 void add_relation(Node* node, Relation* rel)
 {	
+	Relation** relrealloc(Relation** rmptr, size_t nsize);	
+	
 	node->relations[node->rsize++] = rel;
-
-	node->relations = realloc(node->relations, node->rsize);
+	
+	node->relations = relrealloc(node->relations, node->rsize);
 }
+
+Relation** relrealloc(Relation** rmptr, size_t nsize)
+{
+	Relation** nrmptr; // new relation massive pointer	
+	
+	nrmptr = (Relation**) malloc(nsize * sizeof(Relation*));
+
+	for(size_t i = 0; i < nsize; i++)
+		nrmptr[i] = rmptr[i];
+	
+	free(rmptr);
+
+	return nrmptr;
+}
+
 
