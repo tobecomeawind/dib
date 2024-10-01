@@ -1,7 +1,7 @@
 #include  <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-
+#include "types.h"
 
 typedef struct Node Node;         // relationship between relation and node
 typedef struct Relation Relation; // relationship between relation and node
@@ -22,7 +22,7 @@ typedef struct Relation{
 
 
 typedef struct Data{
-	uint8_t type;
+	vtypes  type;
 	void*   info;
 
 	void (*destruct)(Data* data);
@@ -60,28 +60,28 @@ int main(void)
 	Node* root2;
 	
 	int     a = 8;
-	uint8_t b = 1;	
+	vtypes  b = INT;	
 
 	root  = node_construct(data_construct((void*)(&a), b));	
 	root1 = node_construct(data_construct((void*)(&a), b));	
-	//root2 = node_construct(data_construct((void*)(&a), b));	
+	root2 = node_construct(data_construct((void*)(&a), b));	
 	
 		
 	root->add_relation(root,
 			           relation_construct("Root to Root 1", 
 								           root,   root1));	
-	/*	
+	
 	root1->add_relation(root1,
 		                relation_construct("Root1 to Root 2", 
 							                root1,    root2));	
 	root2->add_relation(root2, 
 			            relation_construct("Root2 to Root ", 
 							                root2,   root));	
-	*/
+	
 
 	root->destruct(root);
 	root1->destruct(root1);
-	//root2->destruct(root2);
+	root2->destruct(root2);
 
 	return 0;
 }
