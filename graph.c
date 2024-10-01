@@ -55,7 +55,9 @@ void add_relation(Node* node, Relation* rel);
 
 int main(void)
 {
-	//Need to fix memory	
+	//Need to fix memory
+	//free nodes in struct relation(not working)
+	//fix recursive
 	
 	Node* root;
 	Node* root1;
