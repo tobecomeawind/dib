@@ -1,5 +1,8 @@
 
-typedef enum {
+#ifndef TYPES_H
+#define TYPES_H
+
+typedef enum vtypes{
 	CHAR  = 0b00000001,  // idea for char type 
 						 // the last bit says the type == char
 						 // the another bits says about size, 
@@ -15,4 +18,4 @@ typedef enum {
 	FLOAT = 0b00000100	
 } vtypes; // variable types
 
-
+#endif
