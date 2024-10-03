@@ -8,12 +8,12 @@ typedef struct Relation Relation; // relationship between relation and node
 typedef struct Data Data;         // relationship between relation and node
 
 typedef struct Relation{
-	char* name;     // name of relation
-	Node* parent;   // parent   structure
-	Node* child;	// children structure
+	char* name;         // name of relation
+//	Node* parent;       // parent   structure
+	Node* dest;	// children structure
 		
 	// film1<----- (relation) -----/ tom  \----- (relation) ----> England
-	//(child)    name:Acted_IN    |(parent)|    name:Live_IN       (child)
+	//(dest)    name:Acted_IN                  name:Live_IN       (dest)
 
 	//void (*create  )(char* name, Node* parent, Node* child); 
 	void (*destruct)(Relation* rel); 
@@ -52,7 +52,7 @@ void  node_destruct (Node* node);
 Data* data_construct(void* data, uint8_t type);
 void  data_destruct (Data* dptr);
 
-Relation* relation_construct(char* name, Node* parent, Node* child);
+Relation* relation_construct(char* name, Node* destination);
 void      relation_destruct (Relation* rptr);
 
 void add_relation(Node* node, Relation* rel);

@@ -22,14 +22,14 @@ int main(void)
 		
 	root->vtable->add_relation(root,
 			           relation_construct("Root to Root 1", 
-								           root,   root1));	
+								                   root1));	
 	
 	root1->vtable->add_relation(root1,
 		                relation_construct("Root1 to Root 2", 
-							                root1,    root2));	
+							                         root2));	
 	root2->vtable->add_relation(root2, 
 			            relation_construct("Root2 to Root ", 
-							                root2,   root));	
+							                         root));	
 	
 
 	root->vtable->destruct(root);
@@ -46,7 +46,6 @@ Node* node_construct(Data* data)
 	Node* nptr;	             // node pointer
 	//static NodeVtable tptr; // table pointer	
 	
-	//if(!tptr) tptr = malloc(sizeof(NodeVtable));
 	static NodeVtable tptr = {
 		.destruct     = node_destruct,
 		.add_relation = add_relation,
@@ -59,7 +58,7 @@ Node* node_construct(Data* data)
 	nptr->rsize     = 0;
 	nptr->relations = (Relation**) malloc(sizeof(Relation*));
 	nptr->vtable    = &tptr; 
-
+	
 	return nptr;
 }
 
@@ -93,15 +92,14 @@ void data_destruct(Data* dptr)
 	free(dptr);	
 }
 
-Relation* relation_construct(char* name, Node* parent, Node* child)
+Relation* relation_construct(char* name, Node* destination)
 {
 	Relation* rptr; // relation pointer	
 	
 	rptr = (Relation*) malloc(sizeof(Relation));
 
-	rptr->name     = name;
-	rptr->parent   = parent;	
-	rptr->child    = child;
+	rptr->name     = name;	
+	rptr->dest     = destination;
 	rptr->destruct = &relation_destruct;
 
 	return rptr;
