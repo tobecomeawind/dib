@@ -38,7 +38,10 @@ typedef struct NodeVtable {
 } NodeVtable;
 
 typedef struct Node{
-	Data*       data;      //         
+	char*       name;      // name of Node(Game, Person, City)
+	long int    nhash;     // hash(name)
+
+	Data*       data;      // data ((Tom, CHAR), (23, INT), (3.14, FLOAT))
 	Relation**  relations; // 
 	size_t      rsize;     // relations size      
 	NodeVtable* vtable;	   // virtual table with 
@@ -46,7 +49,7 @@ typedef struct Node{
 
 
 
-Node* node_construct(Data* data);
+Node* node_construct(char* name, Data* data);
 void  node_destruct (Node* node);
 
 Data* data_construct(void* data, uint8_t type);

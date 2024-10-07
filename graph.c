@@ -4,7 +4,7 @@
 
 #include "graph.h"
 #include "types.h"
-
+#include "hash.h"
 
 int main(void)
 {	
@@ -15,21 +15,21 @@ int main(void)
 	int          a = 8;
 	enum vtypes  b = INT;	
 
-	root  = node_construct(data_construct((void*)(&a), b));	
-	root1 = node_construct(data_construct((void*)(&a), b));	
-	root2 = node_construct(data_construct((void*)(&a), b));	
+	root  = node_construct("Game"  , data_construct((void*)(&a), b));	
+	root1 = node_construct("Person", data_construct((void*)(&a), b));	
+	root2 = node_construct("City"  , data_construct((void*)(&a), b));	
 	
 		
 	root->vtable->add_relation(root,
-			           relation_construct("Root to Root 1", 
-								                   root1));	
+			          relation_construct("Root to Root 1", 
+								                  root1));	
 	
 	root1->vtable->add_relation(root1,
-		                relation_construct("Root1 to Root 2", 
-							                         root2));	
+		               relation_construct("Root1 to Root 2", 
+							                        root2));	
 	root2->vtable->add_relation(root2, 
-			            relation_construct("Root2 to Root ", 
-							                         root));	
+			           relation_construct("Root2 to Root ", 
+					   	                            root));	
 	
 
 	root->vtable->destruct(root);
@@ -41,7 +41,7 @@ int main(void)
 
 
 
-Node* node_construct(Data* data)
+Node* node_construct(char* name, Data* data)
 {
 	Node* nptr;	             // node pointer
 	//static NodeVtable tptr; // table pointer	
@@ -53,6 +53,9 @@ Node* node_construct(Data* data)
 	};
 
 	nptr = (Node*) malloc(sizeof(Node));
+
+	nptr->name      = name;
+	nptr->nhash     = hash(name);
 
 	nptr->data      = data;
 	nptr->rsize     = 0;
