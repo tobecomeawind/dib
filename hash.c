@@ -1,8 +1,8 @@
-#include <stdio.h>
+#include "hash.h"
+
 #include <math.h>
 #include <string.h>
 
-#define SEED 123
 
 long int hash(char* val)
 {
