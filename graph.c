@@ -8,33 +8,27 @@
 
 int main(void)
 {	
-	Node* root;
-	Node* root1;
-	Node* root2;
-	
-	int          a = 8;
-	enum vtypes  b = INT;	
+	Node *Tom, *Lucy;	
 
-	root  = node_construct("Game"  , data_construct((void*)(&a), b));	
-	root1 = node_construct("Person", data_construct((void*)(&a), b));	
-	root2 = node_construct("City"  , data_construct((void*)(&a), b));	
-	
-		
-	root->vtable->add_relation(root,
-			          relation_construct("Root to Root 1", 
-								                  root1));	
-	
-	root1->vtable->add_relation(root1,
-		               relation_construct("Root1 to Root 2", 
-							                        root2));	
-	root2->vtable->add_relation(root2, 
-			           relation_construct("Root2 to Root ", 
-					   	                            root));	
-	
 
-	root->vtable->destruct(root);
-	root1->vtable->destruct(root1);
-	root2->vtable->destruct(root2);
+	Tom  = node_construct("Person",
+			              data_construct((void*)"Tom",
+					      CHAR));	
+	
+	Lucy = node_construct("Person",
+			              data_construct((void*)"Lucy",
+						  CHAR));	
+
+	Tom->vtable->add_relation(Tom,
+			                  relation_construct("Loves",
+								                  Lucy));	
+
+	Lucy->vtable->add_relation(Lucy,
+			                   relation_construct("Loves",
+								                   Tom));	
+	
+	Tom ->vtable->destruct(Tom);
+	Lucy->vtable->destruct(Lucy);
 	
 	return 0;
 }
@@ -44,7 +38,6 @@ int main(void)
 Node* node_construct(char* name, Data* data)
 {
 	Node* nptr;	             // node pointer
-	//static NodeVtable tptr; // table pointer	
 	
 	static NodeVtable tptr = {
 		.destruct     = node_destruct,
@@ -52,11 +45,14 @@ Node* node_construct(char* name, Data* data)
 		.del_relation = NULL
 	};
 
+	EntityType etptr = {
+		.typename = name,
+		.hash     = hash(name)	
+	};
+
 	nptr = (Node*) malloc(sizeof(Node));
 
-	nptr->name      = name;
-	nptr->nhash     = hash(name);
-
+	nptr->type      = &etptr;
 	nptr->data      = data;
 	nptr->rsize     = 0;
 	nptr->relations = (Relation**) malloc(sizeof(Relation*));
@@ -98,7 +94,12 @@ void data_destruct(Data* dptr)
 Relation* relation_construct(char* name, Node* destination)
 {
 	Relation* rptr; // relation pointer	
-	
+
+	EntityType etptr = {
+		.typename = name,	
+		.hash     = hash(name)
+	}; 
+
 	rptr = (Relation*) malloc(sizeof(Relation));
 
 	rptr->name     = name;	

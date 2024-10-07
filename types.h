@@ -2,7 +2,7 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-typedef enum vtypes{
+typedef enum variable_types{
 	CHAR  = 0b00000001,  // idea for char type 
 						 // the last bit says the type == char
 						 // the another bits says about size, 

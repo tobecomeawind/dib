@@ -28,6 +28,11 @@ typedef struct Data{
 	void (*destruct)(Data* data);
 } Data;
 
+typedef struct EntityType{ // Entity = Node || Relation
+	char     *typename;
+	long int  hash;
+} EntityType;
+
 typedef struct NodeVtable {
 		
 	//Node* (*construct   )(Data* data, Relation* rel);
@@ -38,8 +43,10 @@ typedef struct NodeVtable {
 } NodeVtable;
 
 typedef struct Node{
-	char*       name;      // name of Node(Game, Person, City)
-	long int    nhash;     // hash(name)
+	EntityType* type;	
+	
+	//char*       name;      // name of Node(Game, Person, City)
+	//long int    nhash;     // hash(name)
 
 	Data*       data;      // data ((Tom, CHAR), (23, INT), (3.14, FLOAT))
 	Relation**  relations; // 
