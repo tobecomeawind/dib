@@ -7,14 +7,9 @@
 
 #include <stddef.h>
 
-//typedef struct Relation Relation;
-
 typedef struct Node{
 	EntityType* type;	
 	
-	//char*       name;      // name of Node(Game, Person, City)
-	//long int    nhash;     // hash(name)
-
 	Data*       data;      // data ((Tom, CHAR), (23, INT), (3.14, FLOAT))
 	Relation**  relations; // 
 	size_t      rsize;     // relations size      

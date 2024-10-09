@@ -7,8 +7,9 @@
 
 int main(void)
 {	
-	Node *Tom, *Lucy;	
-
+	Node *Tom, *TomAge
+		 *Lucy;	
+	Node *Age, *City, *Country;
 
 	Tom  = node_construct("Person",
 			              data_construct((void*)"Tom",
@@ -25,6 +26,7 @@ int main(void)
 	add_relation(Lucy,
 			     relation_construct("Loves",
 				 Tom));	
+
 	
 	node_destruct(Tom);
 	node_destruct(Lucy);
