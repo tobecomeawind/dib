@@ -1,0 +1,2 @@
+/usr/bin/ar qc librelation.a CMakeFiles/relation.dir/relation.c.o
+/usr/bin/ranlib librelation.a

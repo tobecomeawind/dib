@@ -7,9 +7,7 @@
 
 int main(void)
 {	
-	Node *Tom, *TomAge
-		 *Lucy;	
-	Node *Age, *City, *Country;
+	Node *Tom, *Lucy;	
 
 	Tom  = node_construct("Person",
 			              data_construct((void*)"Tom",
