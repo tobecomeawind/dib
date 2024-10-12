@@ -1,0 +1,36 @@
+#!/bin/bash
+
+echo
+echo "------------------------"
+echo "---Compilation start!---"
+echo "------------------------"
+echo
+
+
+
+if [ ! -d build ]
+then
+	echo "'build' folder doesn't exist"
+	echo "Creating 'build' folder"
+	mkdir build	
+fi
+
+cd build
+
+compilation(){
+	cmake ..
+	cmake --build .
+	
+	echo	
+	echo "---Compilation time---"
+}
+
+
+echo
+echo "---------------------------"
+echo "---Compilation complete!---"
+echo "---------------------------"
+echo
+
+time compilation
+echo "----------------------"
