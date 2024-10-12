@@ -1,1 +1,0 @@
-/usr/bin/cc CMakeFiles/main.dir/main.c.o -o main  algs/libalgs.a core/libcore.a hash/libhash.a core/data/libdata.a core/node/libnode.a core/relation/librelation.a -lm 

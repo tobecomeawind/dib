@@ -1,2 +1,0 @@
-/usr/bin/ar qc libcore.a data/CMakeFiles/data.dir/data.c.o node/CMakeFiles/node.dir/node.c.o relation/CMakeFiles/relation.dir/relation.c.o
-/usr/bin/ranlib libcore.a
