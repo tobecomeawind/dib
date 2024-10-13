@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/lexer.dir/lexer/lexer.c.o -o lexer   -L/home/tobecomeawind/Devs/dib/src/language_core/tokens  -L/home/tobecomeawind/Devs/dib/src/language_core/algs 

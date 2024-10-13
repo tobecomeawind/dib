@@ -1,0 +1,9 @@
+/home/tobecomeawind/Devs/dib/src/language_core/build/CMakeFiles/lexer.dir
+/home/tobecomeawind/Devs/dib/src/language_core/build/CMakeFiles/edit_cache.dir
+/home/tobecomeawind/Devs/dib/src/language_core/build/CMakeFiles/rebuild_cache.dir
+/home/tobecomeawind/Devs/dib/src/language_core/build/build/CMakeFiles/algs.dir
+/home/tobecomeawind/Devs/dib/src/language_core/build/build/CMakeFiles/edit_cache.dir
+/home/tobecomeawind/Devs/dib/src/language_core/build/build/CMakeFiles/rebuild_cache.dir
+/home/tobecomeawind/Devs/dib/src/language_core/build/tokens/CMakeFiles/tokens.dir
+/home/tobecomeawind/Devs/dib/src/language_core/build/tokens/CMakeFiles/edit_cache.dir
+/home/tobecomeawind/Devs/dib/src/language_core/build/tokens/CMakeFiles/rebuild_cache.dir
