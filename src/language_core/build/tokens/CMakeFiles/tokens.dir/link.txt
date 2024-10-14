@@ -1,2 +1,0 @@
-/usr/bin/ar qc libtokens.a CMakeFiles/tokens.dir/tokens.c.o
-/usr/bin/ranlib libtokens.a
