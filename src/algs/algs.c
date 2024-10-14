@@ -15,7 +15,7 @@ int binsearch(void* *buf, int size,
 	low  = 0;
 	high = size;
 
-	while(low <= high){
+	while(low < high){
 		mid = (low + high) / 2;
 		
 		mediateResult = compare(target, buf, mid, type);
@@ -37,6 +37,7 @@ int compare(void* target, void* buffer, int index, vtypes type)
 	//----------------------	
 	//compare for binsearch
 	//----------------------
+
 
 	switch(type){
 		case(CHAR):

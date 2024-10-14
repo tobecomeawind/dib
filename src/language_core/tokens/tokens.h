@@ -1,27 +1,30 @@
 #ifndef TOKENS_H
 #define TOKENS_H
 
+#include <stdint.h>
+
 typedef enum
 {
-	SPAWN,
+	KEYWORD,
+	NAME,
+	WHITE_SPACE,
 
-	OPEN_PARENTS,  // (
-	CLOSE_PARENTS,  // )	
+	OPEN_PARENS,   // (
+	CLOSE_PARENS,  // )	
 	
-	OPEN_BRACES,  // {
-	CLOSE_BRACES, // }
+	COLON,          // :
 
-	ENTITY,
-	REL,
-	NAME
+} Tokens;
 
-} dbTokens;
+typedef struct {
+	Tokens       type;
+	const char  *data;	
+} Token;
 
-typedef enum
-{
-	EXIT = 1,
-	NEXT_ROW,	
 
-} cliTokens;
+int isKeyword   (char *word);
+int isParenses  (char *c);
+int isColon     (char *c);
+int isWhiteSpace(char *c);
 
 #endif

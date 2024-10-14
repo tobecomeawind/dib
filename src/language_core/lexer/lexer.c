@@ -6,6 +6,9 @@
 
 #include "tokens.h"
 
+
+static void appendToken(Token *buf, Token *bptr, Tokens type, char *data);
+
 #define MAX_LINE_SIZE  100
 #define MAX_WORD_SIZE  32
 
@@ -17,20 +20,17 @@ int main(void)
 	char lineBuf[MAX_LINE_SIZE];
 	char lineBufIndex = 0;	
 
-	uint8_t currentToken;
 	char    c;
 
 	hello_message();
 
-	while(currentToken != EXIT){
+	while(c != EOF){
 		printf("dib-cli >>> ");
 
 		while((c = getchar()) != '\n'){
 			lineBuf[lineBufIndex++] = c;				
 		}
-		
-		printf("---Start Analyzing Line---");	
-	
+			
 		lineBuf[lineBufIndex] = '\0';	
 		analyze_line(lineBuf, lineBufIndex);
 		
@@ -63,37 +63,96 @@ void analyze_line(char *lptr, int size)
 	//------------------------------
 
 
+
 	char    tokenWord[MAX_WORD_SIZE];
 	char   *twptr = tokenWord;	// token word pointer
-	uint8_t tokensBuf[100];
+								
+	Token   tokensBuf[1000];
+	Token  *tbptr = tokensBuf;  // token buf pointer
 
-	uint8_t search_token(char *word);
+	//uint8_t search_token(char *word);
 
 	while(*lptr != '\0'){
-		if(isalpha(*lptr)){
-			while(isalpha(*lptr)){
-				*twptr   = *lptr;	
-				twptr++;    lptr++;	
-			}
+		if (isalpha(*lptr)) {
+			
+			do{
+				*twptr++ = *lptr;
+			} while(isalpha(*++lptr));
+			
 			*twptr = '\0';
-			search_token(tokenWord);
+
+			if (isKeyword(tokenWord)){
+				printf("\nKeyword: %s\n", tokenWord);
+				appendToken(&tokensBuf[0],
+						    tbptr,
+							KEYWORD,
+							tokenWord);	
+			} else {
+				printf("\nName   : %s\n", tokenWord);
+				appendToken(&tokensBuf[0],
+						    tbptr,
+							NAME,
+							tokenWord);		
+			}		
+			
 			twptr = tokenWord;
-		}else{
-			printf("\n--- \"%c\" is not alpha---\n", *lptr);	
-			lptr++;
-		}	
-	}	
+		} else { // last symbol jump fix
+			if (isParenses(lptr)) {
+
+				printf("\nParens\n");
+				
+				switch (*lptr){
+					case ')':
+						appendToken(&tokensBuf[0], 
+								    tbptr,
+									CLOSE_PARENS,
+									lptr);	
+					case '(':
+						appendToken(&tokensBuf[0], 
+								    tbptr,
+									OPEN_PARENS,
+									lptr);	
+							
+				};
+	
+			} else if(isColon(lptr)){
+
+				printf("\nColon\n");	
+				appendToken(&tokensBuf[0],
+						    tbptr,
+							COLON, 
+							lptr);		
+				
+			} else if(isWhiteSpace(lptr)){
+
+				printf("\nWhiteSpace\n");
+				appendToken(&tokensBuf[0],
+						    tbptr,
+							WHITE_SPACE, 
+							lptr);		
+					
+			} else {	
+				printf("\n--- \"%c\" nothing---\n", *lptr);	
+			}
+
+			lptr++; // last symbol jump fix
+		}		
+	}
+
+	tbptr = tokensBuf;	
 }
 
 
-uint8_t search_token(char *word)
+static void appendToken(Token *buf, Token *bptr, Tokens type, char *data)
 {
-	//--------------------------
-	// Search token numb by word
-	// word = CREATE
-	// enum dbTokens = CREATE
-	//--------------------------
-	printf("\nWord: %s \n", word);	
+	if(bptr - buf > 0){
+		printf("\nError: TokensBuf are is full!\n");	
+		exit(-1);
+	}	
+	
+	Token tokenVar = {.type = type,
+		              .data = (const char*)data};
+	*bptr++ = tokenVar;
 }
 
 

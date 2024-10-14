@@ -1,8 +1,10 @@
 #include "tokens.h"
+#include "algs.h"
+
 #include <string.h>
 #include <stdio.h>
 
-#include "algs.h"
+
 
 int isKeyword(char *word)
 {
@@ -13,11 +15,34 @@ int isKeyword(char *word)
 	//--------------------------
 
 	char* keywords[] = { // All tokens
+		"CHAR",
 		"ENTITY",
-		"RELATION",
-		"SPAWN",
+		"ENTITIES",
+		"FLOAT",
+		"INT",
+		"LINK",
 	};
 
 	// return 1 if word in keywords else 0
-	return binsearch((void**)keywords, 3, (void*)word, CHAR);	
+	return binsearch((void**)keywords, 6, (void*)word, CHAR);	
 }
+
+
+int isParenses(char *c)
+{
+	return *c == '(' || *c == ')';
+};
+
+int isColon(char *c)
+{
+	return *c == ':';
+};
+
+int isWhiteSpace(char *c)
+{
+	return *c == ' ' || *c == '\t';
+};
+
+
+
+
