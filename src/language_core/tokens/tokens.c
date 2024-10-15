@@ -6,7 +6,7 @@
 
 
 
-int isKeyword(char *word)
+Token* isKeyword(char *word)
 {
 	//--------------------------
 	//Check the word is keyword
@@ -14,17 +14,29 @@ int isKeyword(char *word)
 	//word == name of something
 	//--------------------------
 
-	char* keywords[] = { // All tokens
-		"CHAR",
-		"ENTITY",
-		"ENTITIES",
-		"FLOAT",
-		"INT",
-		"LINK",
-	};
+	int8_t index, size;
+	Token   *tptr; // token pointer
 
-	// return 1 if word in keywords else 0
-	return binsearch((void**)keywords, 6, (void*)word, CHAR);	
+	Token keywords[] = { // Keyword tokens
+		{.type = K_CHAR,     .data = "CHAR"},
+		{.type = K_ENTITY,   .data = "ENTITY"},
+		{.type = K_ENTITIES, .data = "ENTITIES"},
+		{.type = K_FLOAT,    .data = "FLOAT"},
+		{.type = K_INT,      .data = "INT"},
+		{.type = K_LINK,     .data = "LINK"},
+	};
+	
+	size = sizeof(keywords) / sizeof(Token); 
+	// return keyword token if word in keywords else 0
+	index = binsearch((void**)keywords, size, (void*)word, bsTOKEN);	
+
+	if(index < 0){
+		return NULL;
+	}
+
+	tptr = &(keywords[index]);
+
+	return tptr;
 }
 
 

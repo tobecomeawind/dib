@@ -2,13 +2,13 @@
 #define TYPES_H
 
 typedef enum {
-	CHAR,
-	INT,
-	FLOAT,
-	TOKEN,
 
-} bsearchTypes;
+	bsCHAR,
+	bsINT,
+	bsFLOAT,
+	bsTOKEN,
 
+} bstypes; // bin search types
 
 
 typedef enum variable_types{

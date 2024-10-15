@@ -11,8 +11,6 @@
 static void appendToken(Token *buf, Token *bptr, Tokens type, char *data);
 
 
-
-
 int main(void)
 {
 	void hello_message(void);
@@ -70,6 +68,7 @@ Token *analyze_line(char *lptr, int size)
 	//Token   tokensBuf[MAX_TOKEN_BUF_SIZE]; = malloc(sizeof(Token) * MAX_TOKEN_BUF_SIZE)
 	Token  *tokensBuf = malloc(sizeof(Token) * MAX_TOKEN_BUF_SIZE);
 	Token  *tbptr     = tokensBuf;  // token buf pointer
+	Token  *tempVar;
 
 
 	while(*lptr != '\0'){
@@ -80,12 +79,13 @@ Token *analyze_line(char *lptr, int size)
 			} while(isalpha(*++lptr));
 			
 			*twptr = '\0';
+			
 
-			if (isKeyword(tokenWord)){
+			if (tempVar = isKeyword(tokenWord)){
 				appendToken(tokensBuf,
 						    tbptr,
-							KEYWORD,
-							tokenWord);	
+							tempVar->type,
+							(char*)tempVar->data);		
 			} else {
 				appendToken(tokensBuf,
 						    tbptr,

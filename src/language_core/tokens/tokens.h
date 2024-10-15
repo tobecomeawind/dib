@@ -6,12 +6,12 @@
 typedef enum
 {
 	//KEYWORDS
-	CHAR,
-	ENTITY,
-	ENTITIES,
-	FLOAT,
-	INT,
-	LINK,	
+	K_CHAR,
+	K_ENTITY,
+	K_ENTITIES,
+	K_FLOAT,
+	K_INT,
+	K_LINK,	
 
 
 	NAME,
@@ -30,9 +30,9 @@ typedef struct {
 } Token;
 
 
-int isKeyword   (char *word);
-int isParenses  (char *c);
-int isColon     (char *c);
-int isWhiteSpace(char *c);
+Token *isKeyword   (char *word);
+int    isParenses  (char *c);
+int    isColon     (char *c);
+int    isWhiteSpace(char *c);
 
 #endif

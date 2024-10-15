@@ -5,8 +5,7 @@
 
 int binsearch(void* *buf, int size,
 		      void *target,
-			  vtypes type);
+			  bstypes type);
 
-int compare(void* target, void* buffer, int index, vtypes type);
 
 #endif
