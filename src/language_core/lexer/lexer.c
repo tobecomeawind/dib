@@ -4,15 +4,13 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+#include "lexer.h"
 #include "tokens.h"
 
 
 static void appendToken(Token *buf, Token *bptr, Tokens type, char *data);
 
 
-#define MAX_LINE_SIZE      128
-#define MAX_WORD_SIZE      32
-#define MAX_TOKEN_BUF_SIZE 128
 
 
 int main(void)

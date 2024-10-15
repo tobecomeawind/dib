@@ -5,7 +5,15 @@
 
 typedef enum
 {
-	KEYWORD,
+	//KEYWORDS
+	CHAR,
+	ENTITY,
+	ENTITIES,
+	FLOAT,
+	INT,
+	LINK,	
+
+
 	NAME,
 	WHITE_SPACE,
 
