@@ -9,13 +9,16 @@
 
 static void appendToken(Token *buf, Token *bptr, Tokens type, char *data);
 
-#define MAX_LINE_SIZE  100
-#define MAX_WORD_SIZE  32
+
+#define MAX_LINE_SIZE      128
+#define MAX_WORD_SIZE      32
+#define MAX_TOKEN_BUF_SIZE 128
+
 
 int main(void)
 {
 	void hello_message(void);
-	void analyze_line(char* line, int size);
+	Token *analyze_line(char* line, int size);
 
 	char lineBuf[MAX_LINE_SIZE];
 	char lineBufIndex = 0;	
@@ -24,7 +27,7 @@ int main(void)
 
 	hello_message();
 
-	while(c != EOF){
+	while(1){
 		printf("dib-cli >>> ");
 
 		while((c = getchar()) != '\n'){
@@ -55,22 +58,21 @@ void hello_message(void)
 }
 
 
-void analyze_line(char *lptr, int size)
+Token *analyze_line(char *lptr, int size)
 {
+
 	//------------------------------	
 	// Analyzing to create tokens
 	// Tokens in tokenBuf
 	//------------------------------
 
-
-
 	char    tokenWord[MAX_WORD_SIZE];
 	char   *twptr = tokenWord;	// token word pointer
 								
-	Token   tokensBuf[1000];
-	Token  *tbptr = tokensBuf;  // token buf pointer
+	//Token   tokensBuf[MAX_TOKEN_BUF_SIZE]; = malloc(sizeof(Token) * MAX_TOKEN_BUF_SIZE)
+	Token  *tokensBuf = malloc(sizeof(Token) * MAX_TOKEN_BUF_SIZE);
+	Token  *tbptr     = tokensBuf;  // token buf pointer
 
-	//uint8_t search_token(char *word);
 
 	while(*lptr != '\0'){
 		if (isalpha(*lptr)) {
@@ -82,14 +84,12 @@ void analyze_line(char *lptr, int size)
 			*twptr = '\0';
 
 			if (isKeyword(tokenWord)){
-				printf("\nKeyword: %s\n", tokenWord);
-				appendToken(&tokensBuf[0],
+				appendToken(tokensBuf,
 						    tbptr,
 							KEYWORD,
 							tokenWord);	
 			} else {
-				printf("\nName   : %s\n", tokenWord);
-				appendToken(&tokensBuf[0],
+				appendToken(tokensBuf,
 						    tbptr,
 							NAME,
 							tokenWord);		
@@ -98,17 +98,15 @@ void analyze_line(char *lptr, int size)
 			twptr = tokenWord;
 		} else { // last symbol jump fix
 			if (isParenses(lptr)) {
-
-				printf("\nParens\n");
-				
+	
 				switch (*lptr){
 					case ')':
-						appendToken(&tokensBuf[0], 
+						appendToken(tokensBuf, 
 								    tbptr,
 									CLOSE_PARENS,
 									lptr);	
 					case '(':
-						appendToken(&tokensBuf[0], 
+						appendToken(tokensBuf, 
 								    tbptr,
 									OPEN_PARENS,
 									lptr);	
@@ -117,29 +115,27 @@ void analyze_line(char *lptr, int size)
 	
 			} else if(isColon(lptr)){
 
-				printf("\nColon\n");	
-				appendToken(&tokensBuf[0],
+				appendToken(tokensBuf,
 						    tbptr,
 							COLON, 
 							lptr);		
 				
 			} else if(isWhiteSpace(lptr)){
 
-				printf("\nWhiteSpace\n");
-				appendToken(&tokensBuf[0],
+				appendToken(tokensBuf,
 						    tbptr,
 							WHITE_SPACE, 
 							lptr);		
 					
 			} else {	
-				printf("\n--- \"%c\" nothing---\n", *lptr);	
+				printf("\n--- \"%c\" invalid---\n", *lptr);	
 			}
 
 			lptr++; // last symbol jump fix
 		}		
 	}
-
-	tbptr = tokensBuf;	
+	
+	return tokensBuf;	
 }
 
 
