@@ -26,11 +26,13 @@ compilation(){
 }
 
 
+
+time compilation
+echo "----------------------"
+
+
 echo
 echo "---------------------------"
 echo "---Compilation complete!---"
 echo "---------------------------"
 echo
-
-time compilation
-echo "----------------------"
