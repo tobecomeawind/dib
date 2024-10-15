@@ -1,6 +1,15 @@
-
 #ifndef TYPES_H
 #define TYPES_H
+
+typedef enum {
+	CHAR,
+	INT,
+	FLOAT,
+	TOKEN,
+
+} bsearchTypes;
+
+
 
 typedef enum variable_types{
 	CHAR  = 0b00000001,  // idea for char type 
