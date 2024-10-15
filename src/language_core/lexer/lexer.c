@@ -11,49 +11,6 @@
 static void appendToken(Token *buf, Token *bptr, Tokens type, char *data);
 
 
-int main(void)
-{
-	void hello_message(void);
-	Token *analyze_line(char* line, int size);
-
-	char lineBuf[MAX_LINE_SIZE];
-	char lineBufIndex = 0;	
-
-	char    c;
-
-	hello_message();
-
-	while(1){
-		printf("dib-cli >>> ");
-
-		while((c = getchar()) != '\n'){
-			lineBuf[lineBufIndex++] = c;				
-		}
-			
-		lineBuf[lineBufIndex] = '\0';	
-		analyze_line(lineBuf, lineBufIndex);
-		
-		lineBufIndex = 0;
-	}	
-
-
-	return 0;
-}
-
-
-void hello_message(void)
-{
-	//----------------------------
-	//The first output of programm
-	//General information
-	//----------------------------
-
-	printf("\n Hello in DIB, version is 0.0.0.1 \n");
-	printf(" ---Copyright: tobecomeawind--- \n\n");
-	
-}
-
-
 Token *analyze_line(char *lptr, int size)
 {
 
