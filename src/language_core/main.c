@@ -6,7 +6,7 @@
 
 #include "tokens.h"
 #include "lexer.h"
-
+#include "parser.h"
 
 #define MAX_LINE_SIZE      128
 
@@ -39,7 +39,7 @@ int main(void)
 		lineBuf[lineBufIndex] = '\0';	
 		ptr = analyze_line(lineBuf, lineBufIndex);
 		
-		//parse(ptr)....
+		startParsing(ptr);
 
 		free(ptr);
 		lineBufIndex = 0;

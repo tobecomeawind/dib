@@ -19,10 +19,9 @@ Token *analyze_line(char *lptr, int size)
 	// Tokens in tokenBuf
 	//------------------------------
 
-	char    tokenWord[MAX_WORD_SIZE];
-	char   *twptr = tokenWord;	// token word pointer
-								
-	//Token   tokensBuf[MAX_TOKEN_BUF_SIZE]; = malloc(sizeof(Token) * MAX_TOKEN_BUF_SIZE)
+	char   *tokenWord = malloc(sizeof(char) * MAX_WORD_SIZE);
+	char   *twptr     = tokenWord;	// token word pointer
+							
 	Token  *tokensBuf = malloc(sizeof(Token) * MAX_TOKEN_BUF_SIZE);
 	Token  *tbptr     = tokensBuf;  // token buf pointer
 	Token  *tempVar;
@@ -52,6 +51,10 @@ Token *analyze_line(char *lptr, int size)
 			
 			twptr = tokenWord;
 		} else { // last symbol jump fix
+			
+			twptr    = lptr;
+			*++twptr = '\0'; 	
+
 			if (isParenses(lptr)) {
 	
 				switch (*lptr){
@@ -59,12 +62,12 @@ Token *analyze_line(char *lptr, int size)
 						appendToken(tokensBuf, 
 								    tbptr,
 									CLOSE_PARENS,
-									lptr);	
+									twptr);	
 					case '(':
 						appendToken(tokensBuf, 
 								    tbptr,
 									OPEN_PARENS,
-									lptr);	
+									twptr);	
 							
 				};
 	
@@ -73,18 +76,20 @@ Token *analyze_line(char *lptr, int size)
 				appendToken(tokensBuf,
 						    tbptr,
 							COLON, 
-							lptr);		
+							twptr);		
 				
 			} else if(isWhiteSpace(lptr)){
 
 				appendToken(tokensBuf,
 						    tbptr,
 							WHITE_SPACE, 
-							lptr);		
+							twptr);		
 					
 			} else {	
 				printf("\n--- \"%c\" invalid---\n", *lptr);	
 			}
+		
+			twptr = tokenWord;
 
 			lptr++; // last symbol jump fix
 		}		

@@ -19,8 +19,8 @@ Token* isKeyword(char *word)
 
 	Token keywords[] = { // Keyword tokens
 		{.type = K_CHAR,     .data = "CHAR"},
-		{.type = K_ENTITY,   .data = "ENTITY"},
 		{.type = K_ENTITIES, .data = "ENTITIES"},
+		{.type = K_ENTITY,   .data = "ENTITY"},
 		{.type = K_FLOAT,    .data = "FLOAT"},
 		{.type = K_INT,      .data = "INT"},
 		{.type = K_LINK,     .data = "LINK"},

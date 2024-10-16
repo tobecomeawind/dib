@@ -7,9 +7,10 @@ set(CMAKE_BUILD_TYPE Debug)
 
 
 include_directories(${CMAKE_CURRENT_LIST_DIR}/../algs
-	                ${CMAKE_CURRENT_LIST_DIR}/tokens
 	                ${CMAKE_CURRENT_LIST_DIR}/../types
-
+	                ${CMAKE_CURRENT_LIST_DIR}/tokens
+	                ${CMAKE_CURRENT_LIST_DIR}/lexer
+	                ${CMAKE_CURRENT_LIST_DIR}/parser
 )
 
 
@@ -17,7 +18,7 @@ include_directories(${CMAKE_CURRENT_LIST_DIR}/../algs
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../algs build)
 add_subdirectory(tokens)
 add_subdirectory(lexer)
-
+add_subdirectory(parser)
 
 add_executable(${PROJECT_NAME} main.c)
 
@@ -27,4 +28,5 @@ target_link_libraries(${PROJECT_NAME}
 		lexer	
 		tokens
 		algs
+		parser
 )
