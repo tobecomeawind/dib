@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include <stdbool.h>
 
 #include "lexer.h"
 #include "tokens.h"
@@ -11,13 +11,26 @@ static void  ungetToken(Token *token);
 static void mainParsing (void);
 static void parseKeyword(Token *tok);
 
+static void parseEntity(void);
+
+static bool isNextToken(Tokens tokenType, bool addTokenInTempBuf, bool error);
+static void skipWhiteSpace();
+
+
 
 Token *tokensBufPointer;
 Token *tbptr;
 
 
+
+
 void startParsing(Token *bptr)
 {
+	//--------------------------------
+	//Extern function to start parsing
+	//and init global variables
+	//--------------------------------
+	
 	if(!bptr)
 		return;
 
@@ -26,6 +39,10 @@ void startParsing(Token *bptr)
 	
 	mainParsing();
 }
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//Need fix tokensBuf
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 static void mainParsing(void)
@@ -47,15 +64,88 @@ static void parseKeyword(Token *tok)
 		return;	
 	}
 
-	/*
-	switch tok->data:
-		case "ENTITY":
-	*/	
+	//ENTITY (Person:Andrey:CHAR)
 
+	switch (tok->type) {
+		case(K_ENTITY):
+			printf("\nEntity check\n");
+			parseEntity();
+	}	
 }
 
 
 
+
+static void parseEntity(void)
+{
+	//skipWhiteSpace();	
+		
+	//ENTITY	
+	isNextToken(OPEN_PARENS, false, true);        // (	
+	isNextToken(NAME,        false, true);        // Person
+	//         (...., true,  ....)
+	//         if we`ll check entity type	
+	//checkEntityType())	
+	isNextToken(COLON,       false, true);        // :	
+	isNextToken(NAME,        false, true);        // Vasya
+	isNextToken(COLON,       false, true);        // :	
+	isNextToken(NAME,        false, true);        // CHAR	
+	//chech type and name
+	isNextToken(CLOSE_PARENS, false, true);       // )
+					  //
+					  // ENTITY (Person:Vasya:CHAR)
+					  //
+	printf("\nExcellent!!!\n");	
+}
+
+
+
+static bool isNextToken(Tokens tokenType, bool addTokenInTempBuf, bool error)
+{
+	Token *tokenVar = getToken();
+	
+	bool result = true;
+
+	if(!(tokenVar->type == tokenType)){
+		// if we need invoke a error 	
+		if (error){
+			printf("\n Error: expected ");
+			switch(tokenType){
+				case(OPEN_PARENS):
+					printf("\"(\"");
+					break;	
+				case(CLOSE_PARENS):
+					printf("\")\"");
+					break;	
+				case(NAME):
+					printf("\"Name of something\"");
+					break;
+				case(COLON):
+					printf("\":\"");	
+					break;
+			}
+			printf(" \n");
+
+		}
+
+		result = false;
+	}
+
+	if (addTokenInTempBuf)
+		ungetToken(tokenVar);
+
+	return result;
+}
+
+
+
+static void skipWhiteSpace()
+{
+	//invalid work
+
+	while(getToken()->type == WHITE_SPACE);
+	//ungetToken();
+}
 
 
 
@@ -82,16 +172,13 @@ static Token *getToken(void)
 	uint8_t mediateResult = ttbptr - tokensTempBuf;	
 
 	if (mediateResult > 0){
-		printf("\nReturn token value from temp\n");
 		return --ttbptr;
 	} else {	
 		if (tbptr - tokensBufPointer < MAX_TOKEN_BUF_SIZE){
-			printf("\nReturn token value from buf\n");
 			return tbptr++;	
 		}
 		
 		// tbptr oferflowed
-		printf("\nReturn tokel value null\n");
 		return NULL;
 	}
 	//return (mediateResult > 0) ? tokensTempBuf[--ttbptr]: getTokenFromBuf();
