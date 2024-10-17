@@ -42,6 +42,8 @@ void startParsing(Token *bptr)
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //Need fix tokensBuf
+//Need fix tokensBuf
+//Need fix datatypes keyword
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
@@ -89,8 +91,8 @@ static void parseEntity(void)
 	isNextToken(COLON,       false, true);        // :	
 	isNextToken(NAME,        false, true);        // Vasya
 	isNextToken(COLON,       false, true);        // :	
-	isNextToken(NAME,        false, true);        // CHAR	
-	//chech type and name
+	isNextToken(DATATYPE,    false, true);        // CHAR	
+	//check type and name
 	isNextToken(CLOSE_PARENS, false, true);       // )
 					  //
 					  // ENTITY (Person:Vasya:CHAR)
@@ -100,7 +102,9 @@ static void parseEntity(void)
 
 
 
-static bool isNextToken(Tokens tokenType, bool addTokenInTempBuf, bool error)
+static bool isNextToken(Tokens tokenType,
+		                bool   addTokenInTempBuf,
+						bool   errorCheck)
 {
 	Token *tokenVar = getToken();
 	
@@ -108,7 +112,7 @@ static bool isNextToken(Tokens tokenType, bool addTokenInTempBuf, bool error)
 
 	if(!(tokenVar->type == tokenType)){
 		// if we need invoke a error 	
-		if (error){
+		if (errorCheck){
 			printf("\n Error: expected ");
 			switch(tokenType){
 				case(OPEN_PARENS):
@@ -130,6 +134,8 @@ static bool isNextToken(Tokens tokenType, bool addTokenInTempBuf, bool error)
 
 		result = false;
 	}
+
+	printf("\nToken type: %i Data: %s\n", tokenVar->type, tokenVar->data);
 
 	if (addTokenInTempBuf)
 		ungetToken(tokenVar);

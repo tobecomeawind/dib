@@ -6,13 +6,15 @@
 typedef enum
 {
 	//KEYWORDS
-	K_CHAR,
+	KEYWORDS	
 	K_ENTITY,
 	K_ENTITIES,
-	K_FLOAT,
-	K_INT,
 	K_LINK,	
 
+	DATATYPE,
+	K_CHAR,
+	K_FLOAT,
+	K_INT,
 
 	NAME,
 	WHITE_SPACE,
@@ -26,7 +28,7 @@ typedef enum
 
 typedef struct {
 	Tokens       type;
-	const char  *data;	
+    char        *data;	
 } Token;
 
 

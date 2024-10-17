@@ -3,7 +3,7 @@
 
 #include <string.h>
 #include <stdio.h>
-
+#include <stdlib.h>
 
 
 Token* isKeyword(char *word)
@@ -14,8 +14,8 @@ Token* isKeyword(char *word)
 	//word == name of something
 	//--------------------------
 
-	int8_t index, size;
-	Token   *tptr; // token pointer
+	int8_t  index, size;
+	Token   *tptr, keyword; // token pointer
 
 	Token keywords[] = { // Keyword tokens
 		{.type = K_CHAR,     .data = "CHAR"},
@@ -30,11 +30,25 @@ Token* isKeyword(char *word)
 	// return keyword token if word in keywords else 0
 	index = binsearch((void**)keywords, size, (void*)word, bsTOKEN);	
 
+	keyword = keywords[index];
+
 	if(index < 0){
 		return NULL;
 	}
 
-	tptr = &(keywords[index]);
+	tptr = malloc(sizeof(Token));
+	memcpy(tptr, &keyword, sizeof(keyword));
+
+	/*	
+	tptr       = malloc(sizeof(Token));
+	tptr->data = malloc(sizeof(char*));
+
+	tptr->type = keyword.type; 
+	while(*tptr->data++ = *keyword.data++);	
+	*/	
+	
+	//memcpy((char*)tptr->data, (char*)keyword.data, sizeof(strlen(keyword.data)));
+
 
 	return tptr;
 }

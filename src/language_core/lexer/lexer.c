@@ -19,10 +19,10 @@ Token *analyze_line(char *lptr, int size)
 	// Tokens in tokenBuf
 	//------------------------------
 
-	char   *tokenWord = malloc(sizeof(char) * MAX_WORD_SIZE);
+	char   *tokenWord = (char*) malloc(sizeof(char) * MAX_WORD_SIZE);
 	char   *twptr     = tokenWord;	// token word pointer
 							
-	Token  *tokensBuf = malloc(sizeof(Token) * MAX_TOKEN_BUF_SIZE);
+	Token  *tokensBuf = (Token *) malloc(sizeof(Token) * MAX_TOKEN_BUF_SIZE);
 	Token  *tbptr     = tokensBuf;  // token buf pointer
 	Token  *tempVar;
 
@@ -38,22 +38,23 @@ Token *analyze_line(char *lptr, int size)
 			
 
 			if (tempVar = isKeyword(tokenWord)){
+	
 				appendToken(tokensBuf,
 						    tbptr,
 							tempVar->type,
-							(char*)tempVar->data);		
+							tempVar->data);		
 			} else {
 				appendToken(tokensBuf,
 						    tbptr,
 							NAME,
 							tokenWord);		
 			}		
-			
+			free(tempVar);	
 			twptr = tokenWord;
 		} else { // last symbol jump fix
 			
-			twptr    = lptr;
-			*++twptr = '\0'; 	
+			*twptr    = *lptr;
+			*++twptr  = '\0'; 	
 
 			if (isParenses(lptr)) {
 	
@@ -62,12 +63,14 @@ Token *analyze_line(char *lptr, int size)
 						appendToken(tokensBuf, 
 								    tbptr,
 									CLOSE_PARENS,
-									twptr);	
+									tokenWord);	
+						break;
 					case '(':
 						appendToken(tokensBuf, 
 								    tbptr,
 									OPEN_PARENS,
-									twptr);	
+									tokenWord);	
+						break;
 							
 				};
 	
@@ -76,14 +79,14 @@ Token *analyze_line(char *lptr, int size)
 				appendToken(tokensBuf,
 						    tbptr,
 							COLON, 
-							twptr);		
+							tokenWord);		
 				
 			} else if(isWhiteSpace(lptr)){
 
 				appendToken(tokensBuf,
 						    tbptr,
 							WHITE_SPACE, 
-							twptr);		
+							tokenWord);		
 					
 			} else {	
 				printf("\n--- \"%c\" invalid---\n", *lptr);	
@@ -92,23 +95,43 @@ Token *analyze_line(char *lptr, int size)
 			twptr = tokenWord;
 
 			lptr++; // last symbol jump fix
-		}		
+		}	
+		tbptr++;	
 	}
-	
+
+
+	free(tokenWord);
+
 	return tokensBuf;	
 }
 
 
 static void appendToken(Token *buf, Token *bptr, Tokens type, char *data)
 {
-	if(bptr - buf > 0){
+	if (bptr - buf > MAX_TOKEN_BUF_SIZE){
 		printf("\nError: TokensBuf are is full!\n");	
 		exit(-1);
 	}	
-	
+
+	Token *tokenVar = (Token*) malloc(sizeof(Token));	
+	int    dataSize = (int)    strlen(data);
+	char  *dataVar  = (char*)  malloc(sizeof(char) * dataSize);
+
+	memcpy(dataVar, data, dataSize);
+
+	tokenVar->type = type;
+	tokenVar->data = dataVar;
+
+	/*
 	Token tokenVar = {.type = type,
-		              .data = (const char*)data};
-	*bptr++ = tokenVar;
+	                  .data = data};
+	*/
+
+	*bptr = *tokenVar;
+
+
+//	printf("\n Address: %p  \n", bptr);
 }
+
 
 
