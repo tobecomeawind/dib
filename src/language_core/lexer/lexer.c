@@ -40,12 +40,12 @@ Token *analyze_line(char *lptr, int size)
 			if (tempVar = isKeyword(tokenWord)){
 	
 				appendToken(tokensBuf,
-						    tbptr,
+						    tbptr++,
 							tempVar->type,
 							tempVar->data);		
 			} else {
 				appendToken(tokensBuf,
-						    tbptr,
+						    tbptr++,
 							NAME,
 							tokenWord);		
 			}		
@@ -61,13 +61,13 @@ Token *analyze_line(char *lptr, int size)
 				switch (*lptr){
 					case ')':
 						appendToken(tokensBuf, 
-								    tbptr,
+								    tbptr++,
 									CLOSE_PARENS,
 									tokenWord);	
 						break;
 					case '(':
 						appendToken(tokensBuf, 
-								    tbptr,
+								    tbptr++,
 									OPEN_PARENS,
 									tokenWord);	
 						break;
@@ -77,33 +77,33 @@ Token *analyze_line(char *lptr, int size)
 			} else if(isColon(lptr)){
 
 				appendToken(tokensBuf,
-						    tbptr,
+						    tbptr++,
 							COLON, 
 							tokenWord);		
 				
-			} else if(isWhiteSpace(lptr)){
+		/*	} else if(isWhiteSpace(lptr)){
 
 				appendToken(tokensBuf,
 						    tbptr,
 							WHITE_SPACE, 
 							tokenWord);		
-					
+		*/			
 			} else if(isComma(lptr)){
 
 				appendToken(tokensBuf,
-						    tbptr,
+						    tbptr++,
 							COMMA,
 						    tokenWord);	
 			
-			} else {	
-				printf("\n--- \"%c\" invalid---\n", *lptr);	
+			} else {
+				if(!isWhiteSpace(lptr))	
+					printf("\n--- \"%c\" invalid---\n", *lptr);	
 			}
 		
 			twptr = tokenWord;
 
 			lptr++; // last symbol jump fix
 		}	
-		tbptr++;	
 	}
 
 	
