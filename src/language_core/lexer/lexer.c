@@ -99,8 +99,10 @@ Token *analyze_line(char *lptr, int size)
 		tbptr++;	
 	}
 
-
+	
 	free(tokenWord);
+
+	tbptr = NULL; // stop point in tokens buf 
 
 	return tokensBuf;	
 }

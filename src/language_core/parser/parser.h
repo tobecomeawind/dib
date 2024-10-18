@@ -5,4 +5,9 @@
 
 void startParsing(Token *bptr);
 
+typedef enum {
+	PARENSES,
+
+} bordersType;
+
 #endif

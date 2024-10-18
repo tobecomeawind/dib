@@ -11,15 +11,25 @@ static void  ungetToken(Token *token);
 static void mainParsing (void);
 static void parseKeyword(Token *tok);
 
+
+
+static void borderDecorator(bordersType btype, void (*func)(void));
 static void parseEntity(void);
 
-static bool isNextToken(Tokens tokenType, bool addTokenInTempBuf, bool error);
+
+static bool isDataType(Token  *tptr, bool errorCheck);
+static bool isNextToken(Tokens tokenType,
+		                bool   addTokenInTempBuf,
+						bool   errorCheck);
 static void skipWhiteSpace();
 
 
 
 Token *tokensBufPointer;
 Token *tbptr;
+
+
+
 
 
 
@@ -44,6 +54,7 @@ void startParsing(Token *bptr)
 //Need fix tokensBuf
 //Need fix tokensBuf
 //Need fix datatypes keyword
+//Need fix all memory
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
@@ -60,7 +71,14 @@ static void mainParsing(void)
 
 static void parseKeyword(Token *tok)
 {
-	if(tok->type == NAME){
+	//----------------------------------
+	//Parse the first keyword in command  //command such a ENTITY (..., ...)
+	//----------------------------------  //               LINK   (...<->...)
+
+	Tokens tokenType = tok->type;
+	
+
+	if(tokenType == NAME){
 		printf("\nError: Invalid keyword with name \"%s\"", tok->data);	
 		printf("\nExpected keyword\n");
 		return;	
@@ -68,10 +86,11 @@ static void parseKeyword(Token *tok)
 
 	//ENTITY (Person:Andrey:CHAR)
 
-	switch (tok->type) {
+	switch (tokenType) {
 		case(K_ENTITY):
 			printf("\nEntity check\n");
-			parseEntity();
+			borderDecorator(PARENSES, &parseEntity);	
+			//parseEntity();
 	}	
 }
 
@@ -83,7 +102,7 @@ static void parseEntity(void)
 	//skipWhiteSpace();	
 		
 	//ENTITY	
-	isNextToken(OPEN_PARENS,  false, true);        // (	
+	//isNextToken(OPEN_PARENS,  false, true);        // (	
 	isNextToken(NAME,         false, true);        // Person
 	//         (...., true,  ....)
 	//         if we`ll check entity type	
@@ -93,11 +112,39 @@ static void parseEntity(void)
 	isNextToken(COLON,        false, true);        // :	
 	isNextToken(DATATYPE,     false, true);        // CHAR	
 	//check type and name
-	isNextToken(CLOSE_PARENS, false, true);       // )
+	//isNextToken(CLOSE_PARENS, false, true);       // )
 					  //
 					  // ENTITY (Person:Vasya:CHAR)
 					  //
 	printf("\nExcellent!!!\n");	
+}
+
+
+static void borderDecorator(bordersType btype, void (*func)(void))
+{	
+	//-----------------------------------------------	
+	// Wrap the function(statement) to check borders
+	// Example:
+	//
+	// SomeKeyword (...:...:...)
+	//          ||
+	// SomeKeyword "("   -      border decorator
+	//              ...:...:... func()
+	//             ")"   -      border decorator
+	//------------------------------------------------
+	
+	Tokens openBorder, closeBorder;
+
+	switch(btype){
+		case(PARENSES):
+			 openBorder =  OPEN_PARENS;
+			closeBorder = CLOSE_PARENS;
+			break;
+	}
+
+	isNextToken(openBorder,  false, true);        // (	
+	func();
+	isNextToken(closeBorder, false, true);        // )
 }
 
 
@@ -129,15 +176,29 @@ static bool isNextToken(Tokens tokenType,
 		                bool   addTokenInTempBuf,
 						bool   errorCheck)
 {
-	Token *tokenVar     = getToken();
+	Token  *tokenVar     = getToken();
 	Tokens  tokenVarType = tokenVar->type;
 
 
 	bool result = true;
 	
 
-	if (!(tokenVarType == tokenType)){	
-		if (errorCheck && !(isDataType(tokenVar, errorCheck))){
+	if (!(tokenVarType == tokenType)){
+	
+
+		// datatype check
+		// kostil epta
+		if (tokenType == DATATYPE && !(isDataType(tokenVar, errorCheck))){	
+			
+			// no datatype	
+			result     = false;
+
+			// absract break
+			// we shouldnt go down if condition is true
+			errorCheck = false;
+		}
+		
+		if (errorCheck){
 			// if we need invoke a error	
 			printf("\n Error: expected ");
 			switch(tokenType){
@@ -158,10 +219,9 @@ static bool isNextToken(Tokens tokenType,
 
 		}
 
-		result = false;
 	}
 
-	printf("\nToken type: %i Data: %s\n", tokenVar->type, tokenVar->data);
+	printf("\nToken type: %3i Data: \"%s\"\n", tokenVar->type, tokenVar->data);
 
 	if (addTokenInTempBuf)
 		ungetToken(tokenVar);
@@ -206,14 +266,13 @@ static Token *getToken(void)
 	if (mediateResult > 0){
 		return --ttbptr;
 	} else {	
-		if (tbptr - tokensBufPointer < MAX_TOKEN_BUF_SIZE){
+		if ((tbptr - tokensBufPointer < MAX_TOKEN_BUF_SIZE) && tbptr){			
 			return tbptr++;	
 		}
 		
-		// tbptr oferflowed
+		// tbptr oferflowed or tbptr == stop point(NULL)
 		return NULL;
 	}
-	//return (mediateResult > 0) ? tokensTempBuf[--ttbptr]: getTokenFromBuf();
 }
 
 
