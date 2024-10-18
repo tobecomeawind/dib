@@ -1,3 +1,4 @@
 /build/
 src/language_core/build/*
 *.swp
+TODO.txt
