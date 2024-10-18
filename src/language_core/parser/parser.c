@@ -83,15 +83,15 @@ static void parseEntity(void)
 	//skipWhiteSpace();	
 		
 	//ENTITY	
-	isNextToken(OPEN_PARENS, false, true);        // (	
-	isNextToken(NAME,        false, true);        // Person
+	isNextToken(OPEN_PARENS,  false, true);        // (	
+	isNextToken(NAME,         false, true);        // Person
 	//         (...., true,  ....)
 	//         if we`ll check entity type	
 	//checkEntityType())	
-	isNextToken(COLON,       false, true);        // :	
-	isNextToken(NAME,        false, true);        // Vasya
-	isNextToken(COLON,       false, true);        // :	
-	isNextToken(DATATYPE,    false, true);        // CHAR	
+	isNextToken(COLON,        false, true);        // :	
+	isNextToken(NAME,         false, true);        // Vasya
+	isNextToken(COLON,        false, true);        // :	
+	isNextToken(DATATYPE,     false, true);        // CHAR	
 	//check type and name
 	isNextToken(CLOSE_PARENS, false, true);       // )
 					  //
@@ -101,18 +101,44 @@ static void parseEntity(void)
 }
 
 
+static bool isDataType(Token *tptr, bool errorCheck)
+{
+	Tokens tokenType = tptr->type;
+	bool   result    = false;
+
+	switch (tokenType){
+		case(K_CHAR):
+		case(K_INT):
+		case(K_FLOAT):
+			result = true;	
+			break;
+		default:
+			if(errorCheck){
+				printf("\nError: invalid datatype \"%s\" \n", tptr->data);
+				//exit
+			}
+			break;
+	}
+	
+	return result;	
+}
+
+
 
 static bool isNextToken(Tokens tokenType,
 		                bool   addTokenInTempBuf,
 						bool   errorCheck)
 {
-	Token *tokenVar = getToken();
-	
-	bool result = true;
+	Token *tokenVar     = getToken();
+	Tokens  tokenVarType = tokenVar->type;
 
-	if(!(tokenVar->type == tokenType)){
-		// if we need invoke a error 	
-		if (errorCheck){
+
+	bool result = true;
+	
+
+	if (!(tokenVarType == tokenType)){	
+		if (errorCheck && !(isDataType(tokenVar, errorCheck))){
+			// if we need invoke a error	
 			printf("\n Error: expected ");
 			switch(tokenType){
 				case(OPEN_PARENS):
@@ -122,7 +148,7 @@ static bool isNextToken(Tokens tokenType,
 					printf("\")\"");
 					break;	
 				case(NAME):
-					printf("\"Name of something\"");
+					printf("\"Name\"");
 					break;
 				case(COLON):
 					printf("\":\"");	

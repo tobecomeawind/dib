@@ -6,7 +6,7 @@
 typedef enum
 {
 	//KEYWORDS
-	KEYWORDS	
+	//KEYWORDS	
 	K_ENTITY,
 	K_ENTITIES,
 	K_LINK,	
@@ -17,12 +17,12 @@ typedef enum
 	K_INT,
 
 	NAME,
-	WHITE_SPACE,
+	WHITE_SPACE,   // 
 
 	OPEN_PARENS,   // (
 	CLOSE_PARENS,  // )	
 	
-	COLON,          // :
+	COLON,         // :
 
 } Tokens;
 
