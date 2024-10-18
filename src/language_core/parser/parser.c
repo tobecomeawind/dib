@@ -55,6 +55,7 @@ void startParsing(Token *bptr)
 //Need fix tokensBuf
 //Need fix datatypes keyword
 //Need fix all memory
+//perepisat` kostili
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
@@ -103,20 +104,30 @@ static void parseEntity(void)
 		
 	//ENTITY	
 	//isNextToken(OPEN_PARENS,  false, true);        // (	
-	isNextToken(NAME,         false, true);        // Person
+	isNextToken(NAME,       false, true);        // Person
 	//         (...., true,  ....)
 	//         if we`ll check entity type	
 	//checkEntityType())	
-	isNextToken(COLON,        false, true);        // :	
-	isNextToken(NAME,         false, true);        // Vasya
-	isNextToken(COLON,        false, true);        // :	
-	isNextToken(DATATYPE,     false, true);        // CHAR	
+	isNextToken(COLON,      false, true);        // :	
+	isNextToken(NAME,       false, true);        // Vasya
+	isNextToken(COLON,      false, true);        // :	
+	isNextToken(DATATYPE,   false, true);        // CHAR		
 	//check type and name
 	//isNextToken(CLOSE_PARENS, false, true);       // )
 					  //
 					  // ENTITY (Person:Vasya:CHAR)
 					  //
 	printf("\nExcellent!!!\n");	
+
+
+	// multiply add entity
+	//
+	// Example
+	// ENTITY (Person:Vasya:CHAR, Person:Sonya:CHAR)
+	if(isNextToken(COMMA, true, false)){
+		getToken();    // skip "," token
+		parseEntity(); // 	
+	}
 }
 
 
@@ -148,28 +159,6 @@ static void borderDecorator(bordersType btype, void (*func)(void))
 }
 
 
-static bool isDataType(Token *tptr, bool errorCheck)
-{
-	Tokens tokenType = tptr->type;
-	bool   result    = false;
-
-	switch (tokenType){
-		case(K_CHAR):
-		case(K_INT):
-		case(K_FLOAT):
-			result = true;	
-			break;
-		default:
-			if(errorCheck){
-				printf("\nError: invalid datatype \"%s\" \n", tptr->data);
-				//exit
-			}
-			break;
-	}
-	
-	return result;	
-}
-
 
 
 static bool isNextToken(Tokens tokenType,
@@ -179,20 +168,19 @@ static bool isNextToken(Tokens tokenType,
 	Token  *tokenVar     = getToken();
 	Tokens  tokenVarType = tokenVar->type;
 
-
-	bool result = true;
+	// fucking kostili((((((((
+	bool result;
 	
 
-	if (!(tokenVarType == tokenType)){
+	if (!(result = (tokenVarType == tokenType))){
 	
 
 		// datatype check
 		// kostil epta
-		if (tokenType == DATATYPE && !(isDataType(tokenVar, errorCheck))){	
-			
-			// no datatype	
-			result     = false;
-
+		if (tokenType == DATATYPE){
+			if (isDataType(tokenVar, errorCheck))		
+				result = true;
+		    
 			// absract break
 			// we shouldnt go down if condition is true
 			errorCheck = false;
@@ -229,6 +217,28 @@ static bool isNextToken(Tokens tokenType,
 	return result;
 }
 
+static bool isDataType(Token *tptr, bool errorCheck)
+{
+	//Kostil function	
+	Tokens tokenType = tptr->type;
+	bool   result    = false;
+
+	switch (tokenType){
+		case(K_CHAR):
+		case(K_INT):
+		case(K_FLOAT):
+			result = true;	
+			break;
+		default:
+			if(errorCheck){
+				printf("\nError: invalid datatype \"%s\" \n", tptr->data);
+				//exit
+			}
+			break;
+	}
+	
+	return result;	
+}
 
 
 static void skipWhiteSpace()
@@ -278,7 +288,7 @@ static Token *getToken(void)
 
 static void ungetToken(Token *token)
 {
-	ttbptr = token;
+	*ttbptr = *token;
 	ttbptr++;
 }
 

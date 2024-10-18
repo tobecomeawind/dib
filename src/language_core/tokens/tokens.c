@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 Token* isKeyword(char *word)
 {
 	//--------------------------
@@ -54,21 +53,23 @@ Token* isKeyword(char *word)
 }
 
 
-int isParenses(char *c)
+bool isParenses(char *c)
 {
 	return *c == '(' || *c == ')';
 };
 
-int isColon(char *c)
+bool isColon(char *c)
 {
 	return *c == ':';
 };
 
-int isWhiteSpace(char *c)
+bool isComma(char *c)
+{
+	return *c == ',';
+};
+
+bool isWhiteSpace(char *c)
 {
 	return *c == ' ' || *c == '\t';
 };
-
-
-
 

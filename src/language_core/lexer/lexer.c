@@ -88,6 +88,13 @@ Token *analyze_line(char *lptr, int size)
 							WHITE_SPACE, 
 							tokenWord);		
 					
+			} else if(isComma(lptr)){
+
+				appendToken(tokensBuf,
+						    tbptr,
+							COMMA,
+						    tokenWord);	
+			
 			} else {	
 				printf("\n--- \"%c\" invalid---\n", *lptr);	
 			}

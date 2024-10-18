@@ -2,11 +2,11 @@
 #define TOKENS_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 typedef enum
 {
 	//KEYWORDS
-	//KEYWORDS	
 	K_ENTITY,
 	K_ENTITIES,
 	K_LINK,	
@@ -23,8 +23,10 @@ typedef enum
 	CLOSE_PARENS,  // )	
 	
 	COLON,         // :
+	COMMA,         // ,
 
 } Tokens;
+
 
 typedef struct {
 	Tokens       type;
@@ -32,9 +34,10 @@ typedef struct {
 } Token;
 
 
-Token *isKeyword   (char *word);
-int    isParenses  (char *c);
-int    isColon     (char *c);
-int    isWhiteSpace(char *c);
+Token  *isKeyword   (char *word);
+bool    isParenses  (char *c);
+bool    isColon     (char *c);
+bool    isWhiteSpace(char *c);
+bool    isComma     (char *c);
 
 #endif
