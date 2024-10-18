@@ -12,17 +12,14 @@ static void mainParsing (void);
 static void parseKeyword(Token *tok);
 
 
-
 static void borderDecorator(bordersType btype, void (*func)(void));
-static void parseEntity(void);
+static void parseEntity    (void);
 
 
-static bool isDataType(Token  *tptr, bool errorCheck);
+static bool isDataType (Token  *tptr, bool errorCheck);
 static bool isNextToken(Tokens tokenType,
 		                bool   addTokenInTempBuf,
 						bool   errorCheck);
-static void skipWhiteSpace();
-
 
 
 Token *tokensBufPointer;
@@ -76,7 +73,7 @@ static void parseKeyword(Token *tok)
 	//Parse the first keyword in command  //command such a ENTITY (..., ...)
 	//----------------------------------  //               LINK   (...<->...)
 
-	Tokens tokenType = tok->type;
+	Tokens tokenType = tok->minorType;
 	
 
 	if(tokenType == NAME){
@@ -86,12 +83,13 @@ static void parseKeyword(Token *tok)
 	}
 
 	//ENTITY (Person:Andrey:CHAR)
-
-	switch (tokenType) {
-		case(K_ENTITY):
-			printf("\nEntity check\n");
-			borderDecorator(PARENSES, &parseEntity);	
-			//parseEntity();
+	if(isNextToken(KEYWORDS, true, false)){
+		switch (tokenType) {
+			case(K_ENTITY):
+				printf("\nEntity check\n");
+				borderDecorator(PARENSES, &parseEntity);
+				break;	
+		}		
 	}	
 }
 
@@ -103,7 +101,7 @@ static void parseEntity(void)
 	//skipWhiteSpace();	
 		
 	//ENTITY	
-	//isNextToken(OPEN_PARENS,  false, true);        // (	
+	//isNextToken(OPEN_PARENS,  false, true);    // (	
 	isNextToken(NAME,       false, true);        // Person
 	//         (...., true,  ....)
 	//         if we`ll check entity type	
@@ -166,11 +164,12 @@ static bool isNextToken(Tokens tokenType,
 						bool   errorCheck)
 {
 	Token  *tokenVar     = getToken();
-	Tokens  tokenVarType = tokenVar->type;
+	Tokens  tokenMajorType = tokenVar->majorType;
+	Tokens  tokenMinorType = tokenVar->minorType;
 
 	// fucking kostili((((((((
-	bool result;
-	
+	bool result;	
+
 
 	if (!(result = (tokenVarType == tokenType))){
 	
@@ -238,15 +237,6 @@ static bool isDataType(Token *tptr, bool errorCheck)
 	}
 	
 	return result;	
-}
-
-
-static void skipWhiteSpace()
-{
-	//invalid work
-
-	while(getToken()->type == WHITE_SPACE);
-	//ungetToken();
 }
 
 

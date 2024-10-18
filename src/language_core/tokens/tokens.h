@@ -6,30 +6,46 @@
 
 typedef enum
 {
-	//KEYWORDS
-	K_ENTITY,
-	K_ENTITIES,
-	K_LINK,	
+	//KEYWORDS include KEYWORDS and DATATYPE
 
-	DATATYPE,
-	K_CHAR,
-	K_FLOAT,
-	K_INT,
+	KEYWORDS,
 
-	NAME,
-	WHITE_SPACE,   // 
+	ENTITY,
+	ENTITIES,
+	LINK,	
+
+
+	DATATYPE, 
+
+	CHAR,
+	FLOAT,
+	INT,
+
+
+	BORDERS,
 
 	OPEN_PARENS,   // (
 	CLOSE_PARENS,  // )	
-	
+
+
+	CLETTERS, //CHAR LETTERS
+
 	COLON,         // :
 	COMMA,         // ,
+	WHITE_SPACE,   // 
+
+	
+	
+	//OTHERS
+	NAME
+
 
 } Tokens;
 
 
 typedef struct {
-	Tokens       type;
+	Tokens       majorType; 
+	Tokens       minorType;
     char        *data;	
 } Token;
 

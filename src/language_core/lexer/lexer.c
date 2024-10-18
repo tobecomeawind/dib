@@ -11,6 +11,10 @@
 static void appendToken(Token *buf, Token *bptr, Tokens type, char *data);
 
 
+static Token  *tokensBuf = (Token *) malloc(sizeof(Token) * MAX_TOKEN_BUF_SIZE);
+static Token  *tbptr     = tokensBuf;  // token buf pointer
+
+
 Token *analyze_line(char *lptr, int size)
 {
 
@@ -22,10 +26,7 @@ Token *analyze_line(char *lptr, int size)
 	char   *tokenWord = (char*) malloc(sizeof(char) * MAX_WORD_SIZE);
 	char   *twptr     = tokenWord;	// token word pointer
 							
-	Token  *tokensBuf = (Token *) malloc(sizeof(Token) * MAX_TOKEN_BUF_SIZE);
-	Token  *tbptr     = tokensBuf;  // token buf pointer
 	Token  *tempVar;
-
 
 	while(*lptr != '\0'){
 		if (isalpha(*lptr)) {
@@ -39,13 +40,11 @@ Token *analyze_line(char *lptr, int size)
 
 			if (tempVar = isKeyword(tokenWord)){
 	
-				appendToken(tokensBuf,
-						    tbptr++,
+				appendToken(KEYWORD,
 							tempVar->type,
 							tempVar->data);		
 			} else {
-				appendToken(tokensBuf,
-						    tbptr++,
+				appendToken(NAME,
 							NAME,
 							tokenWord);		
 			}		
@@ -60,14 +59,12 @@ Token *analyze_line(char *lptr, int size)
 	
 				switch (*lptr){
 					case ')':
-						appendToken(tokensBuf, 
-								    tbptr++,
+						appendToken(BORDERS,
 									CLOSE_PARENS,
 									tokenWord);	
 						break;
 					case '(':
-						appendToken(tokensBuf, 
-								    tbptr++,
+						appendToken(BORDERS,    
 									OPEN_PARENS,
 									tokenWord);	
 						break;
@@ -76,22 +73,13 @@ Token *analyze_line(char *lptr, int size)
 	
 			} else if(isColon(lptr)){
 
-				appendToken(tokensBuf,
-						    tbptr++,
+				appendToken(CLETTERS,
 							COLON, 
 							tokenWord);		
-				
-		/*	} else if(isWhiteSpace(lptr)){
-
-				appendToken(tokensBuf,
-						    tbptr,
-							WHITE_SPACE, 
-							tokenWord);		
-		*/			
+					
 			} else if(isComma(lptr)){
 
-				appendToken(tokensBuf,
-						    tbptr++,
+				appendToken(CLETTERS,
 							COMMA,
 						    tokenWord);	
 			
@@ -115,9 +103,15 @@ Token *analyze_line(char *lptr, int size)
 }
 
 
-static void appendToken(Token *buf, Token *bptr, Tokens type, char *data)
+static void appendToken(Tokens majType, // majorType
+						Tokens minType, // minorType
+						char *data)     // word
 {
-	if (bptr - buf > MAX_TOKEN_BUF_SIZE){
+	//-------------------------
+	//Append token in tokensBuf
+	//-------------------------
+
+	if (tbptr - tokensBuf > MAX_TOKEN_BUF_SIZE){
 		printf("\nError: TokensBuf are is full!\n");	
 		exit(-1);
 	}	
@@ -128,18 +122,11 @@ static void appendToken(Token *buf, Token *bptr, Tokens type, char *data)
 
 	memcpy(dataVar, data, dataSize);
 
-	tokenVar->type = type;
+	tokenVar->majorType = majType;
+	tokenVar->minorType = minType;
 	tokenVar->data = dataVar;
 
-	/*
-	Token tokenVar = {.type = type,
-	                  .data = data};
-	*/
-
-	*bptr = *tokenVar;
-
-
-//	printf("\n Address: %p  \n", bptr);
+	*tbptr++ = *tokenVar;
 }
 
 

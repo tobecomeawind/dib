@@ -17,12 +17,12 @@ Token* isKeyword(char *word)
 	Token   *tptr, keyword; // token pointer
 
 	Token keywords[] = { // Keyword tokens
-		{.type = K_CHAR,     .data = "CHAR"},
-		{.type = K_ENTITIES, .data = "ENTITIES"},
-		{.type = K_ENTITY,   .data = "ENTITY"},
-		{.type = K_FLOAT,    .data = "FLOAT"},
-		{.type = K_INT,      .data = "INT"},
-		{.type = K_LINK,     .data = "LINK"},
+		{.minorType = CHAR,     .data = "CHAR"},
+		{.minorType = ENTITIES, .data = "ENTITIES"},
+		{.minorType = ENTITY,   .data = "ENTITY"},
+		{.minorType = FLOAT,    .data = "FLOAT"},
+		{.minorType = INT,      .data = "INT"},
+		{.minorType = LINK,     .data = "LINK"},
 	};
 	
 	size = sizeof(keywords) / sizeof(Token); 
@@ -37,6 +37,8 @@ Token* isKeyword(char *word)
 
 	tptr = malloc(sizeof(Token));
 	memcpy(tptr, &keyword, sizeof(keyword));
+
+	tptr->majorType = KEYWORDS;
 
 	/*	
 	tptr       = malloc(sizeof(Token));
