@@ -9,4 +9,7 @@
 
 Token *analyze_line(char *lptr, int size);
 
+extern Token  *tokensBuf;
+extern Token  *tbptr    ;  // token buf pointer
+
 #endif

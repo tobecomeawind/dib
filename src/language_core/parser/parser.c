@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 #include "lexer.h"
 #include "tokens.h"
 #include "parser.h"
+
 
 static Token  *getToken(void);
 static void  ungetToken(Token *token);
@@ -17,16 +19,18 @@ static void parseEntity    (void);
 
 
 static bool isDataType (Token  *tptr, bool errorCheck);
-static bool isNextToken(Tokens tokenType,
+static bool isNextToken(Tokens majorType,
+						Tokens minorType, 
 		                bool   addTokenInTempBuf,
+                        bool   minorCheck,						
 						bool   errorCheck);
 
-
-Token *tokensBufPointer;
-Token *tbptr;
-
+//Token *tokensBuf;
+//Token *tbptr;
 
 
+Token  *tokensBuf;
+Token  *tbptr    ;  // token buf pointer
 
 
 
@@ -41,10 +45,14 @@ void startParsing(Token *bptr)
 	if(!bptr)
 		return;
 
-	tokensBufPointer = bptr;	
-	tbptr = tokensBufPointer;	
+	//tokensBuf = bptr;	
+	//tbptr = bptr;	
 	
 	mainParsing();
+
+	tbptr     = NULL;
+	tokensBuf = NULL;
+	//free(tokensBuf);
 }
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -58,9 +66,10 @@ void startParsing(Token *bptr)
 
 static void mainParsing(void)
 {
-	//
+	//------------------------
 	//Main function of parsing
-	//
+	//------------------------
+	
 	Token *tok;
 	
 	parseKeyword(getToken());
@@ -73,19 +82,21 @@ static void parseKeyword(Token *tok)
 	//Parse the first keyword in command  //command such a ENTITY (..., ...)
 	//----------------------------------  //               LINK   (...<->...)
 
-	Tokens tokenType = tok->minorType;
-	
+	Tokens tokenMajorType = tok->majorType;
+	Tokens tokenMinorType = tok->minorType;	
 
-	if(tokenType == NAME){
+	printf("\nMajor: %i Minor: %i Adress: %p\n", tokenMajorType, tokenMinorType, tok);
+
+	if(tokenMajorType == NAME){
 		printf("\nError: Invalid keyword with name \"%s\"", tok->data);	
 		printf("\nExpected keyword\n");
 		return;	
 	}
 
-	//ENTITY (Person:Andrey:CHAR)
-	if(isNextToken(KEYWORDS, true, false)){
-		switch (tokenType) {
-			case(K_ENTITY):
+	// ENTITY (Person:Andrey:CHAR)
+	if(isNextToken(KEYWORDS, 0, true, false, false)){
+		switch (tokenMinorType) {
+			case (K_ENTITY):
 				printf("\nEntity check\n");
 				borderDecorator(PARENSES, &parseEntity);
 				break;	
@@ -102,27 +113,27 @@ static void parseEntity(void)
 		
 	//ENTITY	
 	//isNextToken(OPEN_PARENS,  false, true);    // (	
-	isNextToken(NAME,       false, true);        // Person
+	isNextToken(NAME,     NAME,     false, true, true);        // Person
 	//         (...., true,  ....)
 	//         if we`ll check entity type	
 	//checkEntityType())	
-	isNextToken(COLON,      false, true);        // :	
-	isNextToken(NAME,       false, true);        // Vasya
-	isNextToken(COLON,      false, true);        // :	
-	isNextToken(DATATYPE,   false, true);        // CHAR		
+	isNextToken(CLETTERS, COLON,    false, true, true);        // :	
+	isNextToken(NAME,     NAME,     false, true, true);        // Vasya
+	isNextToken(CLETTERS, COLON,    false, true, true);        // :	
+	isNextToken(DATATYPE, 0,        false, false, true);        // CHAR		
 	//check type and name
 	//isNextToken(CLOSE_PARENS, false, true);       // )
 					  //
 					  // ENTITY (Person:Vasya:CHAR)
 					  //
 	printf("\nExcellent!!!\n");	
-
-
+	//
 	// multiply add entity
 	//
 	// Example
 	// ENTITY (Person:Vasya:CHAR, Person:Sonya:CHAR)
-	if(isNextToken(COMMA, true, false)){
+	//
+	if(isNextToken(CLETTERS, COMMA, true, true, false)){
 		getToken();    // skip "," token
 		parseEntity(); // 	
 	}
@@ -151,64 +162,60 @@ static void borderDecorator(bordersType btype, void (*func)(void))
 			break;
 	}
 
-	isNextToken(openBorder,  false, true);        // (	
+	isNextToken(BORDERS, openBorder,  false, true, true);        // (	
 	func();
-	isNextToken(closeBorder, false, true);        // )
+	isNextToken(BORDERS, closeBorder, false, true, true);        // )
 }
 
 
 
 
-static bool isNextToken(Tokens tokenType,
+static bool isNextToken(Tokens majorType,
+						Tokens minorType, 
 		                bool   addTokenInTempBuf,
+                        bool   minorCheck,						
 						bool   errorCheck)
 {
-	Token  *tokenVar     = getToken();
+	Token  *tokenVar       = getToken();
 	Tokens  tokenMajorType = tokenVar->majorType;
 	Tokens  tokenMinorType = tokenVar->minorType;
 
 	// fucking kostili((((((((
-	bool result;	
+	bool result = false;	
 
+	if(tokenMajorType == majorType){
+		result = true;
 
-	if (!(result = (tokenVarType == tokenType))){
-	
-
-		// datatype check
-		// kostil epta
-		if (tokenType == DATATYPE){
-			if (isDataType(tokenVar, errorCheck))		
-				result = true;
-		    
-			// absract break
-			// we shouldnt go down if condition is true
-			errorCheck = false;
-		}
+	    if(minorCheck && !(tokenMinorType == minorType)){
 		
-		if (errorCheck){
-			// if we need invoke a error	
-			printf("\n Error: expected ");
-			switch(tokenType){
-				case(OPEN_PARENS):
-					printf("\"(\"");
-					break;	
-				case(CLOSE_PARENS):
-					printf("\")\"");
-					break;	
-				case(NAME):
-					printf("\"Name\"");
-					break;
-				case(COLON):
-					printf("\":\"");	
-					break;
-			}
-			printf(" \n");
-
+			result = false;	
+			
+			if(errorCheck){
+				// if we need invoke a error	
+				printf("\n Error: expected ");
+				switch(minorType){
+					case(OPEN_PARENS):
+						printf("\"(\"");
+						break;	
+					case(CLOSE_PARENS):
+						printf("\")\"");
+						break;	
+					case(NAME):
+						printf("\"Name\"");
+						break;
+					case(COLON):
+						printf("\":\"");	
+						break;
+				}
+				printf(" \n");
+			}	
 		}
 
+	} else {
+		printf("\nInvalid expression type\n");	
 	}
 
-	printf("\nToken type: %3i Data: \"%s\"\n", tokenVar->type, tokenVar->data);
+	//printf("\nToken type: %3i Data: \"%s\"\n", tokenVar->type, tokenVar->data);
 
 	if (addTokenInTempBuf)
 		ungetToken(tokenVar);
@@ -216,6 +223,8 @@ static bool isNextToken(Tokens tokenType,
 	return result;
 }
 
+
+/*
 static bool isDataType(Token *tptr, bool errorCheck)
 {
 	//Kostil function	
@@ -238,7 +247,7 @@ static bool isDataType(Token *tptr, bool errorCheck)
 	
 	return result;	
 }
-
+*/
 
 
 //if tokenTempBuf not null
@@ -266,7 +275,7 @@ static Token *getToken(void)
 	if (mediateResult > 0){
 		return --ttbptr;
 	} else {	
-		if ((tbptr - tokensBufPointer < MAX_TOKEN_BUF_SIZE) && tbptr){			
+		if ((tbptr - tokensBuf < MAX_TOKEN_BUF_SIZE) && tbptr){			
 			return tbptr++;	
 		}
 		

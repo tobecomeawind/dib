@@ -8,18 +8,18 @@ typedef enum
 {
 	//KEYWORDS include KEYWORDS and DATATYPE
 
-	KEYWORDS,
+	KEYWORDS = 1,
 
-	ENTITY,
-	ENTITIES,
-	LINK,	
+	K_ENTITY,
+	K_ENTITIES,
+	K_LINK,	
 
 
 	DATATYPE, 
-
-	CHAR,
-	FLOAT,
-	INT,
+	
+	K_CHAR,
+	K_FLOAT,
+	K_INT,
 
 
 	BORDERS,

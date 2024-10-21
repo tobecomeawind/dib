@@ -8,11 +8,11 @@
 #include "tokens.h"
 
 
-static void appendToken(Token *buf, Token *bptr, Tokens type, char *data);
+static void appendToken(Tokens majType, // majorType
+						Tokens minType, // minorType
+						char *data);    // word
+static void initExternBuf(void);
 
-
-static Token  *tokensBuf = (Token *) malloc(sizeof(Token) * MAX_TOKEN_BUF_SIZE);
-static Token  *tbptr     = tokensBuf;  // token buf pointer
 
 
 Token *analyze_line(char *lptr, int size)
@@ -22,11 +22,13 @@ Token *analyze_line(char *lptr, int size)
 	// Analyzing to create tokens
 	// Tokens in tokenBuf
 	//------------------------------
-
+		
 	char   *tokenWord = (char*) malloc(sizeof(char) * MAX_WORD_SIZE);
 	char   *twptr     = tokenWord;	// token word pointer
 							
 	Token  *tempVar;
+	
+	initExternBuf();
 
 	while(*lptr != '\0'){
 		if (isalpha(*lptr)) {
@@ -40,8 +42,8 @@ Token *analyze_line(char *lptr, int size)
 
 			if (tempVar = isKeyword(tokenWord)){
 	
-				appendToken(KEYWORD,
-							tempVar->type,
+				appendToken(KEYWORDS,
+							tempVar->minorType,
 							tempVar->data);		
 			} else {
 				appendToken(NAME,
@@ -97,7 +99,9 @@ Token *analyze_line(char *lptr, int size)
 	
 	free(tokenWord);
 
-	tbptr = NULL; // stop point in tokens buf 
+	// tbptr = NULL; // stop point in tokens buf 
+	
+	tbptr = tokensBuf;
 
 	return tokensBuf;	
 }
@@ -130,4 +134,9 @@ static void appendToken(Tokens majType, // majorType
 }
 
 
+static void initExternBuf(void)
+{
+	tokensBuf = (Token *) malloc(sizeof(Token) * MAX_TOKEN_BUF_SIZE);
+	tbptr     = tokensBuf;  // token buf pointer
+}
 

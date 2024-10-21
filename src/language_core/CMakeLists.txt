@@ -14,11 +14,10 @@ include_directories(${CMAKE_CURRENT_LIST_DIR}/../algs
 )
 
 
-
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../algs build)
 add_subdirectory(tokens)
 add_subdirectory(lexer)
 add_subdirectory(parser)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../algs build)
 
 add_executable(${PROJECT_NAME} main.c)
 

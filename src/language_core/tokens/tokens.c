@@ -17,12 +17,12 @@ Token* isKeyword(char *word)
 	Token   *tptr, keyword; // token pointer
 
 	Token keywords[] = { // Keyword tokens
-		{.minorType = CHAR,     .data = "CHAR"},
-		{.minorType = ENTITIES, .data = "ENTITIES"},
-		{.minorType = ENTITY,   .data = "ENTITY"},
-		{.minorType = FLOAT,    .data = "FLOAT"},
-		{.minorType = INT,      .data = "INT"},
-		{.minorType = LINK,     .data = "LINK"},
+		{.minorType = K_CHAR,     .data = "CHAR"},
+		{.minorType = K_ENTITIES, .data = "ENTITIES"},
+		{.minorType = K_ENTITY,   .data = "ENTITY"},
+		{.minorType = K_FLOAT,    .data = "FLOAT"},
+		{.minorType = K_INT,      .data = "INT"},
+		{.minorType = K_LINK,     .data = "LINK"},
 	};
 	
 	size = sizeof(keywords) / sizeof(Token); 

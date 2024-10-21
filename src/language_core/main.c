@@ -4,8 +4,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-#include "tokens.h"
 #include "lexer.h"
+#include "tokens.h"
 #include "parser.h"
 
 #define MAX_LINE_SIZE      128
@@ -25,7 +25,6 @@ int main(void)
 	Token *ptr;
 
 	char c;
-
 
 	hello_message();
 
