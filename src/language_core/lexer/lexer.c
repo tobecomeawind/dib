@@ -41,8 +41,7 @@ Token *analyze_line(char *lptr, int size)
 			
 
 			if (tempVar = isKeyword(tokenWord)){
-	
-				appendToken(KEYWORDS,
+				appendToken(tempVar->majorType,
 							tempVar->minorType,
 							tempVar->data);		
 			} else {
@@ -50,6 +49,7 @@ Token *analyze_line(char *lptr, int size)
 							NAME,
 							tokenWord);		
 			}		
+
 			free(tempVar);	
 			twptr = tokenWord;
 		} else { // last symbol jump fix

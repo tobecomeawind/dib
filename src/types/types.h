@@ -21,7 +21,7 @@ typedef enum variable_types{
 						 // 	size == 1 byte
 						 // else 
 						 // 	size == CHAR(for example 0b01110001)
-						 //                  char with size 2^4 + 2^5 + 2^6
+						 //                  char with size 2^4 + 2^5 + 2^6 + 1
 						 
 	INT   = 0b00000010,
 	FLOAT = 0b00000100	

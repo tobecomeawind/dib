@@ -7,12 +7,12 @@ static int compare(void* target, void* buffer, int index, bstypes type);
 
 
 int binsearch(void* *buf, int size,
-		      void *target,
+			  void *target,
 			  bstypes type)
 {
-	//-----------------------------------------	
-	//Simple binsearch, but with type off array
-	//-----------------------------------------	
+	//----------------------------------------	
+	//Simple binsearch, but with type of array
+	//----------------------------------------	
 	
 	int low, high, mid;
 	int mediateResult;

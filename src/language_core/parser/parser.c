@@ -11,10 +11,10 @@ static Token  *getToken(void);
 static void  ungetToken(Token *token);
 
 static void mainParsing (void);
-static void parseKeyword(Token *tok);
+static void parseKeyword(void);
 
 
-static void borderDecorator(bordersType btype, void (*func)(void));
+static void borderWrapper(bordersType btype, void (*func)(void));
 static void parseEntity    (void);
 
 
@@ -72,36 +72,41 @@ static void mainParsing(void)
 	
 	Token *tok;
 	
-	parseKeyword(getToken());
+	parseKeyword();
 }
 
 
-static void parseKeyword(Token *tok)
+static void parseKeyword(void)
 {
 	//----------------------------------
 	//Parse the first keyword in command  //command such a ENTITY (..., ...)
 	//----------------------------------  //               LINK   (...<->...)
-
-	Tokens tokenMajorType = tok->majorType;
-	Tokens tokenMinorType = tok->minorType;	
+	
+	/*
 
 	printf("\nMajor: %i Minor: %i Adress: %p\n", tokenMajorType, tokenMinorType, tok);
 
 	if(tokenMajorType == NAME){
-		printf("\nError: Invalid keyword with name \"%s\"", tok->data);	
-		printf("\nExpected keyword\n");
-		return;	
 	}
+	*/
 
 	// ENTITY (Person:Andrey:CHAR)
-	if(isNextToken(KEYWORDS, 0, true, false, false)){
-		switch (tokenMinorType) {
-			case (K_ENTITY):
-				printf("\nEntity check\n");
-				borderDecorator(PARENSES, &parseEntity);
-				break;	
-		}		
+	if(!isNextToken(KEYWORDS, 0, true, false, false)){
+		printf("\nExpected keyword\n");
+		return;		
 	}	
+	
+	Token* tok            = getToken(); 
+	Tokens tokenMajorType = tok->majorType;
+	Tokens tokenMinorType = tok->minorType;	
+
+	switch (tokenMinorType) {
+		case (K_ENTITY):
+			printf("\nEntity check\n");
+			borderWrapper(PARENSES, &parseEntity);
+			break;	
+	}	
+
 }
 
 
@@ -113,20 +118,22 @@ static void parseEntity(void)
 		
 	//ENTITY	
 	//isNextToken(OPEN_PARENS,  false, true);    // (	
-	isNextToken(NAME,     NAME,     false, true, true);        // Person
+	
+	printf("\nStart Parsing Entity Entry\n");
+	isNextToken(NAME,     NAME,     false, true,  true);        // Person
 	//         (...., true,  ....)
 	//         if we`ll check entity type	
 	//checkEntityType())	
-	isNextToken(CLETTERS, COLON,    false, true, true);        // :	
-	isNextToken(NAME,     NAME,     false, true, true);        // Vasya
-	isNextToken(CLETTERS, COLON,    false, true, true);        // :	
+	isNextToken(CLETTERS, COLON,    false, true,  true);        // :	
+	isNextToken(NAME,     NAME,     false, true,  true);        // Vasya
+	isNextToken(CLETTERS, COLON,    false, true,  true);        // :	
 	isNextToken(DATATYPE, 0,        false, false, true);        // CHAR		
 	//check type and name
 	//isNextToken(CLOSE_PARENS, false, true);       // )
 					  //
 					  // ENTITY (Person:Vasya:CHAR)
 					  //
-	printf("\nExcellent!!!\n");	
+	printf("\nStop Parsing Entity Entry\n");
 	//
 	// multiply add entity
 	//
@@ -140,7 +147,7 @@ static void parseEntity(void)
 }
 
 
-static void borderDecorator(bordersType btype, void (*func)(void))
+static void borderWrapper(bordersType btype, void (*func)(void))
 {	
 	//-----------------------------------------------	
 	// Wrap the function(statement) to check borders
@@ -148,9 +155,9 @@ static void borderDecorator(bordersType btype, void (*func)(void))
 	//
 	// SomeKeyword (...:...:...)
 	//          ||
-	// SomeKeyword "("   -      border decorator
-	//              ...:...:... func()
-	//             ")"   -      border decorator
+	// SomeKeyword "("          | border decorator
+	//              ...:...:... | func()
+	//             ")"          | border decorator
 	//------------------------------------------------
 	
 	Tokens openBorder, closeBorder;
@@ -161,10 +168,12 @@ static void borderDecorator(bordersType btype, void (*func)(void))
 			closeBorder = CLOSE_PARENS;
 			break;
 	}
-
+	
+	printf("\nChecking borders\n");
 	isNextToken(BORDERS, openBorder,  false, true, true);        // (	
 	func();
 	isNextToken(BORDERS, closeBorder, false, true, true);        // )
+	printf("\nExcellent\n");
 }
 
 
@@ -211,11 +220,18 @@ static bool isNextToken(Tokens majorType,
 			}	
 		}
 
-	} else {
+	} else if (errorCheck) {
 		printf("\nInvalid expression type\n");	
 	}
 
-	//printf("\nToken type: %3i Data: \"%s\"\n", tokenVar->type, tokenVar->data);
+	/*
+	printf("\n--Token Info--\nData: \"%s\" \nMinor: %3d \nMajor: %3d\n",
+			 tokenVar->data,
+			          tokenMinorType,
+			                     tokenMajorType);
+
+	printf("\n--Check Info--\nMinor: %3d \nMajor: %3d\n", minorType, majorType);
+	*/	
 
 	if (addTokenInTempBuf)
 		ungetToken(tokenVar);
