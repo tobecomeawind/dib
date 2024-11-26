@@ -4,7 +4,7 @@ add_library(${LIBRARY_NAME} "")
 
 target_sources(${LIBRARY_NAME}
 	PRIVATE
-		data.c
+		${CMAKE_CURRENT_LIST_DIR}/data.c
 	PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/data.h
 )

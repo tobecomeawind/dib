@@ -5,7 +5,7 @@
 #include "lexer.h"
 #include "tokens.h"
 #include "parser.h"
-
+#include "node.h"
 
 static Token  *getToken(void);
 static void  ungetToken(Token *token);
@@ -15,15 +15,14 @@ static void parseKeyword(void);
 
 
 static void borderWrapper(bordersType btype, void (*func)(void));
-static void parseEntity    (void);
+static void parseEntity  (void);
 
 
-static bool isDataType (Token  *tptr, bool errorCheck);
-static bool isNextToken(Tokens majorType,
-						Tokens minorType, 
-		                bool   addTokenInTempBuf,
-                        bool   minorCheck,						
-						bool   errorCheck);
+static Token* isNextToken(Tokens majorType,
+						  Tokens minorType, 
+		                  bool   addTokenInTempBuf,
+                          bool   minorCheck,						
+						  bool   errorCheck);
 
 //Token *tokensBuf;
 //Token *tbptr;
@@ -113,27 +112,48 @@ static void parseKeyword(void)
 
 
 static void parseEntity(void)
-{
-	//skipWhiteSpace();	
-		
+{	
 	//ENTITY	
-	//isNextToken(OPEN_PARENS,  false, true);    // (	
 	
+	char*  EntityType, *Name;
+	Tokens DataType;
+	Node*  testNode;
+	//char* EntityType
+
 	printf("\nStart Parsing Entity Entry\n");
-	isNextToken(NAME,     NAME,     false, true,  true);        // Person
+	
+	// Person
+	EntityType = isNextToken(NAME, NAME, false, true , true)->data;
+	
 	//         (...., true,  ....)
 	//         if we`ll check entity type	
 	//checkEntityType())	
-	isNextToken(CLETTERS, COLON,    false, true,  true);        // :	
-	isNextToken(NAME,     NAME,     false, true,  true);        // Vasya
-	isNextToken(CLETTERS, COLON,    false, true,  true);        // :	
-	isNextToken(DATATYPE, 0,        false, false, true);        // CHAR		
+	
+	// :	
+	isNextToken(CLETTERS, COLON, false, true,  true);                  
+	
+	// Vasya	
+	Name       = isNextToken(NAME, NAME, false, true , true)->data;
+
+	// :	
+	isNextToken(CLETTERS, COLON, false, true,  true);	
+	
+	// CHAR
+	DataType = isNextToken(DATATYPE, 0,  false, false, true)->minorType;  
+	
 	//check type and name
-	//isNextToken(CLOSE_PARENS, false, true);       // )
 					  //
 					  // ENTITY (Person:Vasya:CHAR)
 					  //
+
 	printf("\nStop Parsing Entity Entry\n");
+
+	
+	testNode  = node_construct(EntityType,
+			                   data_construct((void*)Name,
+					           DataType));	
+		
+
 	//
 	// multiply add entity
 	//
@@ -179,26 +199,32 @@ static void borderWrapper(bordersType btype, void (*func)(void))
 
 
 
-static bool isNextToken(Tokens majorType,
+static Token* isNextToken(Tokens majorType,
 						Tokens minorType, 
 		                bool   addTokenInTempBuf,
                         bool   minorCheck,						
 						bool   errorCheck)
 {
+	//------------------------------------
+	// If all conditions true
+	//    Returns token
+	// else
+	//    Returns NULL
+	//------------------------------------
+
 	Token  *tokenVar       = getToken();
 	Tokens  tokenMajorType = tokenVar->majorType;
 	Tokens  tokenMinorType = tokenVar->minorType;
-
-	// fucking kostili((((((((
-	bool result = false;	
+	
+	if (addTokenInTempBuf)
+		ungetToken(tokenVar);
 
 	if(tokenMajorType == majorType){
-		result = true;
 
 	    if(minorCheck && !(tokenMinorType == minorType)){
-		
-			result = false;	
 			
+			tokenVar = NULL;	
+
 			if(errorCheck){
 				// if we need invoke a error	
 				printf("\n Error: expected ");
@@ -220,8 +246,11 @@ static bool isNextToken(Tokens majorType,
 			}	
 		}
 
-	} else if (errorCheck) {
-		printf("\nInvalid expression type\n");	
+	} else {
+		if(errorCheck)
+			printf("\nInvalid expression type\n");	
+		
+		tokenVar = NULL;	
 	}
 
 	/*
@@ -233,10 +262,8 @@ static bool isNextToken(Tokens majorType,
 	printf("\n--Check Info--\nMinor: %3d \nMajor: %3d\n", minorType, majorType);
 	*/	
 
-	if (addTokenInTempBuf)
-		ungetToken(tokenVar);
 
-	return result;
+	return tokenVar;
 }
 
 

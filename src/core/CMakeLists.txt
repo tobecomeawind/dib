@@ -1,6 +1,5 @@
 set(LIBRARY_NAME core)
 
-
 get_filename_component(PARENT_DIR ${CMAKE_CURRENT_LIST_DIR}/.. ABSOLUTE)
 
 include_directories(
@@ -22,7 +21,6 @@ add_library(${LIBRARY_NAME}
 	$<TARGET_OBJECTS:node>
 	$<TARGET_OBJECTS:relation>
 )
-
 
 
 target_link_libraries(${LIBRARY_NAME}

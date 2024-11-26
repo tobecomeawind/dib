@@ -9,7 +9,6 @@ target_sources(${LIBRARY_NAME}
 		${CMAKE_CURRENT_LIST_DIR}/lexer.h
 )
 
-
 target_include_directories(${LIBRARY_NAME}
 	PUBLIC	
 		${CMAKE_CURRENT_LIST_DIR}

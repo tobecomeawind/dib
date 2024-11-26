@@ -4,7 +4,7 @@ add_library(${LIBRARY_NAME} "")
 
 target_sources(${LIBRARY_NAME}
 	PRIVATE
-		node.c
+		${CMAKE_CURRENT_LIST_DIR}/node.c
 	PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/node.h
 )
