@@ -19,7 +19,7 @@ include_directories(${CMAKE_CURRENT_LIST_DIR}/../algs
 
 #[[ Building Libraries ]] 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../algs 
-                 ${CMAKE_CURRENT_SOURCE_DIR}/algs)
+	             ${CMAKE_CURRENT_BINARY_DIR}/algs)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../hash
 	             ${CMAKE_CURRENT_BINARY_DIR}/hash)
