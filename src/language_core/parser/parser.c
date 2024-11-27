@@ -9,6 +9,8 @@
 
 static Token  *getToken(void);
 static void  ungetToken(Token *token);
+static void initTokensTempBuf(void);
+static void freeTokensTempBuf(void);
 
 static void mainParsing (void);
 static void parseKeyword(void);
@@ -24,34 +26,36 @@ static Token* isNextToken(Tokens majorType,
                           bool   minorCheck,						
 						  bool   errorCheck);
 
-//Token *tokensBuf;
-//Token *tbptr;
+
+// Extern buffer declaration
+Token *tokensBuf;
+Token *tbptr    ;   // token buf pointer
+
+// Intern temp buffer declaration
+Token *tokensTempBuf;
+Token *ttbptr;      // token temp buf pointer
 
 
-Token  *tokensBuf;
-Token  *tbptr    ;  // token buf pointer
 
-
-
-
-void startParsing(Token *bptr)
+void startParsing(void)
 {
 	//--------------------------------
 	//Extern function to start parsing
 	//and init global variables
 	//--------------------------------
 	
-	if(!bptr)
+	if(!tbptr)
 		return;
 
 	//tokensBuf = bptr;	
 	//tbptr = bptr;	
 	
+	initTokensTempBuf();	
+
 	mainParsing();
 
-	tbptr     = NULL;
-	tokensBuf = NULL;
-	//free(tokensBuf);
+	freeTokensBuf();
+	freeTokensTempBuf();
 }
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -81,18 +85,14 @@ static void parseKeyword(void)
 	//Parse the first keyword in command  //command such a ENTITY (..., ...)
 	//----------------------------------  //               LINK   (...<->...)
 	
-	/*
 
-	printf("\nMajor: %i Minor: %i Adress: %p\n", tokenMajorType, tokenMinorType, tok);
 
-	if(tokenMajorType == NAME){
-	}
-	*/
+    //printf("\nMajor: %i Minor: %i Adress: %p\n", tokenMajorType, tokenMinorType, tok);
 
 	// ENTITY (Person:Andrey:CHAR)
 	if(!isNextToken(KEYWORDS, 0, true, false, false)){
 		printf("\nExpected keyword\n");
-		return;		
+		return;	
 	}	
 	
 	Token* tok            = getToken(); 
@@ -267,32 +267,6 @@ static Token* isNextToken(Tokens majorType,
 }
 
 
-/*
-static bool isDataType(Token *tptr, bool errorCheck)
-{
-	//Kostil function	
-	Tokens tokenType = tptr->type;
-	bool   result    = false;
-
-	switch (tokenType){
-		case(K_CHAR):
-		case(K_INT):
-		case(K_FLOAT):
-			result = true;	
-			break;
-		default:
-			if(errorCheck){
-				printf("\nError: invalid datatype \"%s\" \n", tptr->data);
-				//exit
-			}
-			break;
-	}
-	
-	return result;	
-}
-*/
-
-
 //if tokenTempBuf not null
 //------------------------------------------
 //Tokens get and unget
@@ -307,8 +281,8 @@ static bool isDataType(Token *tptr, bool errorCheck)
 //buf = buf from startParsing()
 //-----------------------------
 
-Token  tokensTempBuf[TOKEN_TEMP_SIZE];
-Token *ttbptr = tokensTempBuf; // token temp buf pointer
+//Token  tokensTempBuf[TOKEN_TEMP_SIZE];
+//Token *ttbptr = tokensTempBuf; // token temp buf pointer
 
 
 static Token *getToken(void)
@@ -334,4 +308,18 @@ static void ungetToken(Token *token)
 	ttbptr++;
 }
 
+
+
+
+static void initTokensTempBuf(void)
+{
+    tokensTempBuf = (Token*) malloc(sizeof(Token) * TOKEN_TEMP_SIZE);
+	ttbptr        = tokensTempBuf; // token temp buf pointer											  
+}
+
+static void freeTokensTempBuf(void)
+{
+	free(tokensTempBuf);
+	ttbptr = NULL;	
+}
 

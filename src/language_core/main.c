@@ -36,11 +36,10 @@ int main(void)
 		}
 			
 		lineBuf[lineBufIndex] = '\0';	
-		ptr = analyze_line(lineBuf, lineBufIndex);
+		analyze_line(lineBuf, lineBufIndex);
 		
-		startParsing(ptr);
+		startParsing();
 
-		free(ptr);
 		lineBufIndex = 0;
 	}	
 

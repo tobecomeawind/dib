@@ -11,7 +11,8 @@
 static void appendToken(Tokens majType, // majorType
 						Tokens minType, // minorType
 						char *data);    // word
-static void initExternBuf(void);
+										
+static void initTokensBuf(void);
 
 
 
@@ -28,7 +29,7 @@ Token *analyze_line(char *lptr, int size)
 							
 	Token  *tempVar;
 	
-	initExternBuf();
+	initTokensBuf();
 
 	while(*lptr != '\0'){
 		if (isalpha(*lptr)) {
@@ -134,9 +135,14 @@ static void appendToken(Tokens majType, // majorType
 }
 
 
-static void initExternBuf(void)
+static void initTokensBuf(void)
 {
 	tokensBuf = (Token *) malloc(sizeof(Token) * MAX_TOKEN_BUF_SIZE);
 	tbptr     = tokensBuf;  // token buf pointer
 }
 
+void freeTokensBuf(void)
+{
+	tbptr = NULL;
+	free(tokensBuf);
+}

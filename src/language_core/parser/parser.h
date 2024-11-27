@@ -3,11 +3,12 @@
 
 #define TOKEN_TEMP_SIZE 10
 
-void startParsing(Token *bptr);
+void startParsing(void);
 
 typedef enum {
 	PARENSES,
 
 } bordersType;
+
 
 #endif
