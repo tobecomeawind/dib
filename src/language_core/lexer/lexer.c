@@ -32,7 +32,7 @@ Token *analyze_line(char *lptr, int size)
 	initTokensBuf();
 
 	while(*lptr != '\0'){
-		if (isalpha(*lptr)) {
+		if (isalnum(*lptr)) {
 			
 			do{
 				*twptr++ = *lptr;

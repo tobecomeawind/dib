@@ -2,6 +2,7 @@
 #define DATA_H
 
 #include "types.h"
+#include "tokens.h"
 #include <stdint.h>
 
 typedef struct Data{
@@ -9,7 +10,7 @@ typedef struct Data{
 	void*   info;
 } Data;
 
-Data* data_construct(void* data, uint8_t type);
+Data* data_construct(void* data, Tokens type);
 void  data_destruct (Data* dptr);
 
 #endif

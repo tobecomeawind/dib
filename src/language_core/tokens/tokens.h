@@ -42,7 +42,6 @@ typedef enum
 
 } Tokens;
 
-
 typedef struct {
 	Tokens       majorType; 
 	Tokens       minorType;

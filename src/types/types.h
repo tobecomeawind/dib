@@ -27,4 +27,6 @@ typedef enum variable_types{
 	FLOAT = 0b00000100	
 } vtypes; // variable types
 
+
+
 #endif
