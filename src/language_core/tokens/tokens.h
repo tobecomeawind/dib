@@ -49,10 +49,11 @@ typedef struct {
 } Token;
 
 
-Token  *isKeyword   (char *word);
-bool    isParenses  (char *c);
-bool    isColon     (char *c);
-bool    isWhiteSpace(char *c);
-bool    isComma     (char *c);
+Token *isKeyword   (char *word);
+bool   isParenses  (char *c);
+bool   isColon     (char *c);
+bool   isWhiteSpace(char *c);
+bool   isComma     (char *c);
+bool   isAlNum     (char *c);
 
 #endif

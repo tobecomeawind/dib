@@ -2,29 +2,36 @@
 #include <stdlib.h>
 #include <string.h>
 
-static vtypes TokenToVarType(Tokens, void*);
+static vtypes TokenToVarType(Tokens, char*);
 
-Data* data_construct(void* data, Tokens type)
+Data* data_construct(char* data, Tokens type)
 {
-	Data* dptr; // data pointer	
+	Data* dptr; // data pointer
 	
 	dptr = (Data*) malloc(sizeof(Data));
 	
 	dptr->type = TokenToVarType(type, data);
-	dptr->info = data;	
+	dptr->info = (void*) data;	
 
 	return dptr;
 }
 
 
-static vtypes TokenToVarType(Tokens token, void* data)
+static vtypes TokenToVarType(Tokens token, char* data)
 {
+	int    intVar;
+	double floatVar;	
+
 	switch(token){
 		case K_CHAR:
 			return CHAR | strlen((char*) data);	
-		case K_INT:	
+		case K_INT:
+			intVar = atoi(data);	
+			data   = (char*) &intVar;
 			return INT;
 		case K_FLOAT:
+			floatVar = atof(data);	
+			data     = (char*) &floatVar;
 			return FLOAT;
 		default:
 			return 0;	

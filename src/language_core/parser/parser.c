@@ -150,7 +150,7 @@ static void parseEntity(void)
 
 	
 	testNode  = node_construct(EntityType,
-			                   data_construct((void*)Name,
+			                   data_construct(Name,
 					           DataType));	
 		
 

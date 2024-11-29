@@ -10,8 +10,10 @@ echo
 
 if [ ! -d build ]
 then
+	echo
 	echo "'build' folder doesn't exist"
 	echo "Creating 'build' folder"
+	echo
 	mkdir build	
 fi
 

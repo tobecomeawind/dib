@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 Token* isKeyword(char *word)
 {
@@ -71,5 +72,10 @@ bool isComma(char *c)
 bool isWhiteSpace(char *c)
 {
 	return *c == ' ' || *c == '\t';
+};
+
+bool isAlNum(char *c)
+{
+	return isalnum(*c) || *c == '.';
 };
 

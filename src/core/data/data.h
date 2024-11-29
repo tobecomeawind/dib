@@ -10,7 +10,7 @@ typedef struct Data{
 	void*   info;
 } Data;
 
-Data* data_construct(void* data, Tokens type);
+Data* data_construct(char* data, Tokens type);
 void  data_destruct (Data* dptr);
 
 #endif

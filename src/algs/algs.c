@@ -64,6 +64,6 @@ static int compare(void* target, void* buffer, int index, bstypes type)
 		case(bsINT):	
 			return *((int*) target) - (( (int*)buffer )[index]);		
 		case(bsFLOAT):	
-			return (int) (*((float*) target) - (( (float*)buffer )[index]));		
+			return (int) (*((float*) target) - (( (float*)buffer )[index]));	
 	}	
 }
