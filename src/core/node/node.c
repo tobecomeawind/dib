@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 
-Node* node_construct(char* name, Data* data)
+Node* node_construct(char* name, char* data, Tokens dataTypeToken)
 {
 	Node* nptr;	             // node pointer
 
@@ -15,7 +15,7 @@ Node* node_construct(char* name, Data* data)
 	nptr = (Node*) malloc(sizeof(Node));
 
 	nptr->type      = &etptr;
-	nptr->data      = data;
+	nptr->data      = data_construct(data, dataTypeToken);
 	nptr->rsize     = 0;
 	nptr->relations = (Relation**) malloc(sizeof(Relation*)); 
 	

@@ -4,14 +4,15 @@ project(cli)
 
 set(CMAKE_BUILD_TYPE Debug)
 
-include_directories(${CMAKE_CURRENT_LIST_DIR}/../algs 
-				   	${CMAKE_CURRENT_LIST_DIR}/../hash
+include_directories( 
+				   	${CMAKE_CURRENT_LIST_DIR}/tokens
+				   	${CMAKE_CURRENT_LIST_DIR}/../algs
+					${CMAKE_CURRENT_LIST_DIR}/../hash
 					${CMAKE_CURRENT_LIST_DIR}/../core/entity_type
 	                ${CMAKE_CURRENT_LIST_DIR}/../core/data
 	                ${CMAKE_CURRENT_LIST_DIR}/../core/relation
 	                ${CMAKE_CURRENT_LIST_DIR}/../core/node
 	                ${CMAKE_CURRENT_LIST_DIR}/../types 
-				   	${CMAKE_CURRENT_LIST_DIR}/tokens
 	                ${CMAKE_CURRENT_LIST_DIR}/lexer
 	                ${CMAKE_CURRENT_LIST_DIR}/parser
 )
@@ -49,8 +50,8 @@ target_link_libraries(${PROJECT_NAME}
 		parser
 		algs
 		
-		data
 		node
+		data
 		hash
 		relation
 		m

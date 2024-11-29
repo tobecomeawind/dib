@@ -17,7 +17,7 @@ typedef struct Node{
 } Node;
 
 
-Node* node_construct(char* name, Data* data);
+Node* node_construct(char* name, char* data, Tokens dataTypeToken);
 void  node_destruct (Node* node);
 
 void add_relation(Node* node, Relation* rel);

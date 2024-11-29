@@ -150,11 +150,11 @@ static void parseEntity(void)
 
 	
 	testNode  = node_construct(EntityType,
-			                   data_construct(Name,
-					           DataType));	
+			                   Name,
+					           DataType);	
 		
 
-	//
+
 	// multiply add entity
 	//
 	// Example
@@ -162,7 +162,7 @@ static void parseEntity(void)
 	//
 	if(isNextToken(CLETTERS, COMMA, true, true, false)){
 		getToken();    // skip "," token
-		parseEntity(); // 	
+		parseEntity(); 	
 	}
 }
 
