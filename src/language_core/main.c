@@ -8,7 +8,15 @@
 #include "tokens.h"
 #include "parser.h"
 
-#define MAX_LINE_SIZE      128
+#define MAX_LINE_SIZE 128
+
+static void hello_message(void);
+
+void invokeCliIteration(void);
+void invokeCliError(char*);
+
+static char   lineBuf[MAX_LINE_SIZE]; // command line
+static size_t lineBufIndex = 0;
 
 int main(void)
 {
@@ -17,39 +25,47 @@ int main(void)
 	//Manager  CLI commands//
 	//---------------------//
 	
-	void hello_message(void);
-
-	char   lineBuf[MAX_LINE_SIZE];
-	size_t lineBufIndex = 0;	
 
 	Token *ptr;
 
-	char c;
-
 	hello_message();
 
-	while(true){
-		printf("\ndib-cli >>> ");
-
-		while(((c = getchar()) != '\n') && (lineBufIndex < MAX_LINE_SIZE)){
-			lineBuf[lineBufIndex++] = c;				
-		}
-			
-		lineBuf[lineBufIndex] = '\0';	
-		analyze_line(lineBuf, lineBufIndex);
-		
-		startParsing();
-
-		lineBufIndex = 0;
-	}	
-
+	for(;;) {
+		invokeCliIteration();
+	}
 
 	return 0;
 }
 
 
+void invokeCliIteration(void)
+{
+	char letter;
 
-void hello_message(void)
+	printf("\ndib-cli >>> ");
+
+	while( ( (letter = getchar()) != '\n') && (lineBufIndex < MAX_LINE_SIZE) ){
+		lineBuf[lineBufIndex++] = letter;	
+	}
+		
+	lineBuf[lineBufIndex] = '\0';	
+	analyze_line(lineBuf, lineBufIndex);
+	
+	lineBufIndex = 0;	
+	
+	startParsing();
+}	
+
+
+void invokeCliError(char* errorWord)
+{
+	printf("\nError: %s\n", errorWord);
+	lineBufIndex = 0;
+	invokeCliIteration();	
+}
+
+
+static void hello_message(void)
 {
 	//----------------------------
 	//The first output of programm

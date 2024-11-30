@@ -26,6 +26,9 @@ static Token* isNextToken(Tokens majorType,
                           bool   minorCheck,						
 						  bool   errorCheck);
 
+extern void invokeCliError(char*);
+static void errorCall (Token* token, Tokens expectedType);
+static char* errorWordCreate(char* expected, char* given);
 
 // Extern buffer declaration
 Token *tokensBuf;
@@ -88,7 +91,7 @@ static void parseKeyword(void)
 
 	// ENTITY (Person:Andrey:CHAR)
 	if(!isNextToken(KEYWORDS, 0, true, false, false)){
-		printf("\nExpected keyword\n");
+		invokeCliError("Expected Keyword");	
 		return;	
 	}	
 	
@@ -120,8 +123,6 @@ static void parseEntity(void)
 	char*  EntityType, *Name;
 	Tokens DataType;
 	Node*  testNode;
-
-	printf("\nStart Parsing Entity Entry\n");
 	
 	// Person
 	EntityType = isNextToken(NAME, NAME, false, true , true)->data;
@@ -146,8 +147,6 @@ static void parseEntity(void)
 					  //
 					  // ENTITY (Person:Vasya:CHAR)
 					  //
-
-	printf("\nStop Parsing Entity Entry\n");
 
 	
 	testNode  = node_construct(EntityType,
@@ -188,11 +187,9 @@ static void borderWrapper(bordersType btype, void (*func)(void))
 			break;
 	}
 	
-	printf("\nChecking borders\n");
 	isNextToken(BORDERS, openBorder,  false, true, true);        // (	
 	func();
 	isNextToken(BORDERS, closeBorder, false, true, true);        // )
-	printf("\nExcellent\n");
 }
 
 
@@ -222,47 +219,74 @@ static Token* isNextToken(Tokens majorType,
 
 	    if(minorCheck && !(tokenMinorType == minorType)){
 			
+			if(errorCheck)
+				errorCall(tokenVar, minorType);
+				
 			tokenVar = NULL;	
-
-			if(errorCheck){
-				// if we need invoke a error	
-				printf("\n Error: expected ");
-				switch(minorType){
-					case(OPEN_PARENS):
-						printf("\"(\"");
-						break;	
-					case(CLOSE_PARENS):
-						printf("\")\"");
-						break;	
-					case(NAME):
-						printf("\"Name\"");
-						break;
-					case(COLON):
-						printf("\":\"");	
-						break;
-				}
-				printf(" \n");
-			}	
 		}
 
 	} else {
 		if(errorCheck)
-			printf("\nInvalid expression type\n");	
+			errorCall(tokenVar, (minorCheck) ? (minorType) : (majorType));	
 		
 		tokenVar = NULL;	
 	}
 
-	/*
-	printf("\n--Token Info--\nData: \"%s\" \nMinor: %3d \nMajor: %3d\n",
-			 tokenVar->data,
-			          tokenMinorType,
-			                     tokenMajorType);
-
-	printf("\n--Check Info--\nMinor: %3d \nMajor: %3d\n", minorType, majorType);
-	*/	
-
-
 	return tokenVar;
+}
+
+
+static void errorCall (Token* token, Tokens expectedType)
+{	
+	char* expectedErrorWord, *errorString;
+	char* givenData = (token->data) ? (token->data) : "nothing";
+
+	switch(expectedType){
+		case(OPEN_PARENS):
+			expectedErrorWord = "(";
+			break;	
+		case(CLOSE_PARENS):
+			expectedErrorWord = ")";
+			break;	
+		case(NAME):
+			expectedErrorWord = "Name";
+			break;
+		case(COLON):
+			expectedErrorWord = ":";
+			break;
+		case(K_ENTITY):
+			expectedErrorWord = "Entity";
+			break;
+		case(K_CHAR):
+			expectedErrorWord = "CHAR";
+			break;
+		case(K_FLOAT):
+			expectedErrorWord = "FLOAT";
+			break;
+		case(K_INT):
+			expectedErrorWord = "INT";
+			break;
+		case(DATATYPE):
+			expectedErrorWord = "Data Type";
+			break;
+		case(KEYWORDS):
+			expectedErrorWord = "Keyword";
+			break;
+	}
+
+	asprintf(&errorString,
+            "Expected: \"%s\" ~~~ Given: \"%s\"",
+             expectedErrorWord,   givenData);
+
+	invokeCliError(errorString);
+
+	free(errorString);
+}
+
+
+static char* errorWordCreate(char* expected, char* given)
+{
+	//return string;
 }
 
 

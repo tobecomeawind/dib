@@ -15,7 +15,6 @@ static void appendToken(Tokens majType, // majorType
 static void initTokensBuf(void);
 
 
-
 Token *analyze_line(char *lptr, int size)
 {
 
@@ -148,3 +147,5 @@ void freeTokensBuf(void)
 	tbptr = NULL;
 	free(tokensBuf);
 }
+
+
