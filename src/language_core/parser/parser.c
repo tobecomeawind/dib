@@ -59,9 +59,6 @@ void startParsing(void)
 }
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//Need fix tokensBuf
-//Need fix tokensBuf
-//Need fix datatypes keyword
 //Need fix all memory
 //perepisat` kostili
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -103,9 +100,14 @@ static void parseKeyword(void)
 		case (K_ENTITY):
 			printf("\nEntity check\n");
 			borderWrapper(PARENSES, &parseEntity);
+			break;
+		case (K_ENTITIES):
+			printf("\nEntities check\n");
+			break;	
+		case (K_LINK):
+			printf("\nLink check\n");
 			break;	
 	}	
-
 }
 
 
@@ -118,7 +120,6 @@ static void parseEntity(void)
 	char*  EntityType, *Name;
 	Tokens DataType;
 	Node*  testNode;
-	//char* EntityType
 
 	printf("\nStart Parsing Entity Entry\n");
 	
@@ -139,7 +140,7 @@ static void parseEntity(void)
 	isNextToken(CLETTERS, COLON, false, true,  true);	
 	
 	// CHAR
-	DataType = isNextToken(DATATYPE, 0,  false, false, true)->minorType;  
+	DataType   = isNextToken(DATATYPE, 0,  false, false, true)->minorType;  
 	
 	//check type and name
 					  //
@@ -153,8 +154,6 @@ static void parseEntity(void)
 			                   Name,
 					           DataType);	
 		
-
-
 	// multiply add entity
 	//
 	// Example
@@ -281,9 +280,6 @@ static Token* isNextToken(Tokens majorType,
 //buf = buf from startParsing()
 //-----------------------------
 
-//Token  tokensTempBuf[TOKEN_TEMP_SIZE];
-//Token *ttbptr = tokensTempBuf; // token temp buf pointer
-
 
 static Token *getToken(void)
 {
@@ -307,9 +303,6 @@ static void ungetToken(Token *token)
 	*ttbptr = *token;
 	ttbptr++;
 }
-
-
-
 
 static void initTokensTempBuf(void)
 {

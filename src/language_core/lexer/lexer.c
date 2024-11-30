@@ -26,14 +26,16 @@ Token *analyze_line(char *lptr, int size)
 		
 	char   *tokenWord = (char*) malloc(sizeof(char) * MAX_WORD_SIZE);
 	char   *twptr     = tokenWord;	// token word pointer
-							
+	
+
+
 	Token  *tempVar;
 	
 	initTokensBuf();
 
 	while(*lptr != '\0'){
 		if (isAlNum(lptr)) {
-			
+		
 			do{
 				*twptr++ = *lptr;
 			} while(isAlNum(++lptr));

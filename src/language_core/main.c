@@ -29,7 +29,7 @@ int main(void)
 	hello_message();
 
 	while(true){
-		printf("dib-cli >>> ");
+		printf("\ndib-cli >>> ");
 
 		while(((c = getchar()) != '\n') && (lineBufIndex < MAX_LINE_SIZE)){
 			lineBuf[lineBufIndex++] = c;				
