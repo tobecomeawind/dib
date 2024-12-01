@@ -7,7 +7,7 @@
 long int hash(char* val)
 {
 	long int hashval = 0;
-	int len_s   = strlen(val);
+	int len_s        = strlen(val);
 	
 	for(int i = 0; i < len_s; i++)
 		hashval += (long) pow(SEED, len_s - (i+1)) * val[i];

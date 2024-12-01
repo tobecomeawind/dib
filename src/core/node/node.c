@@ -5,7 +5,7 @@
 
 Node* node_construct(char* name, char* data, Tokens dataTypeToken)
 {
-	Node* nptr;	             // node pointer
+	Node* nptr;	// node pointer
 
 	EntityType etptr = {
 		.typename = name,
