@@ -56,4 +56,6 @@ bool   isWhiteSpace(char *c);
 bool   isComma     (char *c);
 bool   isAlNum     (char *c);
 
+char*  convertTokenToString(Tokens token);
+
 #endif

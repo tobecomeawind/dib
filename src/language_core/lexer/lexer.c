@@ -14,6 +14,8 @@ static void appendToken(Tokens majType, // majorType
 										
 static void initTokensBuf(void);
 
+extern void invokeCliError(char *);
+
 
 Token *analyze_line(char *lptr, int size)
 {
@@ -89,7 +91,7 @@ Token *analyze_line(char *lptr, int size)
 			
 			} else {
 				if(!isWhiteSpace(lptr))	
-					printf("\n--- \"%c\" invalid---\n", *lptr);	
+					printf("\n\"Undefined char - %c\"\n", *lptr);		
 			}
 		
 			twptr = tokenWord;

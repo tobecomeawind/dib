@@ -79,3 +79,46 @@ bool isAlNum(char *c)
 	return isalnum(*c) || *c == '.';
 };
 
+
+char* convertTokenToString(Tokens token)
+{	
+	char* stringToken;
+
+	switch(token){
+		case(OPEN_PARENS):
+			stringToken = "(";
+			break;	
+		case(CLOSE_PARENS):
+			stringToken = ")";
+			break;	
+		case(NAME):
+			stringToken = "Name";
+			break;
+		case(COLON):
+			stringToken = ":";
+			break;
+		case(K_ENTITY):
+			stringToken = "Entity";
+			break;
+		case(K_CHAR):
+			stringToken = "CHAR";
+			break;
+		case(K_FLOAT):
+			stringToken = "FLOAT";
+			break;
+		case(K_INT):
+			stringToken = "INT";
+			break;
+		case(DATATYPE):
+			stringToken = "Data Type";
+			break;
+		case(KEYWORDS):
+			stringToken = "Keyword";
+			break;
+	}
+
+	return stringToken;
+}
+
+
+
