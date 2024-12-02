@@ -1,11 +1,13 @@
 #include "node.h"
 #include "hash.h"
+#include "serialization.h"
 
 #include <stdlib.h>
 
 Node* node_construct(char* name, char* data, Tokens dataTypeToken)
 {
-	Node* nptr;	// node pointer
+	Node*  nptr;	// node pointer
+	Node** testnptr; 
 
 	EntityType etptr = {
 		.typename = name,
@@ -18,7 +20,11 @@ Node* node_construct(char* name, char* data, Tokens dataTypeToken)
 	nptr->data      = data_construct(data, dataTypeToken);
 	nptr->rsize     = 0;
 	nptr->relations = (Relation**) malloc(sizeof(Relation*)); 
-	
+
+	testnptr = &nptr;	
+
+	nodeArraySerialize(testnptr, 1);
+
 	return nptr;
 }
 

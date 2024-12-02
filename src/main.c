@@ -9,14 +9,11 @@ int main(void)
 {	
 	Node *Tom, *Lucy;	
 
-	Tom  = node_construct("Person",
-			              data_construct((void*)"Tom",
-					      CHAR));	
+	Tom  = node_construct("Person", "Tom",  K_CHAR);	
 	
-	Lucy = node_construct("Person",
-			              data_construct((void*)"Lucy",
-						  CHAR));	
-
+	Lucy = node_construct("Person", "Lucy", K_CHAR);	
+	
+	/*
 	add_relation(Tom,
 			     relation_construct("Loves",
 				 Lucy));	
@@ -28,7 +25,7 @@ int main(void)
 	
 	node_destruct(Tom);
 	node_destruct(Lucy);
-	
+	*/	
 	return 0;
 }
 

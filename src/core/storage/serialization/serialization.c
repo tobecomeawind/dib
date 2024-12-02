@@ -1,18 +1,14 @@
-#include "node.h"
-
 #include <stdio.h>
 #include <stdint.h>
 
-#define TEMP_FILE    "entities.tmp"
+#include "deserialization.h"
+#include "serialization.h"
+#include "node.h"
+#include "files.h"
+#include "types.h"
 
-#define ENTITY_TYPE 0b00000001
-#define DATA        0b00000010
-#define DATA_TYPE   0b00000010
 
-
-static Node** getEntitiesArray(void);
-
-void nodeSerialize(Node* nodeArray[], size_t arraySize)
+void nodeArraySerialize(Node** nodeArray, size_t arraySize)
 {
 	//----------------------------------
 	//Adding nodes to entities temp file
@@ -21,59 +17,50 @@ void nodeSerialize(Node* nodeArray[], size_t arraySize)
 	FILE*  tmpfp;
 	Node** entitiesArray;
 	
-	Node*    currentNode; 
-	long int hash;
-	void*    data;
-	vtypes   dataType;		
+	Node*  currentNode; 
 
 	entitiesArray = getEntitiesArray();
 
-	tmpfp = fopen();
+	tmpfp = fopen(TEMP_FILE, "w");
 
 	if (!entitiesArray) {
 	
-		fputc(size, tmpfp);
+		fputc(arraySize, tmpfp);
 
 		for(size_t i = 0; i < arraySize; i++) {
 		
 			currentNode = nodeArray[i];
 			
-			// Entity starts
-			fputc(ENTITY_TYPE, tmpfp);
-		
-			hash = currentNode->type.hash;				
-			fputc((wchar_t)hash, tmpfp);		
-			
-			// Data starts
-			fputc(DATA,        tmpfp);		
-			data   = currentNode->data->info;	
-			fwrite(data, sizeof(data), sizeof(data) / sizeof(uint8_t), tmpfp); 
-
-			// Data Type starts
-			fputc(DATA_TYPE,   tmpfp);		
-			dataType = currentNode->data->type;	
-			fputc(dataType, tmpfp);	
+			nodeSerialize(currentNode, tmpfp);		
 		}		
 	}
 
+	fputc(EOF, tmpfp);
 	fclose(tmpfp);
 }
 
-static Node** getEntitiesArray(void)
-{
-	FILE*    tmpfp;	
-	uint8_t  countEntities;
 
-	tmpfp = fopen(TEMP_FILE, "r");	
-
-	if (!tmpfp) {
-		printf("\nEntities Temp file didn't created yet\n");	
-		return 0;
-	}
-
-	if ((countEntities = fgetc(fp)) == EOF) 
-		return NULL;
-
+void nodeSerialize(Node* node, FILE* fp)
+{	
+	long int hash;     // Entity type hash
+	void*    data;     // Data
+	vtypes   dataType; // Data Type	
 		
-	fclose(tmpfp);
+	// Entity starts
+	fputc(ENTITY_TYPE,    fp);
+
+	hash = node->type->hash;	
+	
+	for(size_t i = sizeof(long int) / sizeof(uint8_t); i > 0; i--)
+		fputc((char)(hash >> i * 8), fp);
+	
+	// Data starts
+	fputc(DATA,           fp);		
+	data   = node->data->info;	
+	fwrite(data, sizeof(data), sizeof(data) / sizeof(uint8_t), fp); 
+
+	// Data Type starts
+	fputc(DATA_TYPE,      fp);		
+	dataType = node->data->type;	
+	fputc(dataType, fp);		
 }
