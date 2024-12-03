@@ -4,5 +4,6 @@
 #include "node.h"
 
 Node** getEntitiesArray(void);
+static Node* entityDeserialize(FILE* fp);
 
 #endif

@@ -23,7 +23,7 @@ Node* node_construct(char* name, char* data, Tokens dataTypeToken)
 
 	testnptr = &nptr;	
 
-	nodeArraySerialize(testnptr, 1);
+	entityArraySerialize(testnptr, 1);
 
 	return nptr;
 }

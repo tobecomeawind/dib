@@ -8,7 +8,7 @@
 #include "types.h"
 
 
-void nodeArraySerialize(Node** nodeArray, size_t arraySize)
+void entityArraySerialize(Node** nodeArray, size_t arraySize)
 {
 	//----------------------------------
 	//Adding nodes to entities temp file
@@ -20,6 +20,7 @@ void nodeArraySerialize(Node** nodeArray, size_t arraySize)
 	Node*  currentNode; 
 
 	entitiesArray = getEntitiesArray();
+	entitiesArray = NULL;
 
 	tmpfp = fopen(TEMP_FILE, "w");
 
@@ -31,7 +32,7 @@ void nodeArraySerialize(Node** nodeArray, size_t arraySize)
 		
 			currentNode = nodeArray[i];
 			
-			nodeSerialize(currentNode, tmpfp);		
+			entitySerialize(currentNode, tmpfp);		
 		}		
 	}
 
@@ -40,27 +41,26 @@ void nodeArraySerialize(Node** nodeArray, size_t arraySize)
 }
 
 
-void nodeSerialize(Node* node, FILE* fp)
+void entitySerialize(Node* node, FILE* fp)
 {	
 	long int hash;     // Entity type hash
 	void*    data;     // Data
 	vtypes   dataType; // Data Type	
 		
 	// Entity starts
-	fputc(ENTITY_TYPE,    fp);
 
 	hash = node->type->hash;	
+	fputc(sizeof(hash),     fp);
 	
 	for(size_t i = sizeof(long int) / sizeof(uint8_t); i > 0; i--)
 		fputc((char)(hash >> i * 8), fp);
 	
 	// Data starts
-	fputc(DATA,           fp);		
-	data   = node->data->info;	
-	fwrite(data, sizeof(data), sizeof(data) / sizeof(uint8_t), fp); 
+	data   = node->data->info;
+	fputc(sizeof(data),     fp);		
+	fprintf(fp, data);
 
 	// Data Type starts
-	fputc(DATA_TYPE,      fp);		
 	dataType = node->data->type;	
 	fputc(dataType, fp);		
 }

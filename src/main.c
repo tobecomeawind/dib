@@ -9,7 +9,7 @@ int main(void)
 {	
 	Node *Tom, *Lucy;	
 
-	Tom  = node_construct("Person", "Tom",  K_CHAR);	
+	//Tom  = node_construct("Person", "Tom",  K_CHAR);	
 	
 	Lucy = node_construct("Person", "Lucy", K_CHAR);	
 	
