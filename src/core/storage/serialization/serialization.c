@@ -43,24 +43,28 @@ void entityArraySerialize(Node** nodeArray, size_t arraySize)
 
 void entitySerialize(Node* node, FILE* fp)
 {	
-	long int hash;     // Entity type hash
+	uint64_t hash;     // Entity type hash
 	void*    data;     // Data
 	vtypes   dataType; // Data Type	
 		
 	// Entity starts
 
 	hash = node->type->hash;	
-	fputc(sizeof(hash),     fp);
+	fputc(sizeof(hash),     fp);  // size of hash
 	
-	for(size_t i = sizeof(long int) / sizeof(uint8_t); i > 0; i--)
-		fputc((char)(hash >> i * 8), fp);
-	
+	for(size_t i = sizeof(uint64_t) / sizeof(uint8_t); i > 0; i--) {
+		fputc((int8_t)(hash >> ((i - 1) * 8)), fp); // i - 1 cause 
+													// 8 * 8 = 64
+													// if we shift 64 bits right
+													// we lost data
+	}	
 	// Data starts
-	data   = node->data->info;
-	fputc(sizeof(data),     fp);		
+	data = node->data->info;
+	fputc(sizeof(data),     fp); // size of data
 	fprintf(fp, data);
 
 	// Data Type starts
-	dataType = node->data->type;	
+	dataType = node->data->type; // don't use size
+								 // cause dataType always 1 byte	
 	fputc(dataType, fp);		
 }

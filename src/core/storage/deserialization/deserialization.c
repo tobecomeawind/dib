@@ -8,7 +8,7 @@
 Node** getEntitiesArray(void)
 {
 	FILE*    tmpfp;
-	uint8_t  countEntities;
+	int8_t  countEntities;
 	Node**   entitiesArray;
 
 	tmpfp = fopen(TEMP_FILE, "r");	
@@ -36,28 +36,41 @@ Node** getEntitiesArray(void)
 
 static Node* entityDeserialize(FILE* fp)
 {
+	//----------------------------------------
+	// Create entity from bytes data to struct
+	//----------------------------------------
+
 	Node*    entity;	
 	void*    data;
-	long int hash;	
+	uint64_t hash;	
 	vtypes   dataType;
+	
 	uint8_t  byte;	
-	uint32_t size;
+	uint32_t chunkSize; // size of chunk 
+						// such in file
+						//   ...|Size_Of_Data_Of_Entity|data_of_Entity|...
+						//              ||                    || 
+						//            chunkSize              hash 
+						//        1byte with size       chunkSize bytes
+						//               sizeof(hash) = chunkSize
 
 
 	// Entity Hash size in bytes
-	size = fgetc(fp);
-
-	for (uint32_t i = 0; i < size; i++) {
-		byte = fgetc(fp);	
-		hash = (hash |= byte) << 8;		
+	chunkSize = fgetc(fp);
+	
+	// skip last iteration 
+	// cause we don't need move last byte
+	for (;chunkSize-- > 1;) {
+		byte = fgetc(fp);
+		hash = (hash |= byte) << 8;	
 	}	
-
-	printf("\nHash: %li \n", hash);
+	hash = (hash |= (byte = fgetc(fp))); 
 
 	// Data size in bytes
-	size = fgetc(fp);
+	chunkSize = fgetc(fp);
 
-	fread(data, size, 1, fp);	
+	data = malloc(chunkSize);
+	fread(data, 1, chunkSize, fp);	
 
 	// Data Type size in bytes 
 	dataType = fgetc(fp);	

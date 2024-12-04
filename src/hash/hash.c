@@ -2,15 +2,15 @@
 
 #include <math.h>
 #include <string.h>
-
+#include <stdint.h>
 
 long int hash(char* val)
 {
-	long int hashval = 0;
-	int len_s        = strlen(val);
+	uint64_t hashval = 0;
+	uint8_t  len_s   = strlen(val);
 	
-	for(int i = 0; i < len_s; i++)
-		hashval += (long) pow(SEED, len_s - (i+1)) * val[i];
+	for(uint8_t i = 0; i < len_s; i++)
+		hashval += (uint64_t) pow(SEED, len_s - (i+1)) * val[i];
 	
 	return hashval;	
 }
