@@ -4,28 +4,32 @@
 #include <string.h>
 #include <ctype.h>
 
-static vtypes DataToVarType(Tokens, char*);
+static vtypes DataToVarType(Tokens, void*);
 static Tokens getTypeOfData(char*);
 
-Data* data_construct(char* data, Tokens type)
+bool DataCliCheck = false;
+
+Data* dataConstruct(void* data, Tokens type, bool isFromCli)
 {
 	Data* dptr; // data pointer
-	
+
+	DataCliCheck = isFromCli;
+
 	dptr = (Data*) malloc(sizeof(Data));
 	
 	dptr->type = DataToVarType(type, data);
-	dptr->info = (void*) data;	
+	dptr->info = data;	
 
 	return dptr;
 }
 
 
-static vtypes DataToVarType(Tokens dataType, char* data)
+static vtypes DataToVarType(Tokens dataType, void* data)
 {
 	int*    intVar;
 	double* floatVar;
 
-	if (dataType != getTypeOfData(data)){
+	if (DataCliCheck && dataType != getTypeOfData(data)){
 		printf("\nInvalid Data Type\n");
 		return 0;	
 	}	
@@ -47,7 +51,7 @@ static vtypes DataToVarType(Tokens dataType, char* data)
 }
 
 
-void data_destruct(Data* dptr)
+void dataDestruct(Data* dptr)
 {
 	free(dptr);	
 }
@@ -55,7 +59,7 @@ void data_destruct(Data* dptr)
 
 static Tokens getTypeOfData(char* data)
 {
-	Tokens dataType = K_CHAR;	
+	Tokens dataType = K_CHAR;		
 
 	while (*data++) {
 

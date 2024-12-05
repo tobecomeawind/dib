@@ -6,6 +6,7 @@
 #include "relation.h"
 
 #include <stddef.h>
+#include <stdint.h>
 
 typedef struct Node{
 	EntityType* type;	
@@ -17,8 +18,12 @@ typedef struct Node{
 } Node;
 
 
-Node* node_construct(char* name, char* data, Tokens dataTypeToken);
-void  node_destruct (Node* node);
+Node* nodeConstructFromCli(char* name, char *data, Tokens dataTypeToken);
+Node* nodeConstruct(char*    name,
+                     uint64_t hashValue,
+                     void*    data,
+                     Tokens   dataTypeToken);
+void  nodeDestruct (Node* node);
 
 void add_relation(Node* node, Relation* rel);
 

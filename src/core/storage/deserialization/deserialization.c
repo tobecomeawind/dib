@@ -8,7 +8,7 @@
 Node** getEntitiesArray(void)
 {
 	FILE*    tmpfp;
-	int8_t  countEntities;
+	int8_t   countEntities;
 	Node**   entitiesArray;
 
 	tmpfp = fopen(TEMP_FILE, "r");	
@@ -74,4 +74,10 @@ static Node* entityDeserialize(FILE* fp)
 
 	// Data Type size in bytes 
 	dataType = fgetc(fp);	
+
+	printf("\nEntity hash: %li Data: %s\n", hash, (char*)data);		
+
+	entity = nodeConstruct(NULL, hash, data, dataType);		
+
+	//return NULL;
 }

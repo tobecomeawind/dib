@@ -4,13 +4,14 @@
 #include "types.h"
 #include "tokens.h"
 #include <stdint.h>
+#include <stdbool.h>
 
 typedef struct Data{
 	vtypes  type;
 	void*   info;
 } Data;
 
-Data* data_construct(char* data, Tokens type);
-void  data_destruct (Data* dptr);
+Data* dataConstruct(void* data, Tokens type, bool isFromCli);
+void  dataDestruct (Data* dptr);
 
 #endif

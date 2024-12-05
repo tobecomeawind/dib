@@ -3,24 +3,44 @@
 #include "serialization.h"
 
 #include <stdlib.h>
+#include <stdbool.h>
 
-Node* node_construct(char* name, char* data, Tokens dataTypeToken)
+bool isDataFromCli = false;
+
+Node* nodeConstructFromCli(char* name, char *data, Tokens dataTypeToken)
+{
+	Node* nptr; 
+	void* voidData = (void*) data;
+
+	isDataFromCli = true;
+	nptr          = nodeConstruct(name, 0, voidData, dataTypeToken);	
+
+	return nptr;
+}
+
+
+Node* nodeConstruct(char*    name,
+                    uint64_t hashValue,
+                    void*    data,
+                    Tokens   dataTypeToken)
 {
 	Node*  nptr;	// node pointer
 	Node** testnptr; 
-
+	
 	EntityType etptr = {
 		.typename = name,
-		.hash     = hash(name)	
+		.hash     = (hashValue) ? hashValue : hash(name),
 	};
 
 	nptr = (Node*) malloc(sizeof(Node));
 
 	nptr->type      = &etptr;
-	nptr->data      = data_construct(data, dataTypeToken);
+	nptr->data      = dataConstruct(data, dataTypeToken, isDataFromCli);
 	nptr->rsize     = 0;
 	nptr->relations = (Relation**) malloc(sizeof(Relation*)); 
 
+	isDataFromCli = false;	
+	
 	testnptr = &nptr;	
 
 	entityArraySerialize(testnptr, 1);
@@ -29,9 +49,9 @@ Node* node_construct(char* name, char* data, Tokens dataTypeToken)
 }
 
 
-void node_destruct(Node* node)
+void nodeDestruct(Node* node)
 {
-	data_destruct(node->data);
+	dataDestruct(node->data);
 	
 	for(size_t i = 0; i < node->rsize; i++)
 		relation_destruct(node->relations[i]);	

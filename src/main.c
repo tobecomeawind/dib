@@ -11,7 +11,7 @@ int main(void)
 
 	//Tom  = node_construct("Person", "Tom",  K_CHAR);	
 	
-	Lucy = node_construct("MustafaBlya", "Lucy", K_CHAR);	
+	Lucy = nodeConstructFromCli("MustafaBlya", "Lucy", K_CHAR);	
 	
 	/*
 	add_relation(Tom,

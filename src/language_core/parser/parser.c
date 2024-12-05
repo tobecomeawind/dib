@@ -149,7 +149,7 @@ static void parseEntity(void)
 
 	
 	testNode  = node_construct(EntityType,
-			                   Name,
+			                   (void*) Name,
 					           DataType);	
 		
 	// multiply add entity
