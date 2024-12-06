@@ -23,6 +23,20 @@ Data* dataConstruct(void* data, Tokens type, bool isFromCli)
 	return dptr;
 }
 
+uint8_t getDataSize(Data* dptr)
+{
+	switch (dptr->type) {
+		case (INT):
+			return sizeof(int);
+		case (FLOAT):
+			return sizeof(double);	
+		default: // case only with constants cause we use if	
+			if (dptr->type & CHAR) // CHAR
+				return dptr->type;	
+	}	
+}
+
+
 
 static vtypes DataToVarType(Tokens dataType, void* data)
 {

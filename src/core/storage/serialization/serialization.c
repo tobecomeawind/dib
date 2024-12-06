@@ -7,7 +7,6 @@
 #include "files.h"
 #include "types.h"
 
-
 void entityArraySerialize(Node** nodeArray, size_t arraySize)
 {
 	//----------------------------------
@@ -20,7 +19,7 @@ void entityArraySerialize(Node** nodeArray, size_t arraySize)
 	Node*  currentNode; 
 
 	entitiesArray = getEntitiesArray();
-	entitiesArray = NULL;
+	//entitiesArray = NULL;
 
 	tmpfp = fopen(TEMP_FILE, "w");
 
@@ -50,17 +49,20 @@ void entitySerialize(Node* node, FILE* fp)
 	// Entity starts
 
 	hash = node->type->hash;	
-	fputc(sizeof(hash),     fp);  // size of hash
-	
+
+	fputc(sizeof(hash),            fp);  // size of hash
+
 	for(size_t i = sizeof(uint64_t) / sizeof(uint8_t); i > 0; i--) {
 		fputc((int8_t)(hash >> ((i - 1) * 8)), fp); // i - 1 cause 
 													// 8 * 8 = 64
 													// if we shift 64 bits right
 													// we lost data
-	}	
+	}
+
+
 	// Data starts
 	data = node->data->info;
-	fputc(sizeof(data),     fp); // size of data
+	fputc(getDataSize(node->data), fp); // size of data
 	fprintf(fp, data);
 
 	// Data Type starts

@@ -8,11 +8,15 @@
 int main(void)
 {	
 	Node *Tom, *Lucy;	
+	Node** testnptr; 
 
 	//Tom  = node_construct("Person", "Tom",  K_CHAR);	
 	
 	Lucy = nodeConstructFromCli("MustafaBlya", "Lucy", K_CHAR);	
-	
+		
+	testnptr = &Lucy;	
+	entityArraySerialize(testnptr, 1);
+		
 	/*
 	add_relation(Tom,
 			     relation_construct("Loves",

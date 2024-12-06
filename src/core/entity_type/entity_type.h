@@ -8,4 +8,6 @@ typedef struct EntityType{ // Entity = Node || Relation
 	uint64_t  hash;
 } EntityType;
 
+EntityType* entityTypeConstruct(char* name, uint64_t hash);
+
 #endif

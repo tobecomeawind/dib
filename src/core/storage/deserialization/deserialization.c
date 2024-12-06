@@ -42,7 +42,7 @@ static Node* entityDeserialize(FILE* fp)
 
 	Node*    entity;	
 	void*    data;
-	uint64_t hash;	
+	uint64_t hash = 0;	
 	vtypes   dataType;
 	
 	uint8_t  byte;	
@@ -75,7 +75,7 @@ static Node* entityDeserialize(FILE* fp)
 	// Data Type size in bytes 
 	dataType = fgetc(fp);	
 
-	printf("\nEntity hash: %li Data: %s\n", hash, (char*)data);		
+	printf("\nEntity hash: %lli Data: %s\n", hash, (char*)data);		
 
 	entity = nodeConstruct(NULL, hash, data, dataType);		
 

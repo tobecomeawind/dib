@@ -3,6 +3,8 @@ set(LIBRARY_NAME entity_type)
 add_library(${LIBRARY_NAME} "")
 
 target_sources(${LIBRARY_NAME}
+	PRIVATE
+		${CMAKE_CURRENT_LIST_DIR}/entity_type.c
 	PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/entity_type.h
 )

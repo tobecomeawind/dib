@@ -17,6 +17,7 @@ include_directories(
 
 #add_library(${LIBRARY_NAME} "")
 
+add_subdirectory(entity_type)
 add_subdirectory(storage)
 add_subdirectory(relation)
 add_subdirectory(data)
@@ -32,6 +33,7 @@ add_library(${LIBRARY_NAME}
 
 
 target_link_libraries(${LIBRARY_NAME}
+		entity_type		
 		deserialization
 		serialization
 		data

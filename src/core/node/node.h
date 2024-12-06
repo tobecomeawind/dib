@@ -4,6 +4,7 @@
 #include "entity_type.h"
 #include "data.h"
 #include "relation.h"
+#include "serialization.h"
 
 #include <stddef.h>
 #include <stdint.h>

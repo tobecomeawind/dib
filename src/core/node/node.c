@@ -1,6 +1,5 @@
 #include "node.h"
 #include "hash.h"
-#include "serialization.h"
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -25,28 +24,20 @@ Node* nodeConstruct(char*    name,
                     Tokens   dataTypeToken)
 {
 	Node*  nptr;	// node pointer
-	Node** testnptr; 
 	
-	EntityType etptr = {
-		.typename = name,
-		.hash     = (hashValue) ? hashValue : hash(name),
-	};
-
 	nptr = (Node*) malloc(sizeof(Node));
 
-	nptr->type      = &etptr;
+	nptr->type      = entityTypeConstruct(name, hashValue);
 	nptr->data      = dataConstruct(data, dataTypeToken, isDataFromCli);
 	nptr->rsize     = 0;
 	nptr->relations = (Relation**) malloc(sizeof(Relation*)); 
 
 	isDataFromCli = false;	
 	
-	testnptr = &nptr;	
-
-	entityArraySerialize(testnptr, 1);
 
 	return nptr;
 }
+
 
 
 void nodeDestruct(Node* node)
