@@ -2,9 +2,9 @@
 
 #include <math.h>
 #include <string.h>
-#include <stdint.h>
+#include <stdio.h>
 
-long int hash(char* val)
+uint64_t hash(char* val)
 {
 	uint64_t hashval = 0;
 	uint8_t  len_s   = strlen(val);
@@ -16,24 +16,33 @@ long int hash(char* val)
 }
 
 
-/*
-int hash_index(long int hash_number, int size)
+
+uint8_t hash_index(uint64_t hash_number, int size)
 {
-	return (int)(hash_number % size);	
+	printf("\nHash index for %li = %i\n", hash_number, hash_number % size);	
+	return (uint8_t)(hash_number % size);	
 }
 
 
 int main()
 {
-	int size = 5;	
-	long int hash_set[size];	
+	int size = 4;	
+	char* hash_set[size];	
 
-	hash_set[hash_index(hash("Petya", SEED), size)] = hash("Petya", SEED);
-	hash_set[hash_index(hash("Masha", SEED), size)] = hash("Masha", SEED);
-	hash_set[hash_index(hash("Dasha", SEED), size)] = hash("Dasha", SEED);
-	hash_set[hash_index(hash("KFJSF", SEED), size)] = hash("KFJSF", SEED);
-	hash_set[hash_index(hash("GGGGG", SEED), size)] = hash("GGGGG", SEED);
-	
+	uint64_t Petya = hash("Petya");
+	uint64_t Masha = hash("Masha");
+	uint64_t Vasya = hash("Vasya");
+	uint64_t Oleg  = hash("Oleg");
+
+	hash_set[hash_index(Petya, size)] = "Petya";
+	hash_set[hash_index(Masha, size)] = "Masha";
+	hash_set[hash_index(Vasya, size)] = "Olegg";
+	hash_set[hash_index(Oleg,  size)] = "Olegg";
+
+	if (hash_set[hash_index(Petya, size)] == "Olegg") {
+		printf("\nAll good\n");	
+	}		
+
 	return 0;
 }
-*/
+

@@ -16,10 +16,7 @@ void entityArraySerialize(Node** nodeArray, size_t arraySize)
 	FILE*  tmpfp;
 	Node** entitiesArray;
 	
-	Node*  currentNode; 
-
 	entitiesArray = getEntitiesArray();
-	//entitiesArray = NULL;
 
 	tmpfp = fopen(TEMP_FILE, "w");
 
@@ -28,10 +25,8 @@ void entityArraySerialize(Node** nodeArray, size_t arraySize)
 		fputc(arraySize, tmpfp);
 
 		for(size_t i = 0; i < arraySize; i++) {
-		
-			currentNode = nodeArray[i];
 			
-			entitySerialize(currentNode, tmpfp);		
+			entitySerialize(nodeArray[i], tmpfp);		
 		}		
 	}
 

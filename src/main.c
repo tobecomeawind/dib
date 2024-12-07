@@ -10,12 +10,13 @@ int main(void)
 	Node *Tom, *Lucy;	
 	Node** testnptr; 
 
-	//Tom  = node_construct("Person", "Tom",  K_CHAR);	
-	
+	Tom  = nodeConstructFromCli("Person", "Tom",  K_CHAR);		
 	Lucy = nodeConstructFromCli("MustafaBlya", "Lucy", K_CHAR);	
 		
-	testnptr = &Lucy;	
-	entityArraySerialize(testnptr, 1);
+	testnptr = (Node**) calloc(2, sizeof(Node*));
+	testnptr[0] = Tom;	
+	testnptr[1] = Lucy;	
+	entityArraySerialize(testnptr, 2);
 		
 	/*
 	add_relation(Tom,

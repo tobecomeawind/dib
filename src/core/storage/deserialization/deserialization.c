@@ -27,10 +27,12 @@ Node** getEntitiesArray(void)
 	entitiesArray = (Node**) malloc(sizeof(Node*) * countEntities);	
 
 	for (size_t i = 0; i < countEntities; i++) {
-		entityDeserialize(tmpfp);	
+		entitiesArray[i] = entityDeserialize(tmpfp);	
 	}
 
 	fclose(tmpfp);
+
+	return entitiesArray;
 }
 
 
@@ -77,7 +79,8 @@ static Node* entityDeserialize(FILE* fp)
 
 	printf("\nEntity hash: %lli Data: %s\n", hash, (char*)data);		
 
-	entity = nodeConstruct(NULL, hash, data, dataType);		
 
-	//return NULL;
+	entity = nodeConstruct(NULL, hash, data, dataType);	
+
+	return entity;
 }

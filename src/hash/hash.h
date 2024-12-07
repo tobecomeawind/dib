@@ -2,7 +2,8 @@
 #define HASH_H
 
 #define SEED 969
+#include <stdint.h>
 
-long int hash(char* val);
+uint64_t hash(char* val);
 
 #endif

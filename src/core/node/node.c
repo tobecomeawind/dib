@@ -33,7 +33,8 @@ Node* nodeConstruct(char*    name,
 	nptr->relations = (Relation**) malloc(sizeof(Relation*)); 
 
 	isDataFromCli = false;	
-	
+
+		
 
 	return nptr;
 }
