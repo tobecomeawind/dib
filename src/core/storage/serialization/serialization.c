@@ -54,7 +54,6 @@ void entitySerialize(Node* node, FILE* fp)
 													// we lost data
 	}
 
-
 	// Data starts
 	data = node->data->info;
 	fputc(getDataSize(node->data), fp); // size of data
