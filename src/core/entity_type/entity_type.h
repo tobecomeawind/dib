@@ -3,9 +3,11 @@
 
 #include <stdint.h>
 
-typedef struct EntityType{ // Entity = Node || Relation
+typedef struct { // Entity = Node || Relation
+
 	char     *typename;
-	uint64_t  hash;
+	uint64_t  hashVal;
+
 } EntityType;
 
 EntityType* entityTypeConstruct(char* name, uint64_t hash);

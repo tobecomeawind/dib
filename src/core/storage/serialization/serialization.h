@@ -8,6 +8,6 @@
 
 //void entitySerialize     (Node* node, FILE* fp);
 void hashTableSerialize  (HashTable* table);
-void entityArraySerialize(Node** nodeArray, size_t arraySize);
+//void entityArraySerialize(Node** nodeArray, size_t arraySize);
 
 #endif

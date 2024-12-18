@@ -13,12 +13,11 @@ int main(void)
 
 	HashTable* table = hashTableInit(2);
 
-	Tom  = nodeConstructFromCli("Person", "Tom",  K_CHAR);		
+	Tom  = nodeConstructFromCli("Personallity", "Tom",  K_CHAR);		
 	Lucy = nodeConstructFromCli("MustafaBlya", "Lucy", K_CHAR);	
 	
-	hashTableInsert(table, Tom);
-	hashTableInsert(table, Lucy);
-	hashTableInsert(nodeConstructFromCli("Person"));	
+	hashTableInsert(table, Tom->type);
+	hashTableInsert(table, Lucy->type);
 
 	/*
 	testnptr = (Node**) calloc(2, sizeof(Node*));
@@ -40,8 +39,8 @@ int main(void)
 
 	*/
 
-	//nodeDestruct(Tom);
-	//nodeDestruct(Lucy);
+	nodeDestruct(Tom);
+	nodeDestruct(Lucy);
 	hashTableDestruct(table);	
 	
 	return 0;

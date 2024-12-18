@@ -30,7 +30,4 @@ void  nodeDestruct (Node* node);
 
 void add_relation(Node* node, Relation* rel);
 
-
-uint64_t getNodeHash (Node* node);
-
 #endif

@@ -1,14 +1,16 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "deserialization.h"
 #include "serialization.h"
+#include "entity_type.h"
 #include "node.h"
 #include "files.h"
 #include "types.h"
 
-static void hashNodeSerialize (HashNode* tableNode, FILE* tmpfp);
-static void entitySerialize   (Node*     node,      FILE* fp);
+static void hashNodeSerialize (HashNode*   tableNode, FILE* tmpfp);
+static void entitySerialize   (EntityType* entity,    FILE* fp);
 
 
 void hashTableSerialize (HashTable* table)
@@ -55,20 +57,18 @@ static void hashNodeSerialize (HashNode* tableNode, FILE* tmpfp)
 }
 
 
-static void entitySerialize(Node* node, FILE* fp)
+static void entitySerialize(EntityType* entity, FILE* fp)
 {	
 	//--------------------------
-	// Serialize a node of graph
-	// without relations
+	// Serialize a entity
 	//--------------------------
 	
 	uint64_t hash;     // Entity type hash
-	void*    data;     // Data
-	vtypes   dataType; // Data Type	
+	char*    data;     // Data
 		
 	// Entity starts
 
-	hash = node->type->hash;	
+	hash = entity->hashVal;	
 
 	fputc(sizeof(hash),            fp);  // size of hash
 
@@ -80,14 +80,9 @@ static void entitySerialize(Node* node, FILE* fp)
 	}
 
 	// Data starts
-	data = node->data->info;
-	fputc(getDataSize(node->data), fp); // size of data
+	data = entity->typename;
+	fputc(strlen(data), fp); // size of data
 	fprintf(fp, data);
-
-	// Data Type starts
-	dataType = node->data->type; // don't use size
-								 // cause dataType always 1 byte	
-	fputc(dataType, fp);
 }
 
 

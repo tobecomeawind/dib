@@ -3,12 +3,13 @@
 
 #include <stdlib.h>
 
+
 EntityType* entityTypeConstruct(char* typename, uint64_t hashValue)
 {
 	EntityType* etptr = (EntityType*) malloc(sizeof(EntityType));
 	
 	etptr->typename = typename;
-	etptr->hash     = (hashValue) ? hashValue: hash(typename);
+	etptr->hashVal  = (hashValue) ? hashValue: hash(typename);
 	
 	return etptr;
 }	

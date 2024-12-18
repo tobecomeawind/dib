@@ -1,19 +1,18 @@
-#include "hash.h"
-
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
-static uint8_t   hashNodeIndex    (HashNode*  hnptr,   uint8_t size);
-static uint8_t   hashIndex        (uint64_t   hashVal, uint8_t size);
-static HashNode* hashNodeInit     (Node*      data );
-static void      hashNodeDestruct (HashNode*  hnptr);
-static bool      hashTableSearch  (HashTable* table,   uint64_t hashVal);
-static void      hashTableDelete  (HashTable* table,   uint64_t hashVal);
-static inline uint64_t getHash(HashNode* hashNode);
+#include "hash.h"
 
+static uint8_t   hashNodeIndex    (HashNode*   hnptr,   uint8_t size);
+static uint8_t   hashIndex        (uint64_t    hashVal, uint8_t size);
+static HashNode* hashNodeInit     (EntityType* data );
+static void      hashNodeDestruct (HashNode*   hnptr);
+static bool      hashTableSearch  (HashTable*  table,   uint64_t hashVal);
+static void      hashTableDelete  (HashTable*  table,   uint64_t hashVal);
+static inline uint64_t getHash(HashNode* hashNode);
 
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -24,7 +23,6 @@ static inline uint64_t getHash(HashNode* hashNode);
 // Word "Node" = Hash Node(node of hash table bucket linked list)
 //
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 
 
 uint64_t hash(char* val)
@@ -42,7 +40,7 @@ uint64_t hash(char* val)
 	return hashval;	
 }
 
-static HashNode* hashNodeInit (Node* data)
+static HashNode* hashNodeInit (EntityType* data)
 {
 	//----------------------
 	// Hash Node Constructor
@@ -65,7 +63,7 @@ static void hashNodeDestruct (HashNode* hnptr)
 	if (!hnptr) return;
 	
 	//free(hnptr->data);
-	nodeDestruct(hnptr->data);	
+	entityTypeDestruct(hnptr->data);	
 	free(hnptr);
 }
 
@@ -128,7 +126,7 @@ void hashTableDestruct (HashTable* htptr)
 }
 
 
-void hashTableInsert (HashTable* table, Node* data)
+void hashTableInsert (HashTable* table, EntityType* data)
 {
 	//---------------------------------
 	// Insert data in hash table bucket
@@ -146,7 +144,7 @@ void hashTableInsert (HashTable* table, Node* data)
 
 	for (;tmp->next; tmp = tmp->next) // go to last node of bucket linked list	
 		if (getHash(tmp) == getHash(hnptr)) return; 
-	                                                 // if we find equals hash
+                                                    // if we find equals hash
 													// we break the function
 													// node with equal hash
 													// exists
@@ -204,17 +202,17 @@ void hashTableDeleteByName (HashTable* table, char* name)
 
 static void hashTableDelete (HashTable* table, uint64_t hashVal)
 {
-	//------------------------
+	//--------------------
 	// Delete Node by Hash
-	//------------------------
+	//--------------------
 
 	uint8_t   deleteIndex = hashIndex(hashVal, table->size);	
 	HashNode* tmp         = table->array[deleteIndex];
 
 	if (tmp) { // if bucket not empty	
 		if (getHash(tmp) == hashVal) { // if first bucket hash
-									         // equal
-									         // delete node hash
+						    	       // equal
+									   // delete node hash
 			table->array[deleteIndex] = tmp->next;
 			hashNodeDestruct(tmp);
 			return;
@@ -248,83 +246,5 @@ static uint8_t hashIndex(uint64_t hashVal, uint8_t size)
 
 static inline uint64_t getHash(HashNode* hashNode)
 {
-	return getNodeHash(hashNode->data);
+	return hashNode->data->hashVal;
 }
-
-
-
-/*
-
-// Tests
-int main()
-{
-	const int size = 7;	
-
-	HashTable* table = hashTableInit(size);
-
-	hashTableInsert(table, "a");
-	hashTableInsert(table, "Petya");
-	hashTableInsert(table, "Roma");
-	hashTableInsert(table, "sdafkj");
-	hashTableInsert(table, "asfkjsaklfj");
-	hashTableInsert(table, "Masha");
-	hashTableInsert(table, "Vasya");
-	hashTableInsert(table, "Oleg");
-	hashTableInsert(table, "Bomba");
-	hashTableInsert(table, "Ggingert");
-	hashTableInsert(table, "Violence");
-	hashTableInsert(table, "sadfViolence");
-
-	hashTableDeleteByName(table, "a");
-	hashTableDeleteByName(table, "a");
-	hashTableDeleteByName(table, "Vasya");
-	hashTableDeleteByName(table, "Bomba");
-
-	for (int i = 0; i < size; i++) {
-		HashNode* tmp = table->array[i];
-		if (!tmp) {
-			printf("%i\t----\n", i + 1);	
-		} else {
-			printf("%i\t", i + 1);	
-			do {
-				printf("%s->", tmp->data);	
-			} while (tmp = tmp->next);	
-			putchar('\n');
-		}
-	}
-
-
-	if ( hashTableSearchByName(table, "Bomba") ) {
-		printf("\nFind!)\n");	
-	} else {
-		printf("\nNot find!(\n");		
-	}
-
-
-	hashTableDestruct(table);
-
-	
-    char* hash_set[size];	
-
-	uint64_t Petya = hash("Petya");
-	uint64_t Masha = hash("Masha");
-	uint64_t Vasya = hash("Vasya");
-	uint64_t Oleg  = hash("Oleg");
-
-	hash_set[hashIndex(Petya, size)] = "Petya";
-	hash_set[hashIndex(Masha, size)] = "Masha";
-	hash_set[hashIndex(Vasya, size)] = "Olegg";
-	hash_set[hashIndex(Oleg,  size)] = "Olegg";		
-
-	//if (hash_set[hashIndex(Petya, size)] == "Oleg") {
-	if (hash("Oleg") == hash((void*)"Oleg")) {
-		printf("\nEqual\n");	
-	} else {
-		printf("\nNot equal\n");	
-	}	
-	
-	
-
-	return 0;
-}
-*/

@@ -1,6 +1,5 @@
 set(LIBRARY_NAME hash)
 
-
 add_library(${LIBRARY_NAME} "")
 
 target_sources(${LIBRARY_NAME}

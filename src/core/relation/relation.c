@@ -8,7 +8,7 @@ Relation* relation_construct(char* name, Node* destination)
 
 	EntityType etptr = {
 		.typename = name,	
-		.hash     = hash(name)
+		.hashVal     = hash(name)
 	}; 
 
 	rptr = (Relation*) malloc(sizeof(Relation));
