@@ -35,7 +35,6 @@ Node* nodeConstruct(char*    name,
 	isDataFromCli = false;	
 
 		
-
 	return nptr;
 }
 
@@ -47,9 +46,15 @@ void nodeDestruct(Node* node)
 	
 	for(size_t i = 0; i < node->rsize; i++)
 		relation_destruct(node->relations[i]);	
-		
+	
+	entityTypeDestruct(node->type);	
 	free(node->relations);
 	free(node);
+}
+
+inline uint64_t getNodeHash (Node* node)
+{
+	return node->type->hash;
 }
 
 

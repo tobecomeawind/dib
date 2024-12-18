@@ -4,7 +4,10 @@ add_subdirectory(algs)
 add_subdirectory(core)
 add_subdirectory(hash)
 
-include_directories(${CMAKE_CURRENT_LIST_DIR}/core/entity_type)
+include_directories(
+	${CMAKE_CURRENT_LIST_DIR}/core/
+	${CMAKE_CURRENT_LIST_DIR}/core/entity_type
+)
 
 #add_subdirectory(types)
 

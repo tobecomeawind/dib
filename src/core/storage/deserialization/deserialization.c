@@ -79,7 +79,6 @@ static Node* entityDeserialize(FILE* fp)
 
 	printf("\nEntity hash: %lli Data: %s\n", hash, (char*)data);		
 
-
 	entity = nodeConstruct(NULL, hash, data, dataType);	
 
 	return entity;

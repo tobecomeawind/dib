@@ -9,5 +9,6 @@ typedef struct EntityType{ // Entity = Node || Relation
 } EntityType;
 
 EntityType* entityTypeConstruct(char* name, uint64_t hash);
+void        entityTypeDestruct (EntityType* fuckYou);
 
 #endif

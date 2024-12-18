@@ -6,12 +6,25 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-static uint8_t   hashNodeIndex    (HashNode* hnptr,   uint8_t size);
-static uint8_t   hashIndex        (uint64_t  hashVal, uint8_t size);
-static HashNode* hashNodeInit     (char*     data);
-static void      hashNodeDestruct (HashNode* hnptr);
-static bool      hashTableSearch  (HashTable* table,  uint64_t hashVal);
-static void      hashTableDelete  (HashTable* table,  uint64_t hashVal);
+static uint8_t   hashNodeIndex    (HashNode*  hnptr,   uint8_t size);
+static uint8_t   hashIndex        (uint64_t   hashVal, uint8_t size);
+static HashNode* hashNodeInit     (Node*      data );
+static void      hashNodeDestruct (HashNode*  hnptr);
+static bool      hashTableSearch  (HashTable* table,   uint64_t hashVal);
+static void      hashTableDelete  (HashTable* table,   uint64_t hashVal);
+static inline uint64_t getHash(HashNode* hashNode);
+
+
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// In this folder
+//
+// Word "Node" != Node of Graph (/src/core/node)
+//
+// Word "Node" = Hash Node(node of hash table bucket linked list)
+//
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
 
 uint64_t hash(char* val)
@@ -29,7 +42,7 @@ uint64_t hash(char* val)
 	return hashval;	
 }
 
-static HashNode* hashNodeInit (char* data)
+static HashNode* hashNodeInit (Node* data)
 {
 	//----------------------
 	// Hash Node Constructor
@@ -37,9 +50,8 @@ static HashNode* hashNodeInit (char* data)
 		
 	HashNode* hnptr = (HashNode*) malloc(sizeof(HashNode));	
 
-	hnptr->hashVal = hash(data);
-	hnptr->data    = data;
-	hnptr->next    = NULL;
+	hnptr->data = data;
+	hnptr->next = NULL;
 
 	return hnptr;
 }
@@ -53,6 +65,7 @@ static void hashNodeDestruct (HashNode* hnptr)
 	if (!hnptr) return;
 	
 	//free(hnptr->data);
+	nodeDestruct(hnptr->data);	
 	free(hnptr);
 }
 
@@ -67,7 +80,7 @@ static void hashNodeDelete (HashNode* node, uint64_t hashVal)
 		
 		// name nextNode equals deleteNode
 
-		if (nextNode && nextNode->hashVal == hashVal) { // if we find node
+		if (nextNode && getHash(nextNode) == hashVal) { // if we find node
 			node->next = nextNode->next; // jumping by one node
 			hashNodeDestruct(nextNode);
 			return;
@@ -115,7 +128,7 @@ void hashTableDestruct (HashTable* htptr)
 }
 
 
-void hashTableInsert (HashTable* table, char* data)
+void hashTableInsert (HashTable* table, Node* data)
 {
 	//---------------------------------
 	// Insert data in hash table bucket
@@ -132,7 +145,8 @@ void hashTableInsert (HashTable* table, char* data)
 	}
 
 	for (;tmp->next; tmp = tmp->next) // go to last node of bucket linked list	
-		if (tmp->hashVal == hnptr->hashVal) return; // if we find equals hash
+		if (getHash(tmp) == getHash(hnptr)) return; 
+	                                                 // if we find equals hash
 													// we break the function
 													// node with equal hash
 													// exists
@@ -167,11 +181,13 @@ static bool hashTableSearch (HashTable* table, uint64_t hashVal)
 
 	if (tmp) // if bucket exists	
 		for (;tmp; tmp = tmp->next) // check list  
-			if (tmp->hashVal == hashVal)
+			if (getHash(tmp) == hashVal)
 				return true; // if hash`s equals
 			
 	return false;
 }
+
+
 
 void hashTableDeleteByName (HashTable* table, char* name) 
 {
@@ -196,9 +212,9 @@ static void hashTableDelete (HashTable* table, uint64_t hashVal)
 	HashNode* tmp         = table->array[deleteIndex];
 
 	if (tmp) { // if bucket not empty	
-		if (tmp->hashVal == hashVal) { // if first bucket hash
-									   // equal
-									   // delete node hash
+		if (getHash(tmp) == hashVal) { // if first bucket hash
+									         // equal
+									         // delete node hash
 			table->array[deleteIndex] = tmp->next;
 			hashNodeDestruct(tmp);
 			return;
@@ -208,6 +224,34 @@ static void hashTableDelete (HashTable* table, uint64_t hashVal)
 	}
 
 }
+
+
+
+static uint8_t hashNodeIndex (HashNode* hnptr, uint8_t size)
+{
+	//------------------
+	// Wrap if hashIndex
+	// But with Node
+	//------------------
+	
+	return hashIndex(getHash(hnptr), size);
+}
+
+static uint8_t hashIndex(uint64_t hashVal, uint8_t size)
+{
+	//-----------------------
+	// Return Index of bucket
+	//-----------------------
+	
+	return (uint8_t)(hashVal % size);	
+}
+
+static inline uint64_t getHash(HashNode* hashNode)
+{
+	return getNodeHash(hashNode->data);
+}
+
+
 
 /*
 
@@ -284,23 +328,3 @@ int main()
 	return 0;
 }
 */
-
-
-static uint8_t hashNodeIndex (HashNode* hnptr, uint8_t size)
-{
-	//------------------
-	// Wrap if hashIndex
-	// But with Node
-	//------------------
-	
-	return hashIndex(hnptr->hashVal, size);
-}
-
-static uint8_t hashIndex(uint64_t hashVal, uint8_t size)
-{
-	//-----------------------
-	// Return Index of bucket
-	//-----------------------
-	
-	return (uint8_t)(hashVal % size);	
-}

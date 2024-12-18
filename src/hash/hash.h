@@ -3,11 +3,12 @@
 
 #define SEED 969
 #include <stdint.h>
-
+#include <stdbool.h>
+#include "node.h"
+ 
 typedef struct HashNode{
 	
-	uint64_t         hashVal;
-	char*            data;
+	Node*            data;
 	struct HashNode* next;
 
 } HashNode;
@@ -20,7 +21,12 @@ typedef struct {
 					  
 } HashTable;
 
-uint64_t   hash          (char* val);
-HashTable* hashTableInit (uint8_t size);
+
+uint64_t   hash                  (char* val);
+HashTable* hashTableInit         (uint8_t size);
+void       hashTableInsert       (HashTable* table, Node* data);
+void       hashTableDestruct     (HashTable* htptr);
+bool       hashTableSearchByName (HashTable* table, char* name);
+void       hashTableDeleteByName (HashTable* table, char* name); 
 
 #endif
