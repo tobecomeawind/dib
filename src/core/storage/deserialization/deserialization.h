@@ -2,8 +2,8 @@
 #define DESERIALIZATION_H
 
 #include "node.h"
+#include "hash.h"
 
-Node** getEntitiesArray(void);
-static Node* entityDeserialize(FILE* fp);
+HashTable* hashTableDeserialize (void);
 
 #endif

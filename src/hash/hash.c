@@ -40,6 +40,12 @@ uint64_t hash(char* val)
 	return hashval;	
 }
 
+
+HashNode* hashNodeConstruct (EntityType* etptr)
+{
+	return hashNodeInit(etptr);
+}
+
 static HashNode* hashNodeInit (EntityType* data)
 {
 	//----------------------

@@ -26,9 +26,10 @@ typedef struct {
 
 uint64_t   hash                  (char* val);
 HashTable* hashTableInit         (uint8_t size);
-void       hashTableInsert       (HashTable* table, EntityType* data);
-void       hashTableDestruct     (HashTable* htptr);
-bool       hashTableSearchByName (HashTable* table, char* name);
-void       hashTableDeleteByName (HashTable* table, char* name); 
+void       hashTableInsert       (HashTable*  table, EntityType* data);
+void       hashTableDestruct     (HashTable*  htptr);
+bool       hashTableSearchByName (HashTable*  table, char* name);
+void       hashTableDeleteByName (HashTable*  table, char* name); 
+HashNode*  hashNodeConstruct     (EntityType* etptr);
 
 #endif

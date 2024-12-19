@@ -5,12 +5,13 @@
 #include "node.h"
 #include "hash.h"
 #include "serialization.h"
+#include "deserialization.h"
 
 int main(void)
 {	
 	Node *Tom, *Lucy;	
-	Node** testnptr; 
-
+	HashTable* table;	
+	/*	
 	HashTable* table = hashTableInit(2);
 
 	Tom  = nodeConstructFromCli("Personallity", "Tom",  K_CHAR);		
@@ -18,6 +19,7 @@ int main(void)
 	
 	hashTableInsert(table, Tom->type);
 	hashTableInsert(table, Lucy->type);
+	*/
 
 	/*
 	testnptr = (Node**) calloc(2, sizeof(Node*));
@@ -26,7 +28,8 @@ int main(void)
 	entityArraySerialize(testnptr, 2);
 	*/
 
-	hashTableSerialize(table);
+	//hashTableSerialize(table);
+	table = hashTableDeserialize();	
 
 	/*
 	add_relation(Tom,
@@ -39,8 +42,8 @@ int main(void)
 
 	*/
 
-	nodeDestruct(Tom);
-	nodeDestruct(Lucy);
+	//nodeDestruct(Tom);
+	//nodeDestruct(Lucy);
 	hashTableDestruct(table);	
 	
 	return 0;
