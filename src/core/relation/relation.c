@@ -2,7 +2,7 @@
 #include "relation.h"
 #include "hash.h"
 
-Relation* relation_construct(char* name, Node* destination)
+Relation* relationConstruct(char* name, Node* destination)
 {
 	Relation* rptr; // relation pointer	
 
@@ -19,7 +19,7 @@ Relation* relation_construct(char* name, Node* destination)
 	return rptr;
 }
 
-void relation_destruct(Relation* rptr)
+void relationDestruct(Relation* rptr)
 {
 	free(rptr);	
 }

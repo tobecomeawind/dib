@@ -119,12 +119,12 @@ static void parseEntity(void)
 {	
 	//ENTITY	
 	
-	char*  EntityType, *Name;
+	char*  Entity, *Data;
 	Tokens DataType;
 	Node*  testNode;
 	
 	// Person
-	EntityType = isNextToken(NAME, NAME, false, true , true)->data;
+	Entity = isNextToken(NAME, NAME, false, true , true)->data;
 	
 	//         (...., true,  ....)
 	//         if we`ll check entity type	
@@ -134,7 +134,7 @@ static void parseEntity(void)
 	isNextToken(CLETTERS, COLON, false, true,  true);                  
 	
 	// Vasya	
-	Name       = isNextToken(NAME, NAME, false, true , true)->data;
+	Data  = isNextToken(NAME, NAME, false, true , true)->data;
 
 	// :	
 	isNextToken(CLETTERS, COLON, false, true,  true);	
@@ -148,9 +148,9 @@ static void parseEntity(void)
 					  //
 
 	
-	testNode  = node_construct(EntityType,
-			                   (void*) Name,
-					           DataType);	
+	testNode  = nodeConstructFromCli(Entity,
+			                         Data,
+					                 DataType);	
 		
 	// multiply add entity
 	//

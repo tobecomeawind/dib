@@ -45,7 +45,7 @@ void nodeDestruct(Node* node)
 	dataDestruct(node->data);
 	
 	for(size_t i = 0; i < node->rsize; i++)
-		relation_destruct(node->relations[i]);	
+		relationDestruct(node->relations[i]);	
 	
 	//entityTypeDestruct(node->type);	
 	free(node->relations);
