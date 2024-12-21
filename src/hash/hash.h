@@ -24,12 +24,13 @@ typedef struct {
 } HashTable;
 
 
-uint64_t   hash                  (char* val);
-HashTable* hashTableInit         (uint8_t size);
-void       hashTableInsert       (HashTable*  table, EntityType* data);
-void       hashTableDestruct     (HashTable*  htptr);
-bool       hashTableSearchByName (HashTable*  table, char* name);
-void       hashTableDeleteByName (HashTable*  table, char* name); 
-HashNode*  hashNodeConstruct     (EntityType* etptr);
+uint64_t    hash                  (char* val);
+HashTable*  hashTableInit         (uint8_t size);
+void        hashTableInsert       (HashTable*  table, EntityType* data);
+void        hashTableDestruct     (HashTable*  htptr);
+EntityType* hashTableSearchByName (HashTable*  table, char* name);
+EntityType* hashTableSearchByHash (HashTable*  table, uint64_t hashVal);
+void        hashTableDeleteByName (HashTable*  table, char* name); 
+HashNode*   hashNodeConstruct     (EntityType* etptr);
 
 #endif

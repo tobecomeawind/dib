@@ -6,12 +6,12 @@
 
 #include "hash.h"
 
-static uint8_t   hashNodeIndex    (HashNode*   hnptr,   uint8_t size);
-static uint8_t   hashIndex        (uint64_t    hashVal, uint8_t size);
-static HashNode* hashNodeInit     (EntityType* data );
-static void      hashNodeDestruct (HashNode*   hnptr);
-static bool      hashTableSearch  (HashTable*  table,   uint64_t hashVal);
-static void      hashTableDelete  (HashTable*  table,   uint64_t hashVal);
+static uint8_t     hashNodeIndex    (HashNode*   hnptr,   uint8_t size);
+static uint8_t     hashIndex        (uint64_t    hashVal, uint8_t size);
+static HashNode*   hashNodeInit     (EntityType* data );
+static void        hashNodeDestruct (HashNode*   hnptr);
+static EntityType* hashTableSearch  (HashTable*  table,   uint64_t hashVal);
+static void        hashTableDelete  (HashTable*  table,   uint64_t hashVal);
 static inline uint64_t getHash(HashNode* hashNode);
 
 
@@ -23,6 +23,9 @@ static inline uint64_t getHash(HashNode* hashNode);
 // Word "Node" = Hash Node(node of hash table bucket linked list)
 //
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
 
 
 uint64_t hash(char* val)
@@ -159,7 +162,7 @@ void hashTableInsert (HashTable* table, EntityType* data)
 }
 
 
-bool hashTableSearchByName (HashTable* table, char* name)
+EntityType* hashTableSearchByName (HashTable* table, char* name)
 {
 	//------------------------
 	// Search Node by Name
@@ -172,8 +175,13 @@ bool hashTableSearchByName (HashTable* table, char* name)
 	return hashTableSearch(table, hashName);			
 }
 
+EntityType* hashTableSearchByHash (HashTable* table, uint64_t hashVal)
+{
+	return hashTableSearch(table, hashVal);	
+}
 
-static bool hashTableSearch (HashTable* table, uint64_t hashVal)
+
+static EntityType* hashTableSearch (HashTable* table, uint64_t hashVal)
 {
 	//----------------------
 	// Search Node by hash
@@ -186,9 +194,9 @@ static bool hashTableSearch (HashTable* table, uint64_t hashVal)
 	if (tmp) // if bucket exists	
 		for (;tmp; tmp = tmp->next) // check list  
 			if (getHash(tmp) == hashVal)
-				return true; // if hash`s equals
+				return tmp->data; // if hash`s equals
 			
-	return false;
+	return NULL;
 }
 
 

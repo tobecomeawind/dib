@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 
+
 typedef struct { // Entity = Node || Relation
 
 	char     *typename;
@@ -12,5 +13,7 @@ typedef struct { // Entity = Node || Relation
 
 EntityType* entityTypeConstruct(char* name, uint64_t hash);
 void        entityTypeDestruct (EntityType* fuckYou);
+
+void initEntitiesTempTable (void);
 
 #endif

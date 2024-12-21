@@ -1,7 +1,8 @@
 #ifndef FILES_H
 #define FILES_H
 
-#define TEMP_FILE "entities.tmp"
+#define TEMP_FILE "/home/tobecomeawind/Devs/dib/data/tmp/entities.tmp"
+
 
 /*
 // Start points if entity data

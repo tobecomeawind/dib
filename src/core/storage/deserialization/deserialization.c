@@ -24,6 +24,9 @@ HashTable* hashTableDeserialize (void)
 	if (!tmpfp) return NULL;
 
 	hashTableSize = fgetc(tmpfp);
+
+	if (hashTableSize == EOF) return NULL;
+
 	table = hashTableInit(hashTableSize);
 
 	for (uint8_t i = 0; i < hashTableSize; i++) {

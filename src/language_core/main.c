@@ -7,6 +7,7 @@
 #include "lexer.h"
 #include "tokens.h"
 #include "parser.h"
+#include "entity_type.h"
 
 #define MAX_LINE_SIZE 128
 
@@ -25,6 +26,8 @@ int main(void)
 	//Manager  CLI commands//
 	//---------------------//
 	
+	
+	initEntitiesTempTable();
 
 	Token *ptr;
 
