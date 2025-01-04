@@ -39,17 +39,6 @@ Token* isKeyword(char *word)
 	tptr = malloc(sizeof(Token));
 	memcpy(tptr, &keyword, sizeof(keyword));
 
-	/*	
-	tptr       = malloc(sizeof(Token));
-	tptr->data = malloc(sizeof(char*));
-
-	tptr->type = keyword.type; 
-	while(*tptr->data++ = *keyword.data++);	
-	*/	
-	
-	//memcpy((char*)tptr->data, (char*)keyword.data, sizeof(strlen(keyword.data)));
-
-
 	return tptr;
 }
 

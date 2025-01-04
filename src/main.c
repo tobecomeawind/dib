@@ -10,16 +10,16 @@
 int main(void)
 {	
 	Node *Tom, *Lucy;	
-	HashTable* table;	
-	/*	
-	HashTable* table = hashTableInit(2);
+	//HashTable* table;
+
+	HashTable* table = hashTableInit(1);	
 
 	Tom  = nodeConstructFromCli("Personallity", "Tom",  K_CHAR);		
 	Lucy = nodeConstructFromCli("MustafaBlya", "Lucy", K_CHAR);	
 	
 	hashTableInsert(table, Tom->type);
 	hashTableInsert(table, Lucy->type);
-	*/
+	
 
 	/*
 	testnptr = (Node**) calloc(2, sizeof(Node*));
@@ -29,7 +29,7 @@ int main(void)
 	*/
 
 	//hashTableSerialize(table);
-	table = hashTableDeserialize();	
+	//table = hashTableDeserialize();	
 
 	/*
 	add_relation(Tom,
@@ -42,8 +42,8 @@ int main(void)
 
 	*/
 
-	//nodeDestruct(Tom);
-	//nodeDestruct(Lucy);
+	nodeDestruct(Tom);
+	nodeDestruct(Lucy);
 	hashTableDestruct(table);	
 	
 	return 0;

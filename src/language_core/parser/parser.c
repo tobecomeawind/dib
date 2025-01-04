@@ -246,6 +246,9 @@ static void errorCall (Token* token, Tokens expectedType)
             "|Expected: \"%s\"|---|Given: \"%s\"|",
              expectedErrorWord,   givenData);
 
+	freeTokensBuf();
+	freeTokensTempBuf();
+	
 	invokeCliError(errorString);
 
 	free(errorString);

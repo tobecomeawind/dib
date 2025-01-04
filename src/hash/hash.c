@@ -12,6 +12,7 @@ static HashNode*   hashNodeInit     (EntityType* data );
 static void        hashNodeDestruct (HashNode*   hnptr);
 static EntityType* hashTableSearch  (HashTable*  table,   uint64_t hashVal);
 static void        hashTableDelete  (HashTable*  table,   uint64_t hashVal);
+static void        hashTableRealloc (HashTable*  table);
 static inline uint64_t getHash(HashNode* hashNode);
 
 
@@ -140,7 +141,9 @@ void hashTableInsert (HashTable* table, EntityType* data)
 	//---------------------------------
 	// Insert data in hash table bucket
 	//---------------------------------
-	
+
+	hashTableRealloc(table); // realloc array with size+1
+
 	HashNode* hnptr       = hashNodeInit(data);	
 	uint8_t   insertIndex = hashNodeIndex(hnptr, table->size);
 	HashNode* tmp         = table->array[insertIndex];	
@@ -159,6 +162,13 @@ void hashTableInsert (HashTable* table, EntityType* data)
 													// exists
 	
 	tmp->next = hnptr; // add last value
+}
+
+
+static void hashTableRealloc (HashTable* table)
+{
+	table->size += 1;
+	table->array = realloc(table->array, sizeof(HashNode*) * table->size);	
 }
 
 
