@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <assert.h>
 
 #include "lexer.h"
 #include "tokens.h"
@@ -17,8 +16,9 @@ static void mainParsing (void);
 static void parseKeyword(void);
 
 
-static void borderWrapper(bordersType btype, void (*func)(void));
-static void parseEntity  (void);
+static void borderWrapper(bordersType btype, bool (*func)(void));
+
+static bool parseEntity  (void);
 
 
 static Token* isNextToken(Tokens majorType,
@@ -37,6 +37,15 @@ Token *tbptr    ;   // token buf pointer
 // Intern temp buffer declaration
 Token *tokensTempBuf;
 Token *ttbptr;      // token temp buf pointer
+
+
+
+
+#define checkErrorCall(X, point) \
+if(!(X)) {             \
+	goto point;        \
+}                      \
+
 
 
 
@@ -116,39 +125,43 @@ static void parseKeyword(void)
 
 
 
-static void parseEntity(void)
+static bool parseEntity(void)
 {	
 	//ENTITY	
-	
+
+	Token* tmpToken;	
 	char*  Entity, *Data;
 	Tokens DataType;
 	Node*  testNode;
 	
 	// Person
-	Entity = isNextToken(NAME, NAME, false, true , true)->data;
-	
+	checkErrorCall(tmpToken = isNextToken(NAME, NAME, false, true , true),
+			                                                       errorPoint);
+	Entity = tmpToken->data;	
 	//         (...., true,  ....)
 	//         if we`ll check entity type	
 	//checkEntityType())	
 	
 	// :	
-	isNextToken(CLETTERS, COLON, false, true,  true);                  
+	checkErrorCall(isNextToken(CLETTERS, COLON, false, true, true), errorPoint);
 	
 	// Vasya	
-	Data  = isNextToken(NAME, NAME, false, true , true)->data;
+	checkErrorCall(tmpToken = isNextToken(NAME, NAME, false, true , true),
+                                                                    errorPoint);
+	Data = tmpToken->data;
 
 	// :	
-	isNextToken(CLETTERS, COLON, false, true,  true);	
+	checkErrorCall(isNextToken(CLETTERS, COLON, false, true, true), errorPoint);
 	
 	// CHAR
-	DataType   = isNextToken(DATATYPE, 0,  false, false, true)->minorType;  
-	
+	checkErrorCall(isNextToken(DATATYPE, 0,  false, false, true),   errorPoint);
+	DataType = tmpToken->minorType;	
 	//check type and name
 					  //
 					  // ENTITY (Person:Vasya:CHAR)
 					  //
 
-	
+
 	testNode  = nodeConstructFromCli(Entity,
 			                         Data,
 					                 DataType);	
@@ -158,14 +171,19 @@ static void parseEntity(void)
 	// Example
 	// ENTITY (Person:Vasya:CHAR, Person:Sonya:CHAR)
 	//
-	if(isNextToken(CLETTERS, COMMA, true, true, false)){
+	if( isNextToken(CLETTERS, COMMA, true, true, false) ){
 		getToken();    // skip "," token
 		parseEntity(); 	
 	}
+	
+	return true;
+
+	errorPoint:		
+		return false;
 }
 
 
-static void borderWrapper(bordersType btype, void (*func)(void))
+static void borderWrapper(bordersType btype, bool (*func)(void))
 {	
 	//-----------------------------------------------	
 	// Wrap the function(statement) to check borders
@@ -188,7 +206,8 @@ static void borderWrapper(bordersType btype, void (*func)(void))
 	}
 	
 	isNextToken(BORDERS, openBorder,  false, true, true);        // (	
-	func();
+	if ( !func() ) return;
+	
 	isNextToken(BORDERS, closeBorder, false, true, true);        // )
 }
 
@@ -209,6 +228,9 @@ static Token* isNextToken(Tokens majorType,
 	//------------------------------------
 
 	Token  *tokenVar       = getToken();
+
+	if (!tokenVar) return NULL;
+
 	Tokens  tokenMajorType = tokenVar->majorType;
 	Tokens  tokenMinorType = tokenVar->minorType;
 	
@@ -247,8 +269,6 @@ static void errorCall (Token* token, Tokens expectedType)
             "|Expected: \"%s\"|---|Given: \"%s\"|",
              expectedErrorWord,   givenData);
 
-	freeTokensBuf();
-	freeTokensTempBuf();
 	
 	invokeCliError(errorString);
 

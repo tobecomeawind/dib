@@ -102,8 +102,6 @@ Token *analyze_line(char *lptr, int size)
 	free(tokenWord);
 	free(tmpToken);	
 
-	// tbptr = NULL; // stop point in tokens buf 
-	
 	tbptr = tokensBuf;
 
 	return tokensBuf;	
@@ -120,10 +118,8 @@ static void appendToken(Tokens majType, // majorType
 
 	if (tbptr - tokensBuf > MAX_TOKEN_BUF_SIZE){
 		printf("\nError: TokensBuf are is full!\n");	
-		exit(-1);
 	}	
 	
-
 	// Copy data in new variable
 	// cause input data will free later in analyze line 
 	uint8_t dataSize = strlen(data);	
@@ -131,23 +127,9 @@ static void appendToken(Tokens majType, // majorType
 	memcpy(newData, data, dataSize);
 
 
-	Token* tmpToken = tokenConstruct(majType, minType, data);	
+	Token* tmpToken = tokenConstruct(majType, minType, newData);	
 	*tbptr++        = *tmpToken;
 
-
-	/*
-	Token *tokenVar = (Token*) malloc(sizeof(Token));	
-	int    dataSize = (int)    strlen(data);
-	char  *dataVar  = (char*)  malloc(strlen(dataSize));
-
-	memcpy(dataVar, data, dataSize);
-
-	tokenVar->majorType = majType;
-	tokenVar->minorType = minType;
-	tokenVar->data = dataVar;
-
-	*tbptr++ = *tokenVar;
-	*/
 }
 
 

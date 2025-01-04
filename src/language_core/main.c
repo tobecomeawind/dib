@@ -64,8 +64,6 @@ void invokeCliError(char* errorWord)
 {
 	printf("\nError~~~ %s\n", errorWord);
 	lineBufIndex = 0;
-	//free(errorWord);
-    invokeCliIteration();	
 }
 
 
