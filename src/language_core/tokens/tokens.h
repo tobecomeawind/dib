@@ -42,14 +42,18 @@ typedef enum
 
 } Tokens;
 
-typedef struct {
+
+typedef struct token_t {
+
 	Tokens       majorType; 
 	Tokens       minorType;
-    char        *data;	
+    char        *data;
+
 } Token;
 
+Token* tokenConstruct (Tokens major, Tokens minor, char* data);
 
-Token *isKeyword   (char *word);
+bool   isKeyword   (char *word, Token* tptr);
 bool   isParenses  (char *c);
 bool   isColon     (char *c);
 bool   isWhiteSpace(char *c);

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #include "lexer.h"
 #include "tokens.h"
@@ -270,20 +271,21 @@ static void errorCall (Token* token, Tokens expectedType)
 //-----------------------------
 
 
-static Token *getToken(void)
+static Token* getToken(void)
 {
 	uint8_t mediateResult = ttbptr - tokensTempBuf;	
-
-	if (mediateResult > 0){
-		return --ttbptr;
-	} else {	
-		if ((tbptr - tokensBuf < MAX_TOKEN_BUF_SIZE) && tbptr){			
-			return tbptr++;	
-		}
+	
+	// if tokensTempBuf not empty
+	// return value from tokens temp bur pointer
+	if ( mediateResult > 0 ) return --ttbptr;
+	
+	// if (tbprt != NULL) && (tbptr != last token in tokensBuf)
+	// return current token and shift right by one pos in tokensBuf
+	if ( tbptr && (tbptr - tokensBuf < MAX_TOKEN_BUF_SIZE)) return tbptr++;	
+	
 		
-		// tbptr oferflowed or tbptr == stop point(NULL)
-		return NULL;
-	}
+	// tbptr oferflowed or tbptr == stop point(NULL)
+	return NULL;	
 }
 
 

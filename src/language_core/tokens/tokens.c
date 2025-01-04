@@ -6,7 +6,21 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-Token* isKeyword(char *word)
+
+Token* tokenConstruct (Tokens major, Tokens minor, char* data)
+{
+	Token* tptr = malloc(sizeof(Token));	
+	
+	if (!tptr) return NULL;
+
+	tptr->majorType = major;	
+	tptr->minorType = minor;	
+	tptr->data      = data;
+
+	return tptr;	
+}
+
+bool isKeyword(char *word, Token* tptr)
 {
 	//--------------------------
 	//Check the word is keyword
@@ -15,7 +29,7 @@ Token* isKeyword(char *word)
 	//--------------------------
 
 	int8_t  index, size;
-	Token   *tptr, keyword; // token pointer
+	Token  keyword; // token pointer
 
 	Token keywords[] = { // Keyword tokens
 		{.majorType = DATATYPE, .minorType = K_CHAR,     .data = "CHAR"    },
@@ -27,19 +41,18 @@ Token* isKeyword(char *word)
 	};
 	
 	size = sizeof(keywords) / sizeof(Token); 
+	
 	// return keyword token if word in keywords else 0
 	index = binsearch((void**)keywords, size, (void*)word, bsTOKEN);	
-
-	keyword = keywords[index];
-
-	if(index < 0){
-		return NULL;
+	
+	if( index < 0 ) {
+		tptr = NULL;
+		return false;
 	}
 
-	tptr = malloc(sizeof(Token));
+	keyword = keywords[index];
 	memcpy(tptr, &keyword, sizeof(keyword));
-
-	return tptr;
+	return true;
 }
 
 

@@ -25,36 +25,34 @@ Token *analyze_line(char *lptr, int size)
 	// Tokens in tokenBuf
 	//------------------------------
 		
-	char   *tokenWord = (char*) malloc(sizeof(char) * MAX_WORD_SIZE);
-	char   *twptr     = tokenWord;	// token word pointer
+	char* tokenWord = (char*) malloc(sizeof(char) * MAX_WORD_SIZE);
+	char* twptr     = tokenWord;	// token word pointer
 	
-
-
-	Token  *tempVar;
+	Token* tmpToken = malloc(sizeof(Token));
 	
 	initTokensBuf();
 
-	while(*lptr != '\0'){
-		if (isAlNum(lptr)) {
+	while( *lptr != '\0' ) {
+		if ( isAlNum(lptr) ) {
 		
 			do{
 				*twptr++ = *lptr;
-			} while(isAlNum(++lptr));
+			} while( isAlNum(++lptr) );
 			
 			*twptr = '\0';
 			
 
-			if (tempVar = isKeyword(tokenWord)){
-				appendToken(tempVar->majorType,
-							tempVar->minorType,
-							tempVar->data);		
+			if ( isKeyword(tokenWord, tmpToken) ) {
+				appendToken(tmpToken->majorType,
+							tmpToken->minorType,
+							tmpToken->data);		
 			} else {
 				appendToken(NAME,
 							NAME,
 							tokenWord);		
 			}		
 
-			free(tempVar);	
+			//free(tmpToken);	
 			twptr = tokenWord;
 		} else { // last symbol jump fix
 			
@@ -102,6 +100,7 @@ Token *analyze_line(char *lptr, int size)
 
 	
 	free(tokenWord);
+	free(tmpToken);	
 
 	// tbptr = NULL; // stop point in tokens buf 
 	
@@ -123,10 +122,23 @@ static void appendToken(Tokens majType, // majorType
 		printf("\nError: TokensBuf are is full!\n");	
 		exit(-1);
 	}	
+	
 
+	// Copy data in new variable
+	// cause input data will free later in analyze line 
+	uint8_t dataSize = strlen(data);	
+	char* newData    = malloc(dataSize);
+	memcpy(newData, data, dataSize);
+
+
+	Token* tmpToken = tokenConstruct(majType, minType, data);	
+	*tbptr++        = *tmpToken;
+
+
+	/*
 	Token *tokenVar = (Token*) malloc(sizeof(Token));	
 	int    dataSize = (int)    strlen(data);
-	char  *dataVar  = (char*)  malloc(sizeof(char) * dataSize);
+	char  *dataVar  = (char*)  malloc(strlen(dataSize));
 
 	memcpy(dataVar, data, dataSize);
 
@@ -135,6 +147,7 @@ static void appendToken(Tokens majType, // majorType
 	tokenVar->data = dataVar;
 
 	*tbptr++ = *tokenVar;
+	*/
 }
 
 
