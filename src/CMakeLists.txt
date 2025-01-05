@@ -9,9 +9,6 @@ include_directories(
 	${CMAKE_CURRENT_LIST_DIR}/core/entity_type
 )
 
-#add_subdirectory(types)
-
-
 target_link_libraries(main
 	PRIVATE
 		algs

@@ -11,6 +11,7 @@ static EntityType* entityTypeNew (char* typeName, uint64_t hashValue);
 
 static HashTable* EntitiesTempTable;
 
+
 void initEntitiesTempTable (void)
 {
 	HashTable* table;

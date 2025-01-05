@@ -3,22 +3,7 @@ cmake_minimum_required(VERSION 3.28)
 project(cli)
 
 set(CMAKE_BUILD_TYPE Debug)
-#set(CMAKE_VERBOSE_MAKEFILE ON)
-
-#[[
-include_directories( 
-				   	${CMAKE_CURRENT_LIST_DIR}/tokens
-				   	${CMAKE_CURRENT_LIST_DIR}/../algs
-					${CMAKE_CURRENT_LIST_DIR}/../hash
-	                ${CMAKE_CURRENT_LIST_DIR}/../types 
-	                ${CMAKE_CURRENT_LIST_DIR}/lexer
-	                ${CMAKE_CURRENT_LIST_DIR}/parser
-)
-]]
-
-#[[ Building Libraries ]] 
-
-
+#set(CMAKE_VERBOSE_MAKEFILE ON) # to check debuf info
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../algs 
 	             ${CMAKE_CURRENT_BINARY_DIR}/algs)
@@ -48,21 +33,3 @@ target_link_libraries(${PROJECT_NAME}
 		
 		m
 )
-
-#[[
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../core/data
-	             ${CMAKE_CURRENT_BINARY_DIR}/data)
-			 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../core/relation
-	             ${CMAKE_CURRENT_BINARY_DIR}/relation)
-
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../core/node
-	             ${CMAKE_CURRENT_BINARY_DIR}/node)
-
-		node
-		data
-		hash
-		relation
-		m
-)
-]]
