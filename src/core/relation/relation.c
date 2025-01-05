@@ -6,8 +6,9 @@ Relation* relationConstruct(char* name, Node* destination)
 {
 	Relation* rptr; // relation pointer	
 
+	//TODO rework this shit
 	EntityType etptr = {
-		.typename = name,	
+		.typeName = name,	
 		.hashVal     = hash(name)
 	}; 
 

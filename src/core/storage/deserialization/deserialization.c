@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+
 #include "deserialization.h"
 #include "files.h"
 #include "entity_type.h"
@@ -15,14 +16,14 @@ static EntityType* entityDeserialize   (FILE* fp);
 HashTable* hashTableDeserialize (void)
 {
 	FILE*      tmpfp;
-	uint8_t    hashTableSize;
+	int8_t     hashTableSize;
 	HashTable* table;
 	HashNode*  tableNode;
 
 	tmpfp = fopen(TEMP_FILE, "r");
 
-	if (!tmpfp) return NULL;
-
+	if ( !tmpfp ) return NULL;
+	
 	hashTableSize = fgetc(tmpfp);
 
 	if (hashTableSize == EOF) return NULL;
@@ -106,37 +107,3 @@ static EntityType* entityDeserialize(FILE* fp)
 	return entity;
 }
 
-
-
-
-/*
-Node** getEntitiesArray(void)
-{
-	FILE*    tmpfp;
-	int8_t   countEntities;
-	Node**   entitiesArray;
-
-	tmpfp = fopen(TEMP_FILE, "r");	
-
-	if (!tmpfp) {
-		printf("\nEntities Temp file didn't created yet\n");	
-		return 0;
-	}
-
-	if ((countEntities = fgetc(tmpfp)) == EOF){
-		printf("\nNo data in file!\n");
-		fclose(tmpfp);
-		return NULL;
-	}
-
-	entitiesArray = (Node**) malloc(sizeof(Node*) * countEntities);	
-
-	for (size_t i = 0; i < countEntities; i++) {
-		entitiesArray[i] = entityDeserialize(tmpfp);	
-	}
-
-	fclose(tmpfp);
-
-	return entitiesArray;
-}
-*/

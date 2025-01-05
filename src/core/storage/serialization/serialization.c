@@ -80,38 +80,7 @@ static void entitySerialize(EntityType* entity, FILE* fp)
 	}
 
 	// Entity Name starts
-	data = entity->typename;
+	data = entity->typeName;
 	fputc(strlen(data), fp); // size of data
 	fprintf(fp, data);
 }
-
-
-/*
-void entityArraySerialize(Node** nodeArray, size_t arraySize)
-{
-	//----------------------------------
-	//Adding nodes to entities temp file
-	//----------------------------------	
-		
-	FILE*  tmpfp;
-	Node** entitiesArray;
-	
-	entitiesArray = getEntitiesArray();
-
-	tmpfp = fopen(TEMP_FILE, "w");
-
-	if (!entitiesArray) {
-	
-		fputc(arraySize, tmpfp);
-
-		for(size_t i = 0; i < arraySize; i++) {
-			
-			entitySerialize(nodeArray[i], tmpfp);		
-		}		
-	}
-
-	fputc(EOF, tmpfp);
-	fclose(tmpfp);
-}
-
-*/

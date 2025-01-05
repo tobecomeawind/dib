@@ -3,15 +3,15 @@
 
 #include <stdint.h>
 
+typedef struct entity_type_t{ // Entity = Node || Relation
 
-typedef struct { // Entity = Node || Relation
-
-	char     *typename;
+	char     *typeName;
 	uint64_t  hashVal;
 
 } EntityType;
 
-EntityType* entityTypeConstruct(char* name, uint64_t hash);
+EntityType* entityTypeConstruct(char* typeName, uint64_t hash);
+EntityType* entityTypeConstructTmp (char* typeName, uint64_t hashValue);
 void        entityTypeDestruct (EntityType* fuckYou);
 
 void initEntitiesTempTable (void);

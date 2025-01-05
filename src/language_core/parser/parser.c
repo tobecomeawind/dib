@@ -70,11 +70,6 @@ void startParsing(void)
 	freeTokensTempBuf();
 }
 
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//Need fix all memory
-//perepisat` kostili
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 
 static void mainParsing(void)
 {
@@ -136,7 +131,7 @@ static bool parseEntity(void)
 	
 	// Person
 	checkErrorCall(tmpToken = isNextToken(NAME, NAME, false, true , true),
-			                                                       errorPoint);
+			                                                        errorPoint);
 	Entity = tmpToken->data;	
 	//         (...., true,  ....)
 	//         if we`ll check entity type	
@@ -154,29 +149,27 @@ static bool parseEntity(void)
 	checkErrorCall(isNextToken(CLETTERS, COLON, false, true, true), errorPoint);
 	
 	// CHAR
-	checkErrorCall(isNextToken(DATATYPE, 0,  false, false, true),   errorPoint);
+	checkErrorCall(tmpToken = isNextToken(DATATYPE, 0,  false, false, true),
+                                                                    errorPoint);
 	DataType = tmpToken->minorType;	
 	//check type and name
 					  //
 					  // ENTITY (Person:Vasya:CHAR)
 					  //
 
-
-	testNode  = nodeConstructFromCli(Entity,
-			                         Data,
-					                 DataType);	
-		
+	nodeConstructCli(Entity, Data, DataType);	
+	
 	// multiply add entity
 	//
 	// Example
 	// ENTITY (Person:Vasya:CHAR, Person:Sonya:CHAR)
 	//
-	if( isNextToken(CLETTERS, COMMA, true, true, false) ){
-		getToken();    // skip "," token
-		parseEntity(); 	
+	if( !isNextToken(CLETTERS, COMMA, true, true, false) ){
+		return true;
 	}
-	
-	return true;
+
+	getToken();    // skip "," token
+	parseEntity(); 	
 
 	errorPoint:		
 		return false;

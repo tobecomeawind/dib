@@ -4,16 +4,25 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-bool isDataFromCli = false;
 
-Node* nodeConstructFromCli(char* name, char *data, Tokens dataTypeToken)
+static Node* s_nodeConstruct (EntityType* etptr, Data* dptr, Relation** rptr);
+
+// TODO как вариант в s_nodeConstruct передавать ссылки на функции
+
+Node* nodeConstructCli(char* name, char *data, Tokens dataTypeToken)
 {
 	Node* nptr; 
-	void* voidData = (void*) data;
 
-	isDataFromCli = true;
-	nptr          = nodeConstruct(name, 0, voidData, dataTypeToken);	
+	void*    voidData  = (void*) data;
+	uint64_t hashValue = hash(name);
 
+	EntityType* etptr = entityTypeConstructTmp(name, hashValue);
+	Data*       dptr  = dataConstruct(data, dataTypeToken, true);
+
+	Relation**  rptr  = (Relation**) malloc(sizeof(Relation*)); 
+
+	nptr = s_nodeConstruct(etptr, dptr, rptr);	
+	
 	return nptr;
 }
 
@@ -25,16 +34,30 @@ Node* nodeConstruct(char*    name,
 {
 	Node*  nptr;	// node pointer
 	
+	EntityType* etptr = entityTypeConstruct(name, hashValue);
+	Data*       dptr  = dataConstruct(data, dataTypeToken, false);
+
+	Relation**  rptr  = (Relation**) malloc(sizeof(Relation*)); 
+
+	nptr = s_nodeConstruct(etptr, dptr, rptr);
+	
+	return nptr;
+}
+
+
+static Node* s_nodeConstruct (EntityType* etptr, Data* dptr, Relation** rptr)
+{
+	Node* nptr;
+
 	nptr = (Node*) malloc(sizeof(Node));
 
-	nptr->type      = entityTypeConstruct(name, hashValue);
-	nptr->data      = dataConstruct(data, dataTypeToken, isDataFromCli);
-	nptr->rsize     = 0;
-	nptr->relations = (Relation**) malloc(sizeof(Relation*)); 
+	if ( !nptr ) return NULL;
 
-	isDataFromCli = false;	
+	nptr->type      = etptr;
+	nptr->data      = dptr;
+	nptr->rsize     = 0; // TODO rework
+	nptr->relations = rptr;
 
-		
 	return nptr;
 }
 
