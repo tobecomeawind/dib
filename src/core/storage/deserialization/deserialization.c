@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
-
+#include <string.h>
 
 #include "deserialization.h"
 #include "files.h"
@@ -95,15 +95,10 @@ static EntityType* entityDeserialize(FILE* fp)
 
 	// Data size in bytes
 	chunkSize = fgetc(fp);
-
 	name = (char*) malloc(chunkSize);
-
 	fread(name, 1, chunkSize, fp);		
 
-	//printf("\nEntity hash: %lli Data: %s\n", hash, (char*)data);		
-
 	entity = entityTypeConstruct(name, hash);	
-
 	return entity;
 }
 

@@ -4,13 +4,33 @@
 #include "serialization.h"
 
 #include <stdlib.h>
-
+#include <stdio.h>
 
 static EntityType* entityTypeNew (char* typeName, uint64_t hashValue);
 
 
 static HashTable* EntitiesTempTable;
 
+
+static inline void actualizeTable () // update table to last info
+{
+	EntitiesTempTable = hashTableDeserialize();	
+}
+
+
+void printEntities (void)
+{
+	HashNode** entities = EntitiesTempTable->array;
+	HashNode* tmpNode;
+
+	for (uint8_t i = 0; i < EntitiesTempTable->size - 1; ++i) {
+		tmpNode = entities[i];	
+		while (tmpNode) {
+			printf("%s\n", tmpNode->data->typeName);	
+			tmpNode = tmpNode->next;
+		}
+	}
+}
 
 void initEntitiesTempTable (void)
 {

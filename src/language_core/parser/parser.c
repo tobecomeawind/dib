@@ -110,6 +110,7 @@ static void parseKeyword(void)
 			break;
 		case (K_ENTITIES):
 			printf("\nEntities check\n");
+			printEntities();		
 			break;	
 		case (K_LINK):
 			printf("\nLink check\n");
@@ -156,6 +157,7 @@ static bool parseEntity(void)
 					  //
 					  // ENTITY (Person:Vasya:CHAR)
 					  //
+	
 
 	nodeConstructCli(Entity, Data, DataType);	
 	

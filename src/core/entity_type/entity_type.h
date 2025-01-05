@@ -14,6 +14,8 @@ EntityType* entityTypeConstruct(char* typeName, uint64_t hash);
 EntityType* entityTypeConstructTmp (char* typeName, uint64_t hashValue);
 void        entityTypeDestruct (EntityType* fuckYou);
 
+void printEntities (void);
+
 void initEntitiesTempTable (void);
 
 #endif

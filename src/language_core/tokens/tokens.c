@@ -59,27 +59,27 @@ bool isKeyword(char *word, Token* tptr)
 bool isParenses(char *c)
 {
 	return *c == '(' || *c == ')';
-};
+}
 
 bool isColon(char *c)
 {
 	return *c == ':';
-};
+}
 
 bool isComma(char *c)
 {
 	return *c == ',';
-};
+}
 
 bool isWhiteSpace(char *c)
 {
 	return *c == ' ' || *c == '\t';
-};
+}
 
 bool isAlNum(char *c)
 {
 	return isalnum(*c) || *c == '.';
-};
+}
 
 
 char* convertTokenToString(Tokens token)

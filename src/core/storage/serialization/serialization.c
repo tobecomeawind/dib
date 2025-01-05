@@ -26,7 +26,7 @@ void hashTableSerialize (HashTable* table)
 
 	fputc(table->size, tmpfp);
 
-	for (uint8_t i = 0; i < table->size; ++i)
+	for (uint8_t i = 0; i < table->size - 1; ++i)
 		hashNodeSerialize(table->array[i], tmpfp);	
 	 	
 	fputc(EOF, tmpfp);
@@ -70,7 +70,7 @@ static void entitySerialize(EntityType* entity, FILE* fp)
 	// Entity name for hashTable
 	hash = entity->hashVal;	
 
-	fputc(sizeof(hash),            fp);  // size of hash
+	fputc(sizeof(hash), fp);  // size of hash
 
 	for(size_t i = sizeof(uint64_t) / sizeof(uint8_t); i > 0; i--) {
 		fputc((int8_t)(hash >> ((i - 1) * 8)), fp); // i - 1 cause 
@@ -78,9 +78,9 @@ static void entitySerialize(EntityType* entity, FILE* fp)
 													// if we shift 64 bits right
 													// we lost data
 	}
-
 	// Entity Name starts
 	data = entity->typeName;
 	fputc(strlen(data), fp); // size of data
+	
 	fprintf(fp, data);
 }

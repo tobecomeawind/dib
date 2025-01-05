@@ -47,6 +47,8 @@ uint64_t hash(char* val)
 
 HashNode* hashNodeConstruct (EntityType* etptr)
 {
+	if ( !etptr ) return NULL; // fuck u! dont send me empty data
+	
 	return hashNodeInit(etptr);
 }
 

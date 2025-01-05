@@ -25,7 +25,7 @@ Token *analyze_line(char *lptr, int size)
 	// Tokens in tokenBuf
 	//------------------------------
 		
-	char* tokenWord = (char*) malloc(sizeof(char) * MAX_WORD_SIZE);
+	char* tokenWord = (char*) malloc(MAX_WORD_SIZE);
 	char* twptr     = tokenWord;	// token word pointer
 	
 	Token* tmpToken = malloc(sizeof(Token));
@@ -98,7 +98,7 @@ Token *analyze_line(char *lptr, int size)
 		}	
 	}
 
-	
+
 	free(tokenWord);
 	free(tmpToken);	
 
@@ -110,7 +110,7 @@ Token *analyze_line(char *lptr, int size)
 
 static void appendToken(Tokens majType, // majorType
 						Tokens minType, // minorType
-						char *data)     // word
+						char*  data)    // word
 {
 	//-------------------------
 	//Append token in tokensBuf
@@ -122,14 +122,11 @@ static void appendToken(Tokens majType, // majorType
 	
 	// Copy data in new variable
 	// cause input data will free later in analyze line 
-	uint8_t dataSize = strlen(data);	
-	char* newData    = malloc(dataSize);
-	memcpy(newData, data, dataSize);
-
+	char* newData = malloc(strlen(data));
+	strcpy(newData, data);
 
 	Token* tmpToken = tokenConstruct(majType, minType, newData);	
 	*tbptr++        = *tmpToken;
-
 }
 
 

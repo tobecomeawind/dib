@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
-
+#include <stdio.h>
 
 static Node* s_nodeConstruct (EntityType* etptr, Data* dptr, Relation** rptr);
 
@@ -16,7 +16,7 @@ Node* nodeConstructCli(char* name, char *data, Tokens dataTypeToken)
 	void*    voidData  = (void*) data;
 	uint64_t hashValue = hash(name);
 
-	EntityType* etptr = entityTypeConstructTmp(name, hashValue);
+	EntityType* etptr = entityTypeConstructTmp(name, hashValue);	
 	Data*       dptr  = dataConstruct(data, dataTypeToken, true);
 
 	Relation**  rptr  = (Relation**) malloc(sizeof(Relation*)); 
