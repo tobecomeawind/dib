@@ -47,10 +47,6 @@ static HashNode* hashNodeDeserialize (FILE* tmpfp)
 	HashNode*   hnptr;
 	EntityType* etptr;
 
-	int fd;
-
-	fd = fileno(tmpfp); 
-
 	etptr = entityDeserialize(tmpfp);
 
 	hnptr = hashNodeConstruct(etptr);
