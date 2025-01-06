@@ -20,12 +20,9 @@ static void borderWrapper(bordersType btype, bool (*func)(void));
 
 static bool parseEntity  (void);
 
-
-static Token* isNextToken(Tokens majorType,
-						  Tokens minorType, 
-		                  bool   addTokenInTempBuf,
-                          bool   minorCheck,						
-						  bool   errorCheck);
+static Token* isNextToken(Tokens         majorType,
+						  Tokens         minorType, 
+                          isNextTokenArg args);
 
 extern void invokeCliError(char*);
 static void errorCall (Token* token, Tokens expectedType);
@@ -37,8 +34,6 @@ Token *tbptr    ;   // token buf pointer
 // Intern temp buffer declaration
 Token *tokensTempBuf;
 Token *ttbptr;      // token temp buf pointer
-
-
 
 
 #define checkErrorCall(X, point) \
@@ -98,7 +93,7 @@ static void parseKeyword(void)
 	Token* tok;
 	Tokens tokenMajorType, tokenMinorType;
 
-	if( !(tok = isNextToken(KEYWORDS, 0, false, false, false)) ){
+	if( !(tok = isNextToken(KEYWORDS, 0, NO_ARGS)) ){
 		invokeCliError("Expected Keyword");	
 		return;	
 	}	
@@ -132,30 +127,26 @@ static bool parseEntity(void)
 	Token* tmpToken;	
 	char*  Entity, *Data;
 	Tokens DataType;
-	Node*  testNode;
 	
 	// Person
-	checkErrorCall(tmpToken = isNextToken(NAME, NAME, false, true , true),
-			                                                        errorPoint);
+	checkErrorCall(tmpToken = isNextToken(NAME, NAME, MINOR&ERROR), errorPoint);
 	Entity = tmpToken->data;	
 	//         (...., true,  ....)
 	//         if we`ll check entity type	
 	//checkEntityType())	
 	
 	// :	
-	checkErrorCall(isNextToken(CLETTERS, COLON, false, true, true), errorPoint);
+	checkErrorCall(isNextToken(CLETTERS, COLON, MINOR & ERROR), errorPoint);
 	
 	// Vasya	
-	checkErrorCall(tmpToken = isNextToken(NAME, NAME, false, true , true),
-                                                                    errorPoint);
+	checkErrorCall(tmpToken = isNextToken(NAME, NAME, MINOR&ERROR), errorPoint);
 	Data = tmpToken->data;
 
 	// :	
-	checkErrorCall(isNextToken(CLETTERS, COLON, false, true, true), errorPoint);
+	checkErrorCall(isNextToken(CLETTERS, COLON, MINOR & ERROR), errorPoint);
 	
 	// CHAR
-	checkErrorCall(tmpToken = isNextToken(DATATYPE, 0,  false, false, true),
-                                                                    errorPoint);
+	checkErrorCall(tmpToken = isNextToken(DATATYPE, 0,  ERROR), errorPoint);
 	DataType = tmpToken->minorType;	
 	//check type and name
 					  //
@@ -170,7 +161,7 @@ static bool parseEntity(void)
 	// Example
 	// ENTITY (Person:Vasya:CHAR, Person:Sonya:CHAR)
 	//
-	if( !isNextToken(CLETTERS, COMMA, true, true, false) ){
+	if( !isNextToken(CLETTERS, COMMA, TEMP & MINOR) ){
 		return true;
 	}
 
@@ -204,20 +195,17 @@ static void borderWrapper(bordersType btype, bool (*func)(void))
 			break;
 	}
 	
-	isNextToken(BORDERS, openBorder,  false, true, true);        // (	
-	if ( !func() ) return;
-	
-	isNextToken(BORDERS, closeBorder, false, true, true);        // )
+	isNextToken(BORDERS, openBorder,  MINOR & ERROR);        // (	
+	if ( !func() ) return;	
+	isNextToken(BORDERS, closeBorder, MINOR & ERROR);        // )
 }
 
 
 
 
-static Token* isNextToken(Tokens majorType,
-						Tokens minorType, 
-		                bool   addTokenInTempBuf,
-                        bool   minorCheck,						
-						bool   errorCheck)
+static Token* isNextToken(Tokens         majorType,
+                          Tokens         minorType, 
+                          isNextTokenArg args)
 {
 	//------------------------------------
 	// If all conditions true
@@ -233,7 +221,7 @@ static Token* isNextToken(Tokens majorType,
 	Tokens  tokenMajorType = tokenVar->majorType;
 	Tokens  tokenMinorType = tokenVar->minorType;
 	
-	if ( addTokenInTempBuf )
+	if ( args & TEMP )
 		ungetToken(tokenVar);
 
 	// if majors type not equal
@@ -241,7 +229,7 @@ static Token* isNextToken(Tokens majorType,
 		goto errorCheckPoint;	
 	
 	// minors type not equal
-	if( minorCheck && !(tokenMinorType == minorType) ) 
+	if( (args & MINOR) && !(tokenMinorType == minorType) ) 
 		goto errorCheckPoint;	
 
 
@@ -250,8 +238,8 @@ static Token* isNextToken(Tokens majorType,
 
 
 	errorCheckPoint:
-		if ( errorCheck )
-			errorCall(tokenVar, (minorCheck) ? (minorType) : (majorType));	
+		if ( args & ERROR )
+			errorCall(tokenVar, (args & MINOR) ? (minorType) : (majorType));	
 		// if error	
 		return NULL;
 }

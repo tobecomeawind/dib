@@ -10,5 +10,14 @@ typedef enum {
 
 } bordersType;
 
+typedef enum isNextTokenCheck_t {
+	
+	NO_ARGS = 0x00,
+    TEMP    = 0x01, // add    token in temp buf
+    MINOR   = 0x02, // check  minor value	
+    ERROR   = 0x04, // invoke error
+
+} isNextTokenArg;
+
 
 #endif
