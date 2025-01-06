@@ -26,7 +26,7 @@ void hashTableSerialize (HashTable* table)
 
 	fputc(table->size, tmpfp);
 
-	for (uint8_t i = 0; i < table->size - 1; ++i)
+	for (uint8_t i = 0; i < table->size; ++i)
 		hashNodeSerialize(table->array[i], tmpfp);	
 	 	
 	fputc(EOF, tmpfp);
@@ -40,7 +40,7 @@ static void hashNodeSerialize (HashNode* tableNode, FILE* tmpfp)
 	// Serialize a hash node of table
 	//-------------------------------
 	
-	if (!tableNode) {	
+	if ( !tableNode ) {	
 		fputc(0, tmpfp);
 		return;	
 	}
@@ -72,12 +72,12 @@ static void entitySerialize(EntityType* entity, FILE* fp)
 
 	fputc(sizeof(hash), fp);  // size of hash
 
-	for(size_t i = sizeof(uint64_t) / sizeof(uint8_t); i > 0; i--) {
+	for(size_t i = sizeof(uint64_t) / sizeof(uint8_t); i > 0; --i) {
 		fputc((int8_t)(hash >> ((i - 1) * 8)), fp); // i - 1 cause 
-													// 8 * 8 = 64
+	}												// 8 * 8 = 64
 													// if we shift 64 bits right
 													// we lost data
-	}
+	
 	// Entity Name starts
 	data = entity->typeName;
 	fputc(strlen(data), fp); // size of data

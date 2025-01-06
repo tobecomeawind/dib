@@ -37,7 +37,6 @@ uint8_t getDataSize(Data* dptr)
 }
 
 
-
 static vtypes DataToVarType(Tokens dataType, void* data)
 {
 	int*    intVar;

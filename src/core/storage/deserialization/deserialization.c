@@ -46,15 +46,20 @@ static HashNode* hashNodeDeserialize (FILE* tmpfp)
 	uint8_t     flag;	
 	HashNode*   hnptr;
 	EntityType* etptr;
-	
+
+	int fd;
+
+	fd = fileno(tmpfp); 
+
 	etptr = entityDeserialize(tmpfp);
 
 	hnptr = hashNodeConstruct(etptr);
 
 	if ( (flag = getc(tmpfp)) == '>' )
-		hnptr->next = hashNodeDeserialize(tmpfp);	
+		hnptr->next = hashNodeDeserialize(tmpfp);
+	else
+		ungetc(flag, tmpfp);	
 	
-	ungetc(flag, tmpfp);
 	
 	return hnptr;
 }
