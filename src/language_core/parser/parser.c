@@ -94,15 +94,19 @@ static void parseKeyword(void)
     //printf("\nMajor: %i Minor: %i Adress: %p\n", tokenMajorType, tokenMinorType, tok);
 
 	// ENTITY (Person:Andrey:CHAR)
-	if(!isNextToken(KEYWORDS, 0, true, false, false)){
+	
+	Token* tok;
+	Tokens tokenMajorType, tokenMinorType;
+
+	if( !(tok = isNextToken(KEYWORDS, 0, false, false, false)) ){
 		invokeCliError("Expected Keyword");	
 		return;	
 	}	
 	
-	Token* tok            = getToken(); 
-	Tokens tokenMajorType = tok->majorType;
-	Tokens tokenMinorType = tok->minorType;	
+	tokenMajorType = tok->majorType;
+	tokenMinorType = tok->minorType;	
 
+	
 	switch (tokenMinorType) {
 		case (K_ENTITY):
 			printf("\nEntity check\n");
@@ -222,34 +226,34 @@ static Token* isNextToken(Tokens majorType,
 	//    Returns NULL
 	//------------------------------------
 
-	Token  *tokenVar       = getToken();
+	Token  *tokenVar = getToken();
 
-	if (!tokenVar) return NULL;
+	if ( !tokenVar ) return NULL;
 
 	Tokens  tokenMajorType = tokenVar->majorType;
 	Tokens  tokenMinorType = tokenVar->minorType;
 	
-	if (addTokenInTempBuf)
+	if ( addTokenInTempBuf )
 		ungetToken(tokenVar);
 
-	if(tokenMajorType == majorType){
+	// if majors type not equal
+	if ( tokenMajorType != majorType )
+		goto errorCheckPoint;	
+	
+	// minors type not equal
+	if( minorCheck && !(tokenMinorType == minorType) ) 
+		goto errorCheckPoint;	
 
-	    if(minorCheck && !(tokenMinorType == minorType)){
-			
-			if(errorCheck)
-				errorCall(tokenVar, minorType);
-				
-			tokenVar = NULL;	
-		}
 
-	} else {
-		if(errorCheck)
-			errorCall(tokenVar, (minorCheck) ? (minorType) : (majorType));	
-		
-		tokenVar = NULL;	
-	}
-
+	// if all good
 	return tokenVar;
+
+
+	errorCheckPoint:
+		if ( errorCheck )
+			errorCall(tokenVar, (minorCheck) ? (minorType) : (majorType));	
+		// if error	
+		return NULL;
 }
 
 
