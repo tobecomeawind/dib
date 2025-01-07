@@ -28,12 +28,12 @@ extern void invokeCliError(char*);
 static void errorCall (Token* token, Tokens expectedType);
 
 // Extern buffer declaration
-Token *tokensBuf;
-Token *tbptr    ;   // token buf pointer
+Token* tokensBuf;
+Token* tbptr    ;   // token buf pointer
 
 // Intern temp buffer declaration
-Token *tokensTempBuf;
-Token *ttbptr;      // token temp buf pointer
+Token* tokensTempBuf;
+Token* ttbptr;      // token temp buf pointer
 
 
 #define checkErrorCall(X, point) \

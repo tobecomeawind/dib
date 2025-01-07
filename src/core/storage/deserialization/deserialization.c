@@ -37,6 +37,8 @@ HashTable* hashTableDeserialize (void)
 		table->array[i] = tableNode;	
 	}	
 	
+	fclose(tmpfp);
+
 	return table;
 }
 

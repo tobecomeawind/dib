@@ -83,6 +83,7 @@ EntityType* entityTypeConstructTmp (char* typeName, uint64_t hashValue)
 
 void entityTypeDestruct(EntityType* fuckYou)
 {
+	free(fuckYou->typeName);	
 	free(fuckYou);
 }
 

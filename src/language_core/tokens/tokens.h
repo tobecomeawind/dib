@@ -48,11 +48,12 @@ typedef struct token_t {
 
 	Tokens       majorType; 
 	Tokens       minorType;
-    char        *data;
+    char*        data;
 
 } Token;
 
 Token* tokenConstruct (Tokens major, Tokens minor, char* data);
+void   tokenDestruct  (Token* tptr);
 
 bool   isKeyword   (char *word, Token* tptr);
 bool   isParenses  (char *c);

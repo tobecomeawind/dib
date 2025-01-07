@@ -20,6 +20,15 @@ Token* tokenConstruct (Tokens major, Tokens minor, char* data)
 	return tptr;	
 }
 
+void tokenDestruct (Token* tptr)
+{
+	if ( !tptr )      return;
+	if ( tptr->data ) free(tptr->data);	
+	
+	free(tptr);	
+}
+
+
 bool isKeyword(char *word, Token* tptr)
 {
 	//--------------------------
@@ -52,6 +61,7 @@ bool isKeyword(char *word, Token* tptr)
 
 	keyword = keywords[index];
 	memcpy(tptr, &keyword, sizeof(keyword));
+	
 	return true;
 }
 

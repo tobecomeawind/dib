@@ -7,10 +7,10 @@
 #define MAX_TOKEN_BUF_SIZE 128
 
 
-Token *analyze_line(char *lptr, int size);
+Token* analyze_line(char *lptr, int size);
 
-extern Token  *tokensBuf;
-extern Token  *tbptr    ;  // token buf pointer
+extern Token* tokensBuf;
+extern Token* tbptr    ;  // token buf pointer
 
 void freeTokensBuf(void);
 

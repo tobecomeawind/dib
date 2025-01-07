@@ -14,7 +14,7 @@ static void appendToken(Tokens majType, // majorType
 										
 static void initTokensBuf(void);
 
-extern void invokeCliError(char *);
+extern void invokeCliError(char*);
 
 
 Token* analyze_line(char *lptr, int size)
@@ -105,8 +105,7 @@ Token* analyze_line(char *lptr, int size)
 			lptr++; // last symbol jump fix
 		}	
 	}
-
-
+	
 	tbptr = tokensBuf;
 
 	end:
@@ -129,26 +128,30 @@ static void appendToken(Tokens majType, // majorType
 		printf("\nError: TokensBuf are is full!\n");	
 	}	
 	
+	
+	tbptr->majorType = majType;
+	tbptr->minorType = minType;
+	
 	// Copy data in new variable
 	// cause input data will free later in analyze line 
-	char* newData = strdup(data);
-	//or 
-	//newData = malloc(strlen(data) + 1); // ' + 1' for '\0'
+	char* newData = malloc(strlen(data) + 1);
+	strcpy(newData, data);
 
-
-	Token* tmpToken = tokenConstruct(majType, minType, newData);	
-	*tbptr++        = *tmpToken;
+	(tbptr++)->data = newData;
 }
 
 
 static void initTokensBuf(void)
 {
-	tokensBuf = (Token *) malloc(sizeof(Token) * MAX_TOKEN_BUF_SIZE);
+	tokensBuf = (Token*) malloc(sizeof(Token) * MAX_TOKEN_BUF_SIZE);
 	tbptr     = tokensBuf;  // token buf pointer
 }
 
 void freeTokensBuf(void)
-{
+{	
+	for (uint8_t i = (tbptr - tokensBuf); i > 0; --i)
+		free((tbptr)->data);
+			
 	tbptr = NULL;
 	free(tokensBuf);
 }
