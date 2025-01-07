@@ -7,10 +7,6 @@
 #include "parser.h"
 #include "node.h"
 
-static Token  *getToken(void);
-static void  ungetToken(Token *token);
-static void initTokensTempBuf(void);
-static void freeTokensTempBuf(void);
 
 static void mainParsing (void);
 static void parseKeyword(void);
@@ -27,15 +23,6 @@ static Token* isNextToken(Tokens         majorType,
 extern void invokeCliError(char*);
 static void errorCall (Token* token, Tokens expectedType);
 
-// Extern buffer declaration
-Token* tokensBuf;
-Token* tbptr    ;   // token buf pointer
-
-// Intern temp buffer declaration
-Token* tokensTempBuf;
-Token* ttbptr;      // token temp buf pointer
-
-
 #define checkErrorCall(X, point) \
 if(!(X)) {             \
 	goto point;        \
@@ -50,12 +37,6 @@ void startParsing(void)
 	//Extern function to start parsing
 	//and init global variables
 	//--------------------------------
-	
-	if(!tbptr)
-		return;
-
-	//tokensBuf = bptr;	
-	//tbptr = bptr;	
 	
 	initTokensTempBuf();	
 
@@ -129,21 +110,21 @@ static bool parseEntity(void)
 	Tokens DataType;
 	
 	// Person
-	checkErrorCall(tmpToken = isNextToken(NAME, NAME, MINOR&ERROR), errorPoint);
+	checkErrorCall(tmpToken = isNextToken(NAME, NAME, MINOR|ERROR), errorPoint);
 	Entity = tmpToken->data;	
 	//         (...., true,  ....)
 	//         if we`ll check entity type	
 	//checkEntityType())	
 	
 	// :	
-	checkErrorCall(isNextToken(CLETTERS, COLON, MINOR & ERROR), errorPoint);
+	checkErrorCall(isNextToken(CLETTERS, COLON, MINOR|ERROR), errorPoint);
 	
 	// Vasya	
-	checkErrorCall(tmpToken = isNextToken(NAME, NAME, MINOR&ERROR), errorPoint);
+	checkErrorCall(tmpToken = isNextToken(NAME, NAME, MINOR|ERROR), errorPoint);
 	Data = tmpToken->data;
 
 	// :	
-	checkErrorCall(isNextToken(CLETTERS, COLON, MINOR & ERROR), errorPoint);
+	checkErrorCall(isNextToken(CLETTERS, COLON, MINOR|ERROR), errorPoint);
 	
 	// CHAR
 	checkErrorCall(tmpToken = isNextToken(DATATYPE, 0,  ERROR), errorPoint);
@@ -161,7 +142,7 @@ static bool parseEntity(void)
 	// Example
 	// ENTITY (Person:Vasya:CHAR, Person:Sonya:CHAR)
 	//
-	if( !isNextToken(CLETTERS, COMMA, TEMP & MINOR) ){
+	if( !isNextToken(CLETTERS, COMMA, TEMP|MINOR) ){
 		return true;
 	}
 
@@ -195,9 +176,9 @@ static void borderWrapper(bordersType btype, bool (*func)(void))
 			break;
 	}
 	
-	isNextToken(BORDERS, openBorder,  MINOR & ERROR);        // (	
+	isNextToken(BORDERS, openBorder,  MINOR|ERROR);        // (	
 	if ( !func() ) return;	
-	isNextToken(BORDERS, closeBorder, MINOR & ERROR);        // )
+	isNextToken(BORDERS, closeBorder, MINOR|ERROR);        // )
 }
 
 
@@ -277,40 +258,4 @@ static void errorCall (Token* token, Tokens expectedType)
 //buf = buf from startParsing()
 //-----------------------------
 
-
-static Token* getToken(void)
-{
-	uint8_t mediateResult = ttbptr - tokensTempBuf;	
-	
-	// if tokensTempBuf not empty
-	// return value from tokens temp bur pointer
-	if ( mediateResult > 0 ) return --ttbptr;
-	
-	// if (tbprt != NULL) && (tbptr != last token in tokensBuf)
-	// return current token and shift right by one pos in tokensBuf
-	if ( tbptr && (tbptr - tokensBuf < MAX_TOKEN_BUF_SIZE)) return tbptr++;	
-	
-		
-	// tbptr oferflowed or tbptr == stop point(NULL)
-	return NULL;	
-}
-
-
-static void ungetToken(Token *token)
-{
-	*ttbptr = *token;
-	ttbptr++;
-}
-
-static void initTokensTempBuf(void)
-{
-    tokensTempBuf = (Token*) malloc(sizeof(Token) * TOKEN_TEMP_SIZE);
-	ttbptr        = tokensTempBuf; // token temp buf pointer											  
-}
-
-static void freeTokensTempBuf(void)
-{
-	free(tokensTempBuf);
-	ttbptr = NULL;	
-}
 

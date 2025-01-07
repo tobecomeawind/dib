@@ -1,17 +1,61 @@
-#include "tokens.h"
-#include "algs.h"
-
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 
+#include "tokens.h"
+#include "algs.h"
 
-Token* tokenConstruct (Tokens major, Tokens minor, char* data)
+#define MAX_TOKEN_BUF_SIZE 128
+
+
+static Token* tokensBuf;
+static Token* tokensTempBuf;
+
+static Token* tbptr;
+static Token* ttbptr; 
+
+static void freeTokensBuf_iml(Token* buf, Token* bufptr);
+
+
+
+#define INIT_BUF_IML(buf, bufptr)                              \
+do {                                                           \
+	buf = (Token*) malloc(sizeof(Token) * MAX_TOKEN_BUF_SIZE); \ 
+	bufptr = buf;                                              \
+} while(0);                                                    
+
+void initTokensBuf     (void) { INIT_BUF_IML(tokensBuf,     tbptr);  }
+void initTokensTempBuf (void) { INIT_BUF_IML(tokensTempBuf, ttbptr); }
+
+
+void freeTokensBuf    (void) { freeTokensBuf_iml(tokensBuf,     tbptr); }
+void freeTokensTempBuf(void) { freeTokensBuf_iml(tokensTempBuf, ttbptr);}
+
+
+static void freeTokensBuf_iml(Token* buf, Token* bufptr)
+{	
+	//---------------
+	// buf destructor
+	//---------------
+	
+	for (uint8_t i = (bufptr - buf); i > 0; --i)
+		free((--bufptr)->data);
+		
+	bufptr = NULL;
+	free(buf);
+}
+
+
+static Token* tokenConstruct (Tokens major, Tokens minor, char* data)
 {
+	//------------------
+	// Token constructor
+	//------------------
+	
 	Token* tptr = malloc(sizeof(Token));	
 	
-	if (!tptr) return NULL;
+	if ( !tptr ) return NULL;
 
 	tptr->majorType = major;	
 	tptr->minorType = minor;	
@@ -20,8 +64,12 @@ Token* tokenConstruct (Tokens major, Tokens minor, char* data)
 	return tptr;	
 }
 
-void tokenDestruct (Token* tptr)
+static void tokenDestruct (Token* tptr)
 {
+	//---------------
+	// Destruct token
+	//---------------
+	
 	if ( !tptr )      return;
 	if ( tptr->data ) free(tptr->data);	
 	
@@ -29,6 +77,112 @@ void tokenDestruct (Token* tptr)
 }
 
 
+Token* getToken(void)
+{
+	//---------------------------------
+	// Get token from tokensTempBuf
+	//---------------------------------
+
+	uint8_t mediateResult = ttbptr - tokensTempBuf;	
+	
+	// if tokensTempBuf not empty
+	// return value from tokens temp bur pointer
+	if ( mediateResult > 0 ) return --ttbptr;
+	
+	// if (tbprt != NULL) && (tbptr != last token in tokensBuf)
+	// return current token and shift right by one pos in tokensBuf
+	if ( tbptr && (tbptr - tokensBuf < MAX_TOKEN_BUF_SIZE)) return tbptr++;	
+	
+		
+	// tbptr oferflowed or tbptr == stop point(NULL)
+	return NULL;	
+}
+
+void ungetToken(Token *token)
+{
+	//---------------------------------
+	// Push back token in tokensTempBuf
+	//---------------------------------
+	*ttbptr = *token;
+	ttbptr++;
+}
+
+
+void appendToken(Tokens majType, // majorType
+                 Tokens minType, // minorType
+                 char*  data)    // word
+{
+	//-------------------------
+	//Append token in tokensBuf
+	//-------------------------
+
+	if (tbptr - tokensBuf > MAX_TOKEN_BUF_SIZE){
+		printf("\nError: TokensBuf are is full!\n");	
+	}	
+	
+	
+	tbptr->majorType = majType;
+	tbptr->minorType = minType;
+	
+	// Copy data in new variable
+	// cause input data will free later in analyze line 
+	char* newData = malloc(strlen(data) + 1);
+	strcpy(newData, data);
+
+	(tbptr++)->data = newData;
+}
+
+void shiftTokensBufPointer (void) 
+{
+	tbptr = tokensBuf;	
+}
+
+
+
+char* convertTokenToString(Tokens token)
+{	
+	char* stringToken;
+
+	switch(token){
+		case(OPEN_PARENS):
+			stringToken = "(";
+			break;	
+		case(CLOSE_PARENS):
+			stringToken = ")";
+			break;	
+		case(NAME):
+			stringToken = "Name";
+			break;
+		case(COLON):
+			stringToken = ":";
+			break;
+		case(K_ENTITY):
+			stringToken = "Entity";
+			break;
+		case(K_CHAR):
+			stringToken = "CHAR";
+			break;
+		case(K_FLOAT):
+			stringToken = "FLOAT";
+			break;
+		case(K_INT):
+			stringToken = "INT";
+			break;
+		case(DATATYPE):
+			stringToken = "Data Type";
+			break;
+		case(KEYWORDS):
+			stringToken = "Keyword";
+			break;
+	}
+
+	return stringToken;
+}
+
+
+
+
+// Token Checks 
 bool isKeyword(char *word, Token* tptr)
 {
 	//--------------------------
@@ -90,47 +244,3 @@ bool isAlNum(char *c)
 {
 	return isalnum(*c) || *c == '.';
 }
-
-
-char* convertTokenToString(Tokens token)
-{	
-	char* stringToken;
-
-	switch(token){
-		case(OPEN_PARENS):
-			stringToken = "(";
-			break;	
-		case(CLOSE_PARENS):
-			stringToken = ")";
-			break;	
-		case(NAME):
-			stringToken = "Name";
-			break;
-		case(COLON):
-			stringToken = ":";
-			break;
-		case(K_ENTITY):
-			stringToken = "Entity";
-			break;
-		case(K_CHAR):
-			stringToken = "CHAR";
-			break;
-		case(K_FLOAT):
-			stringToken = "FLOAT";
-			break;
-		case(K_INT):
-			stringToken = "INT";
-			break;
-		case(DATATYPE):
-			stringToken = "Data Type";
-			break;
-		case(KEYWORDS):
-			stringToken = "Keyword";
-			break;
-	}
-
-	return stringToken;
-}
-
-
-

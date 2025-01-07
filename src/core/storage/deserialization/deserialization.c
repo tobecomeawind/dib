@@ -105,6 +105,8 @@ static EntityType* entityDeserialize(FILE* fp)
 	fread(name, 1, chunkSize, fp);
 
 	entity = entityTypeConstruct(name, hash);	
+
+	free(name);
 	return entity;
 }
 

@@ -52,8 +52,20 @@ typedef struct token_t {
 
 } Token;
 
-Token* tokenConstruct (Tokens major, Tokens minor, char* data);
-void   tokenDestruct  (Token* tptr);
+void appendToken (Tokens majType, // majorType
+                  Tokens minType, // minorType
+                  char*  data);   // word
+
+void initTokensBuf     (void);
+void freeTokensBuf     (void);
+void initTokensTempBuf (void);
+void freeTokensTempBuf (void);
+
+Token* getToken(void);
+void ungetToken(Token *token);
+void shiftTokensBufPointer (void); 
+
+
 
 bool   isKeyword   (char *word, Token* tptr);
 bool   isParenses  (char *c);

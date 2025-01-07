@@ -1,10 +1,11 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
 #include "entity_type.h"
 #include "hash.h"
 #include "deserialization.h"
 #include "serialization.h"
-
-#include <stdlib.h>
-#include <stdio.h>
 
 static EntityType* entityTypeNew (char* typeName, uint64_t hashValue);
 
@@ -45,7 +46,9 @@ static EntityType* entityTypeNew (char* typeName, uint64_t hashValue)
 {
 	EntityType* etptr = (EntityType*) malloc(sizeof(EntityType));
 	
-	etptr->typeName = typeName;
+	etptr->typeName = malloc(strlen(typeName) + 1);
+	strcpy(etptr->typeName, typeName);
+
 	etptr->hashVal  = (hashValue) ? hashValue: hash(typeName);		
 
 	return etptr;
@@ -83,7 +86,8 @@ EntityType* entityTypeConstructTmp (char* typeName, uint64_t hashValue)
 
 void entityTypeDestruct(EntityType* fuckYou)
 {
-	free(fuckYou->typeName);	
+	if ( !fuckYou ) return;	
+	if ( fuckYou->typeName) free(fuckYou->typeName);	
 	free(fuckYou);
 }
 

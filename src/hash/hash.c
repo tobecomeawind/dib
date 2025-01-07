@@ -27,8 +27,6 @@ static inline uint64_t getHash(HashNode* hashNode);
 
 
 
-
-
 uint64_t hash(char* val)
 {
 	//----------------------------------------

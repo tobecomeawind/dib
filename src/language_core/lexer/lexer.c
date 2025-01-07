@@ -7,17 +7,7 @@
 #include "lexer.h"
 #include "tokens.h"
 
-
-static void appendToken(Tokens majType, // majorType
-						Tokens minType, // minorType
-						char *data);    // word
-										
-static void initTokensBuf(void);
-
-extern void invokeCliError(char*);
-
-
-Token* analyze_line(char *lptr, int size)
+bool analyze_line(char* lptr, int size)
 {
 
 	//------------------------------	
@@ -51,7 +41,9 @@ Token* analyze_line(char *lptr, int size)
 				// exit 
 				if ( strcmp(tokenWord, "q") == 0 ) {
 					freeTokensBuf();	
-					goto end;
+					free(tokenWord);
+					free(tmpToken);	
+					return false;
 				}
 				   
 
@@ -105,55 +97,12 @@ Token* analyze_line(char *lptr, int size)
 			lptr++; // last symbol jump fix
 		}	
 	}
-	
-	tbptr = tokensBuf;
 
-	end:
-		free(tokenWord);
-		free(tmpToken);	
 
-		return tbptr;	
+	shiftTokensBufPointer();	
+
+	free(tokenWord);
+	free(tmpToken);	
+
+	return true;	
 }
-
-
-static void appendToken(Tokens majType, // majorType
-						Tokens minType, // minorType
-						char*  data)    // word
-{
-	//-------------------------
-	//Append token in tokensBuf
-	//-------------------------
-
-	if (tbptr - tokensBuf > MAX_TOKEN_BUF_SIZE){
-		printf("\nError: TokensBuf are is full!\n");	
-	}	
-	
-	
-	tbptr->majorType = majType;
-	tbptr->minorType = minType;
-	
-	// Copy data in new variable
-	// cause input data will free later in analyze line 
-	char* newData = malloc(strlen(data) + 1);
-	strcpy(newData, data);
-
-	(tbptr++)->data = newData;
-}
-
-
-static void initTokensBuf(void)
-{
-	tokensBuf = (Token*) malloc(sizeof(Token) * MAX_TOKEN_BUF_SIZE);
-	tbptr     = tokensBuf;  // token buf pointer
-}
-
-void freeTokensBuf(void)
-{	
-	for (uint8_t i = (tbptr - tokensBuf); i > 0; --i)
-		free((tbptr)->data);
-			
-	tbptr = NULL;
-	free(tokensBuf);
-}
-
-
