@@ -37,8 +37,9 @@ typedef enum
 	
 	
 	//OTHERS
-	NAME
-
+	NAME, 
+	
+	EXIT,
 
 } Tokens;
 

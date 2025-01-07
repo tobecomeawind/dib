@@ -151,7 +151,7 @@ void hashTableInsert (HashTable* table, EntityType* data)
 	HashNode* tmp         = table->array[insertIndex];	
 
 	// if bucket is empty
-	if (!tmp) {
+	if ( !tmp ) {
 		table->array[insertIndex] = hnptr;
 		return;
 	}
@@ -161,8 +161,7 @@ void hashTableInsert (HashTable* table, EntityType* data)
                                                     // if we find equals hash
 													// we break the function
 													// node with equal hash
-													// exists
-	
+													// exists	
 	tmp->next = hnptr; // add last value
 }
 
@@ -203,7 +202,7 @@ static EntityType* hashTableSearch (HashTable* table, uint64_t hashVal)
 	uint8_t   searchIndex = hashIndex(hashVal, table->size);	
 	HashNode* tmp         = table->array[searchIndex]; // node by bucket index
 
-	if (tmp) // if bucket exists	
+	if ( tmp ) // if bucket exists	
 		for (;tmp; tmp = tmp->next) // check list  
 			if (getHash(tmp) == hashVal)
 				return tmp->data; // if hash`s equals
@@ -235,8 +234,8 @@ static void hashTableDelete (HashTable* table, uint64_t hashVal)
 	uint8_t   deleteIndex = hashIndex(hashVal, table->size);	
 	HashNode* tmp         = table->array[deleteIndex];
 
-	if (tmp) { // if bucket not empty	
-		if (getHash(tmp) == hashVal) { // if first bucket hash
+	if ( tmp ) { // if bucket not empty	
+		if ( getHash(tmp) == hashVal ) { // if first bucket hash
 						    	       // equal
 									   // delete node hash
 			table->array[deleteIndex] = tmp->next;

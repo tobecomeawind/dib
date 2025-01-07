@@ -36,6 +36,10 @@ void initEntitiesTempTable (void)
 	EntitiesTempTable = table;
 }
 
+void destructEntitiesTempTable (void)
+{
+	hashTableDestruct(EntitiesTempTable);
+}
 
 static EntityType* entityTypeNew (char* typeName, uint64_t hashValue)
 {

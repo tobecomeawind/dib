@@ -13,7 +13,7 @@
 
 static void hello_message(void);
 
-void invokeCliIteration(void);
+static bool invokeCliIteration(void);
 void invokeCliError(char*);
 
 static char   lineBuf[MAX_LINE_SIZE]; // command line
@@ -34,14 +34,17 @@ int main(void)
 	hello_message();
 
 	for(;;) {
-		invokeCliIteration();
+		if ( !invokeCliIteration() ) { // if critical error or "q" command
+			destructEntitiesTempTable();
+			return 0;
+		}		
 	}
 
-	return 0;
+	return -1;
 }
 
 
-void invokeCliIteration(void)
+static bool invokeCliIteration(void)
 {
 	char letter;
 
@@ -52,11 +55,15 @@ void invokeCliIteration(void)
 	}
 		
 	lineBuf[lineBufIndex] = '\0';	
-	analyze_line(lineBuf, lineBufIndex);
+	
+	if ( !analyze_line(lineBuf, lineBufIndex) ) // if catch "q" command
+		return false;
 	
 	lineBufIndex = 0;	
 	
 	startParsing();
+	
+	return true; // all ok
 }	
 
 

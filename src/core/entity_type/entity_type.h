@@ -16,6 +16,7 @@ void        entityTypeDestruct (EntityType* fuckYou);
 
 void printEntities (void);
 
-void initEntitiesTempTable (void);
+void initEntitiesTempTable     (void);
+void destructEntitiesTempTable (void);
 
 #endif

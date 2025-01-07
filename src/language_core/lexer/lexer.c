@@ -17,7 +17,7 @@ static void initTokensBuf(void);
 extern void invokeCliError(char *);
 
 
-Token *analyze_line(char *lptr, int size)
+Token* analyze_line(char *lptr, int size)
 {
 
 	//------------------------------	
@@ -47,6 +47,14 @@ Token *analyze_line(char *lptr, int size)
 							tmpToken->minorType,
 							tmpToken->data);		
 			} else {
+
+				// exit 
+				if ( strcmp(tokenWord, "q") == 0 ) {
+					freeTokensBuf();	
+					goto end;
+				}
+				   
+
 				appendToken(NAME,
 							NAME,
 							tokenWord);		
@@ -99,12 +107,13 @@ Token *analyze_line(char *lptr, int size)
 	}
 
 
-	free(tokenWord);
-	free(tmpToken);	
-
 	tbptr = tokensBuf;
 
-	return tokensBuf;	
+	end:
+		free(tokenWord);
+		free(tmpToken);	
+
+		return tbptr;	
 }
 
 
