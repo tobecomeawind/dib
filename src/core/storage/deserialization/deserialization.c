@@ -96,8 +96,11 @@ static EntityType* entityDeserialize(FILE* fp)
 
 	// Data size in bytes
 	chunkSize = fgetc(fp);
-	name = (char*) malloc(chunkSize);
-	fread(name, 1, chunkSize, fp);		
+	
+	name = (char*) malloc(chunkSize + 1);
+	name[chunkSize]	= '\0';
+	
+	fread(name, 1, chunkSize, fp);
 
 	entity = entityTypeConstruct(name, hash);	
 	return entity;
