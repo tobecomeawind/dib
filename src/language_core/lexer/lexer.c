@@ -122,8 +122,10 @@ static void appendToken(Tokens majType, // majorType
 	
 	// Copy data in new variable
 	// cause input data will free later in analyze line 
-	char* newData = malloc(strlen(data));
-	strcpy(newData, data);
+	char* newData = strdup(data);
+	//or 
+	//newData = malloc(strlen(data) + 1); // ' + 1' for '\0'
+
 
 	Token* tmpToken = tokenConstruct(majType, minType, newData);	
 	*tbptr++        = *tmpToken;
