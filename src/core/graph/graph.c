@@ -6,7 +6,7 @@
 #include "relation.h"
 
 
-static Node* dfs (Graph* gptr, Node* nptr, Node* target);
+static Node* dfs (Node* base, Node* nptr, Node* target);
 static void linkNodes_iml (Node* source, Node* destination,const char* relName);
 
 
@@ -21,13 +21,12 @@ Graph* graphInit(Node* head)
 	return gptr;
 }
 
-
 void linkNodes (Graph* gptr, Node* source, Node* dest, const char* relName)
 {
-	if (gptr->head == source || gptr->head == dest) 
+	if (gptr->head == source) 
 		return linkNodes_iml(source, dest, relName);
 				
-	if ( !dfs(gptr, gptr->head, source) ) NULL;
+	if ( !dfs(gptr->head, gptr->head, source) ) return;
 
 	linkNodes_iml(source, dest, relName);
 }
@@ -40,29 +39,29 @@ static void linkNodes_iml (Node* source, Node* destination, const char* relName)
 
 
 // depth first search 
-static Node* dfs (Graph* gptr, Node* cur, Node* target)
+static Node* dfs (Node* base, Node* cur, Node* target)
 {
 	//----------------------------
 	// Function to check
 	// exist target in gptr or not
 	//----------------------------
 	
-	Node* base = gptr->head;
 	Relation** rels = cur->relations;
+	uint8_t    size = cur->rsize;
+	Node*      dest;
 
 	// cur == base
 	if ( !cur ) return NULL;
 
 	if ( cur == target ) return cur;
 
-	if ( !cur->rsize ) return NULL;
+	if ( !size ) return NULL;
 
-	for (uint8_t i = 0; i < cur->rsize; ++i)	
-		if ( cur = dfs(gptr, rels[i]->dest, target) )
+	for (uint8_t i = 0; i < size; ++i) {
+		dest = rels[i]->dest;	
+		if ( dest != base && (cur = dfs(base, dest, target)) )
 			return cur;
+	}
 
 	return NULL;
 }
-
-
-

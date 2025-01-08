@@ -76,11 +76,11 @@ static Tokens getTypeOfData(char* data)
 
 	while (*data++) {
 
-		if (isdigit(*data) && dataType != K_FLOAT){
+		if ( isdigit(*data) && dataType != K_FLOAT )
 			dataType = K_INT;	
-		}		
+			
 
-		if (*data == '.') {
+		if ( *data == '.' ) {
 			switch (dataType) {
 				case K_INT:
 					dataType = K_FLOAT;

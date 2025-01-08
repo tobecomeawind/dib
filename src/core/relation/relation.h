@@ -5,7 +5,7 @@
 
 typedef struct Node Node;
 
-typedef struct Relation{
+typedef struct relation_t{
 	
 	EntityType* type;	
 	
