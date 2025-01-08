@@ -22,6 +22,7 @@ add_subdirectory(storage)
 add_subdirectory(relation)
 add_subdirectory(data)
 add_subdirectory(node)
+add_subdirectory(graph)
 
 
 #add_library(${LIBRARY_NAME} "")
@@ -44,6 +45,7 @@ target_link_libraries(${LIBRARY_NAME}
 		data
 		node
 		relation
+		graph
 		m
 
 )

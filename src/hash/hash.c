@@ -27,17 +27,17 @@ static inline uint64_t getHash(HashNode* hashNode);
 
 
 
-uint64_t hash(char* val)
+uint64_t hash(const char* word)
 {
 	//----------------------------------------
 	// Main hash function for string(Entities)
 	//----------------------------------------
 	
 	uint64_t hashval = 0;
-	uint8_t  len_s   = strlen(val);
+	uint8_t  len_s   = strlen(word);
 	
 	for(uint8_t i = 0; i < len_s; i++)
-		hashval += (uint64_t) pow(SEED, len_s - (i+1)) * val[i];
+		hashval += (uint64_t) pow(SEED, len_s - (i+1)) * word[i];
 	
 	return hashval;	
 }

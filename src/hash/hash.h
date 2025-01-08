@@ -24,7 +24,7 @@ typedef struct {
 } HashTable;
 
 
-uint64_t    hash                  (char* val);
+uint64_t    hash                  (const char* word);
 HashTable*  hashTableInit         (uint8_t size);
 void        hashTableInsert       (HashTable*  table, EntityType* data);
 void        hashTableDestruct     (HashTable*  htptr);

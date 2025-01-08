@@ -10,8 +10,8 @@ typedef struct entity_type_t{ // Entity = Node || Relation
 
 } EntityType;
 
-EntityType* entityTypeConstruct(char* typeName, uint64_t hash);
-EntityType* entityTypeConstructTmp (char* typeName, uint64_t hashValue);
+EntityType* entityTypeConstruct(const char* typeName, uint64_t hash);
+EntityType* entityTypeConstructTmp (const char* typeName, uint64_t hashValue);
 void        entityTypeDestruct (EntityType* fuckYou);
 
 void printEntities (void);

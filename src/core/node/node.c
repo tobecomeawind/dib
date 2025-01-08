@@ -73,8 +73,9 @@ void nodeDestruct(Node* node)
 	free(node);
 }
 
-void add_relation(Node* node, Relation* rel)
+void addRelation(Node* node, Relation* rel)
 {	
+	// TODO rework to chech if rel alread in relations
 	Relation** relrealloc(Relation** rmptr, size_t nsize);	
 	
 	node->relations[node->rsize++] = rel;

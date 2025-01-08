@@ -29,6 +29,6 @@ Node* nodeConstruct(char*    name,
 void  nodeDestruct (Node* node);
 
 
-void add_relation(Node* node, Relation* rel);
+void addRelation(Node* node, Relation* rel);
 
 #endif

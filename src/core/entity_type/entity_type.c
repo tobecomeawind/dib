@@ -7,7 +7,7 @@
 #include "deserialization.h"
 #include "serialization.h"
 
-static EntityType* entityTypeNew (char* typeName, uint64_t hashValue);
+static EntityType* entityTypeNew (const char* typeName, uint64_t hashValue);
 
 
 static HashTable* EntitiesTempTable;
@@ -42,7 +42,7 @@ void destructEntitiesTempTable (void)
 	hashTableDestruct(EntitiesTempTable);
 }
 
-static EntityType* entityTypeNew (char* typeName, uint64_t hashValue)
+static EntityType* entityTypeNew (const char* typeName, uint64_t hashValue)
 {
 	EntityType* etptr = (EntityType*) malloc(sizeof(EntityType));
 	
@@ -56,13 +56,13 @@ static EntityType* entityTypeNew (char* typeName, uint64_t hashValue)
 
 
 
-EntityType* entityTypeConstruct (char* typeName, uint64_t hashValue)
+EntityType* entityTypeConstruct (const char* typeName, uint64_t hashValue)
 {
 	return entityTypeNew(typeName, hashValue);	
 }
 
 
-EntityType* entityTypeConstructTmp (char* typeName, uint64_t hashValue)
+EntityType* entityTypeConstructTmp (const char* typeName, uint64_t hashValue)
 {
 	//------------------------------------------------
 	// Create new Entity and push in Entities Tmp File

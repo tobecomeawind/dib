@@ -4,22 +4,25 @@
 
 #include "node.h"
 #include "hash.h"
+#include "graph.h"
 #include "serialization.h"
 #include "deserialization.h"
 
 int main(void)
 {	
-	Node *Tom, *Lucy;	
+	Node *Tom, *Lucy;
+	Graph* g;	
 	//HashTable* table;
 
-	HashTable* table = hashTableInit(1);	
+	initEntitiesTempTable();	
 
-	Tom  = nodeConstructFromCli("Personallity", "Tom",  K_CHAR);		
-	Lucy = nodeConstructFromCli("MustafaBlya", "Lucy", K_CHAR);	
-	
-	hashTableInsert(table, Tom->type);
-	hashTableInsert(table, Lucy->type);
-	
+	Tom  = nodeConstructCli("Personallity", "Tom",  K_CHAR);		
+	Lucy = nodeConstructCli("MustafaBlya", "Lucy",  K_CHAR);	
+		
+	g = graphInit(Tom);
+
+	linkNodes(g, Tom,  Lucy, "Loved_In");
+	linkNodes(g, Lucy, Tom,  "Loved_In");
 
 	/*
 	testnptr = (Node**) calloc(2, sizeof(Node*));
@@ -42,9 +45,6 @@ int main(void)
 
 	*/
 
-	nodeDestruct(Tom);
-	nodeDestruct(Lucy);
-	hashTableDestruct(table);	
 	
 	return 0;
 }
