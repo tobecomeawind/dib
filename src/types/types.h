@@ -6,6 +6,7 @@ typedef enum {
 	bsCHAR,
 	bsINT,
 	bsFLOAT,
+	bsENTITY_TYPE_HASH,
 	bsTOKEN,
 
 } bstypes; // bin search types

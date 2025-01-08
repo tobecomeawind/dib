@@ -1,15 +1,17 @@
 #include <stdlib.h>
+
 #include "relation.h"
 #include "hash.h"
+#include "node.h"
 
 Relation* relationConstruct(const char* name, Node* destination)
-{
-	Relation* rptr; // relation pointer	
-	
+{	
+	Relation* rptr = (Relation*) malloc(sizeof(Relation));
+	if ( !rptr ) return NULL;
+
 	// TODO need create another hashTable for rel Entities
 	EntityType* etptr = entityTypeConstructTmp(name, hash(name));
-
-	rptr = (Relation*) malloc(sizeof(Relation));
+	if ( !etptr ) return NULL;
 
 	rptr->type     = etptr;
 	rptr->dest     = destination;

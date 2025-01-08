@@ -2,8 +2,7 @@
 #define RELATION_H
 
 #include "entity_type.h"
-
-typedef struct Node Node;
+typedef struct node_t Node;
 
 typedef struct relation_t{
 	

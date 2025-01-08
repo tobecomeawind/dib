@@ -14,4 +14,9 @@ target_include_directories(${LIBRARY_NAME}
 		${CMAKE_CURRENT_LIST_DIR}
 		${CMAKE_CURRENT_LIST_DIR}/../types
 		${CMAKE_CURRENT_LIST_DIR}/../language_core/tokens
+		${CMAKE_CURRENT_LIST_DIR}/../core/graph
+		${CMAKE_CURRENT_LIST_DIR}/../core/entity_type
+		${CMAKE_CURRENT_LIST_DIR}/../core/node
+		${CMAKE_CURRENT_LIST_DIR}/../core/data
+		${CMAKE_CURRENT_LIST_DIR}/../core/relation
 )

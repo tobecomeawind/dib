@@ -7,10 +7,8 @@
 #include "entity_type.h"
 #include "data.h"
 #include "relation.h"
-//#include "serialization.h"
 
-
-typedef struct Node{
+typedef struct node_t{
 
 	EntityType* type;	
 	

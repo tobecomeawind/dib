@@ -1,7 +1,6 @@
-#include "algs.h"
-#include "tokens.h"
 #include <string.h>
 
+#include "algs.h"
 
 static int compare(void* target, void* buffer, int index, bstypes type);
 
@@ -47,7 +46,7 @@ int binsearch(void* *buf, int size,
 			return -1;
 	}
 
-	return 0;
+	return low;
 }
 
 static int compare(void* target, void* buffer, int index, bstypes type)
@@ -56,14 +55,16 @@ static int compare(void* target, void* buffer, int index, bstypes type)
 	//compare for binsearch
 	//----------------------
 
-	switch(type){
-		case(bsCHAR):
+	switch (type) {
+		case ( bsCHAR ):
 			return strcmp((char*) target, ( (char**)buffer )[index]);		
-		case(bsTOKEN):
+		case ( bsTOKEN ):
 			return strcmp((char*)target, (( (Token*)buffer) + index)->data);	
-		case(bsINT):	
+		case ( bsINT ):	
 			return *((int*) target) - (( (int*)buffer )[index]);		
-		case(bsFLOAT):	
-			return (int) (*((float*) target) - (( (float*)buffer )[index]));	
+		case ( bsFLOAT ):	
+			return (int) (*((float*) target) - (( (float*)buffer )[index]));
+		case ( bsENTITY_TYPE_HASH ):
+			return (int)(( (EntityTypeArray*) target )->etptr->hashVal ) - (( (EntityTypeArray**)buffer )[index])->etptr->hashVal;		
 	}	
 }

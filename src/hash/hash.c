@@ -171,7 +171,7 @@ static void hashTableRealloc (HashTable* table)
 }
 
 
-EntityType* hashTableSearchByName (HashTable* table, char* name)
+EntityType* hashTableSearchByName (HashTable* table, const char* name)
 {
 	//------------------------
 	// Search Node by Name

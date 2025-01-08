@@ -19,4 +19,6 @@ void printEntities (void);
 void initEntitiesTempTable     (void);
 void destructEntitiesTempTable (void);
 
+EntityType* entitiesTempTableSearchByHash (uint64_t hashValue);
+
 #endif

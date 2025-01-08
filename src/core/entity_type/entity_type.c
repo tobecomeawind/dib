@@ -62,6 +62,11 @@ EntityType* entityTypeConstruct (const char* typeName, uint64_t hashValue)
 }
 
 
+EntityType* entitiesTempTableSearchByHash (uint64_t hashValue)
+{
+	return hashTableSearchByHash(EntitiesTempTable, hashValue);	
+}	
+
 EntityType* entityTypeConstructTmp (const char* typeName, uint64_t hashValue)
 {
 	//------------------------------------------------
