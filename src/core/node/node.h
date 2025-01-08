@@ -11,6 +11,7 @@
 
 
 typedef struct Node{
+
 	EntityType* type;	
 	
 	Data*       data;      // data ((Tom, CHAR), (23, INT), (3.14, FLOAT))

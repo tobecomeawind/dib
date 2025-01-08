@@ -5,9 +5,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-static Node* s_nodeConstruct (EntityType* etptr, Data* dptr, Relation** rptr);
+static Node* nodeConstruct_iml (EntityType* etptr, Data* dptr, Relation** rptr);
 
-// TODO как вариант в s_nodeConstruct передавать ссылки на функции
+// TODO как вариант в nodeConstruct_iml передавать ссылки на функции
 
 Node* nodeConstructCli(char* name, char *data, Tokens dataTypeToken)
 {
@@ -21,7 +21,7 @@ Node* nodeConstructCli(char* name, char *data, Tokens dataTypeToken)
 
 	Relation**  rptr  = (Relation**) malloc(sizeof(Relation*)); 
 
-	nptr = s_nodeConstruct(etptr, dptr, rptr);	
+	nptr = nodeConstruct_iml(etptr, dptr, rptr);	
 	
 	return nptr;
 }
@@ -39,13 +39,13 @@ Node* nodeConstruct(char*    name,
 
 	Relation**  rptr  = (Relation**) malloc(sizeof(Relation*)); 
 
-	nptr = s_nodeConstruct(etptr, dptr, rptr);
+	nptr = nodeConstruct_iml(etptr, dptr, rptr);
 	
 	return nptr;
 }
 
 
-static Node* s_nodeConstruct (EntityType* etptr, Data* dptr, Relation** rptr)
+static Node* nodeConstruct_iml (EntityType* etptr, Data* dptr, Relation** rptr)
 {
 	Node* nptr;
 
@@ -60,8 +60,6 @@ static Node* s_nodeConstruct (EntityType* etptr, Data* dptr, Relation** rptr)
 
 	return nptr;
 }
-
-
 
 void nodeDestruct(Node* node)
 {
