@@ -2,7 +2,9 @@ set(LIBRARY_NAME core)
 
 get_filename_component(PARENT_DIR ${CMAKE_CURRENT_LIST_DIR}/.. ABSOLUTE)
 
+
 include_directories(
+					${PARENT_DIR}/algs
 					${CMAKE_CURRENT_LIST_DIR}/node
 					${CMAKE_CURRENT_LIST_DIR}/storage
 					${CMAKE_CURRENT_LIST_DIR}/storage/serialization
@@ -15,8 +17,6 @@ include_directories(
 					${PARENT_DIR}/hash
 					)
 
-#add_library(${LIBRARY_NAME} "")
-
 add_subdirectory(entity_type)
 add_subdirectory(storage)
 add_subdirectory(relation)
@@ -25,15 +25,13 @@ add_subdirectory(node)
 add_subdirectory(graph)
 
 
-#add_library(${LIBRARY_NAME} "")
-
-
 add_library(${LIBRARY_NAME} 
 	$<TARGET_OBJECTS:deserialization>
 	$<TARGET_OBJECTS:serialization>
 	$<TARGET_OBJECTS:data>
 	$<TARGET_OBJECTS:node>
 	$<TARGET_OBJECTS:relation>
+	$<TARGET_OBJECTS:graph>
 )
 
 

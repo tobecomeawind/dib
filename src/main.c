@@ -32,7 +32,10 @@ int main(void)
 
 
 	g = graphInit(Node1);
-
+	
+	addNode(g, Tom);
+	addNode(g, Tom);
+	addNode(g, Lucy);
 	
 	linkNodes(g, Node1, Node11, "empty");
 	linkNodes(g, Node11, Node111, "empty");

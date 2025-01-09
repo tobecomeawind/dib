@@ -2,15 +2,21 @@
 #define GRAPH_H
 
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "node.h"
+
 
 typedef struct entity_type_array_t {
 
 	EntityType* etptr;	
 	Node**      array;
+	uint8_t     size;
 
 } EntityTypeArray; 
+
+
+
 
 typedef struct no_relations_entities_array_t {
 	
@@ -33,7 +39,12 @@ typedef struct graph_t {
 	
 } Graph;
 
+
+
+
+
 Graph* graphInit(Node* head);
-void linkNodes (Graph* gptr, Node* source, Node* dest, const char* relName);
+void linkNodes  (Graph* gptr, Node* source, Node* dest, const char* relName);
+void addNode    (Graph* gptr, Node* nptr);
 
 #endif

@@ -2,13 +2,9 @@
 #define ALGS_H
 
 #include "types.h"
-#include "tokens.h"
-#include "entity_type.h"
-#include "graph.h"
+#include "stdint.h"
 
-int binsearch(void* *buf, int size,
-		      void *target,
-			  bstypes type);
+int8_t binsearch(void** buf, uint8_t size, void* target, bstypes type);
 
 
 #endif

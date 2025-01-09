@@ -11,7 +11,13 @@ static Node* dfs (Node* base, Node* nptr, Node* target);
 static void linkNodes_iml (Node* source, Node* destination,const char* relName);
 static EntitiesArray* initEntitiesArray(void);
 
+static EntityTypeArray* initEntityTypeArray(EntityType* etptr);
+static void insertNewEntityType (EntitiesArray*    arr,
+                                 EntityType*       etptr,
+                                 uint8_t           index);
+static void insertNode (EntityTypeArray* etaptr, Node* nptr);
 
+// этот файл пахнет говном
 
 Graph* graphInit(Node* head)
 {
@@ -29,18 +35,79 @@ Graph* graphInit(Node* head)
 
 void addNode (Graph* gptr, Node* nptr)
 {
-	if ( !gptr ) return;	
-	if ( !nptr ) return;	
+	if ( !gptr || !nptr) return;	
 
 	EntityTypeArray** arr = gptr->array->noRelArray;
 	uint8_t           size = gptr->array->size;
-	uint8_t index;
-
-
-	index = binsearch((void*)arr, size,(void*) nptr->etptr, bsENTITY_TYPE_HASH);
-
-
+	int8_t index;
+	
+	// check if array is empty	
+	if ( gptr->array->size == 1 ) {
+		index = 0;
+		insertNewEntityType(gptr->array, nptr->type, index);
+		goto insertNodePoint;
+	}
+   
+   	index = binsearch((void**)arr, size,(void*) nptr->type, bsENTITY_TYPE);
+	
+    if ( index < 0 ) {// if entity type not exists
+		index *= -1;	    
+		insertNewEntityType(gptr->array, nptr->type, index);
+	}	
+	
+	insertNodePoint:
+		insertNode(gptr->array->noRelArray[index], nptr);	
 }
+
+static void insertNewEntityType (EntitiesArray*    arr,
+                                 EntityType*       etptr,
+                                 uint8_t           index)
+{
+	if ( !arr || !etptr) return;
+	
+	EntityTypeArray* newEntityType = initEntityTypeArray(etptr); 	
+
+	if ( !newEntityType ) return;
+
+	arr->noRelArray = (EntityTypeArray**) realloc(arr->noRelArray, arr->size+1);			
+	if ( !arr->noRelArray ) return; 		
+	arr->size += 1;
+	
+	for (uint8_t i = arr->size; i > index; --i)
+		arr->noRelArray[i] = arr->noRelArray[i - 1]; 	
+
+	arr->noRelArray[index] = newEntityType;
+}
+
+
+static void insertNode (EntityTypeArray* etaptr, Node* nptr)
+{		
+	if ( !etaptr || !nptr ) return;
+	
+	int8_t index;	
+
+	if ( etaptr->size == 1 ) {
+		index = 0;
+		etaptr->size += 1;
+		goto insertPoint;
+	}
+	index = binsearch((void**)etaptr->array, etaptr->size, (void*)nptr, bsNODE);
+
+	if ( index >= 0 ) return; // nptr already exists
+			
+	etaptr->array = (Node**) realloc(etaptr->array, etaptr->size+1);			
+	
+	if ( !etaptr->array ) return; 		
+	etaptr->size += 1;
+	
+	for (uint8_t i = etaptr->size; i > index; --i)
+		etaptr->array[i] = etaptr->array[i - 1]; 	
+	
+
+	insertPoint:	
+		etaptr->array[index] = nptr;
+}
+
 
 static EntitiesArray* initEntitiesArray(void)
 {
@@ -48,7 +115,7 @@ static EntitiesArray* initEntitiesArray(void)
 
 	if ( !tmpArr ) return NULL;
 
-	tmpArr->size  = 1;
+	tmpArr->size       = 1;
 	tmpArr->noRelArray = (EntityTypeArray**) malloc(sizeof(EntityTypeArray*));
 
 	if ( !tmpArr ) return NULL;
@@ -56,7 +123,20 @@ static EntitiesArray* initEntitiesArray(void)
 	return tmpArr;
 }
 
+static EntityTypeArray* initEntityTypeArray(EntityType* etptr)
+{
+	EntityTypeArray* etaptr = (EntityTypeArray*)malloc(sizeof(EntityTypeArray));
 
+	if ( !etaptr ) return NULL;
+
+	etaptr->etptr = etptr;	
+	etaptr->size  = 1;
+	etaptr->array = (Node**) malloc(sizeof(Node*));
+
+	if ( !etaptr->array ) return NULL;
+
+	return etaptr; 
+}
 
 
 void linkNodes (Graph* gptr, Node* source, Node* dest, const char* relName)
@@ -83,6 +163,7 @@ static void linkNodes_iml (Node* source, Node* destination, const char* relName)
 }
 
 
+//TODO write bfs it work faster
 // depth first search 
 static Node* dfs (Node* base, Node* cur, Node* target)
 {
