@@ -1,10 +1,11 @@
 #ifndef DATA_H
 #define DATA_H
 
-#include "types.h"
-#include "tokens.h"
 #include <stdint.h>
 #include <stdbool.h>
+
+#include "types.h"
+#include "tokens.h"
 
 typedef struct Data{
 	vtypes  type;
@@ -14,5 +15,6 @@ typedef struct Data{
 Data*   dataConstruct(void* data, Tokens type, bool isFromCli);
 void    dataDestruct (Data* dptr);
 uint8_t getDataSize  (Data* dptr);
+bool    dataCompare  (Data* source, Data* target);
 
 #endif

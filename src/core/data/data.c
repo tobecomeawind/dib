@@ -36,6 +36,23 @@ uint8_t getDataSize(Data* dptr)
 	}	
 }
 
+bool dataCompare (Data* source, Data* target)
+{
+	if ( !source || !target ) return false;
+	if ( source->type != target->type )	 return false;
+	
+	switch ( source->type ) {
+		case ( K_INT ):
+			return *((int*)(source->info)) > *((int*)(target->info)); 
+		case ( K_FLOAT ):
+			return *((double*)(source->info)) > *((double*)(target->info)); 
+		case ( K_CHAR ):
+			if ( strcmp(((char*)(source->info)), ((char*)(target->info))) == 0)
+			   return true;	
+	}
+	
+	return false;
+}	
 
 static vtypes DataToVarType(Tokens dataType, void* data)
 {

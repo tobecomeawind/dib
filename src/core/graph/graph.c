@@ -6,10 +6,13 @@
 #include "entity_type.h"
 #include "relation.h"
 #include "algs.h"
+#include "data.h"
+
 
 static Node* dfs (Node* base, Node* nptr, Node* target);
 static void linkNodes_iml (Node* source, Node* destination,const char* relName);
 static EntitiesArray* initEntitiesArray(void);
+static Node* nodeSearchArray (EntitiesArray* arr, Node* target);
 
 static EntityTypeArray* initEntityTypeArray(EntityType* etptr);
 static void insertNewEntityType (EntitiesArray*    arr,
@@ -17,10 +20,21 @@ static void insertNewEntityType (EntitiesArray*    arr,
                                  uint8_t           index);
 static void insertNode (EntityTypeArray* etaptr, Node* nptr);
 
+static inline bool nodeCompare(Node* source, Node* target);
+static Node* isNodeExist (Graph* gptr, Node* target);
+
 // этот файл пахнет говном
+
+
 
 Graph* graphInit(Node* head)
 {
+	//--------------------------------------------------
+	// init graph
+	// and
+	// init array of arrays with nodes without relations
+	//--------------------------------------------------
+
 	Graph* gptr = (Graph*) malloc(sizeof(Graph));	
 	
 	gptr->nodes = 1;	
@@ -35,6 +49,10 @@ Graph* graphInit(Node* head)
 
 void addNode (Graph* gptr, Node* nptr)
 {
+	//---------------------------------------------
+	// Add node to array of nodes without relations
+	//---------------------------------------------
+		
 	if ( !gptr || !nptr) return;	
 
 	EntityTypeArray** arr = gptr->array->noRelArray;
@@ -42,7 +60,7 @@ void addNode (Graph* gptr, Node* nptr)
 	int8_t index;
 	
 	// check if array is empty	
-	if ( gptr->array->size == 1 ) {
+	if ( gptr->array->size == 0 ) {
 		index = 0;
 		insertNewEntityType(gptr->array, nptr->type, index);
 		goto insertNodePoint;
@@ -59,10 +77,46 @@ void addNode (Graph* gptr, Node* nptr)
 		insertNode(gptr->array->noRelArray[index], nptr);	
 }
 
+
+void linkNodes (Graph* gptr, Node* source, Node* dest, const char* relName)
+{
+	//-------------------------------------------
+	// Create relation beetween two nodes
+	//
+	// LINK (Person:Vasya, Person:Masha, LOVED_IN
+	//
+	// source  = Person:Vasya
+	// target  = Person:Masha
+	// relName = LOVED_IN
+	//-------------------------------------------
+	
+	//TODO need free(source) and free(dest) cause this temp values 	
+
+	if ( !gptr || !source || !dest || !relName ) return;
+	
+			
+	// check if source exist in graph or source exists in no rel array		
+	if ( !(source = isNodeExist(gptr, source)) ) return;	
+	
+	if ( !(dest   = isNodeExist(gptr, dest)) ) return;
+
+	gptr->nodes++;
+	gptr->rels++;
+		
+	linkNodes_iml(source, dest, relName);
+}
+
+
+
+
 static void insertNewEntityType (EntitiesArray*    arr,
                                  EntityType*       etptr,
                                  uint8_t           index)
 {
+	//--------------------------------------------------
+	// Insert Entity Array to array with arrays of nodes
+	//--------------------------------------------------
+	
 	if ( !arr || !etptr) return;
 	
 	EntityTypeArray* newEntityType = initEntityTypeArray(etptr); 	
@@ -82,15 +136,21 @@ static void insertNewEntityType (EntitiesArray*    arr,
 
 static void insertNode (EntityTypeArray* etaptr, Node* nptr)
 {		
+	//------------------------------
+	// Insert Node without relations
+	// to array 
+	//------------------------------
+	
 	if ( !etaptr || !nptr ) return;
 	
 	int8_t index;	
 
-	if ( etaptr->size == 1 ) {
+	if ( etaptr->size == 0 ) {
 		index = 0;
 		etaptr->size += 1;
 		goto insertPoint;
 	}
+
 	index = binsearch((void**)etaptr->array, etaptr->size, (void*)nptr, bsNODE);
 
 	if ( index >= 0 ) return; // nptr already exists
@@ -111,11 +171,16 @@ static void insertNode (EntityTypeArray* etaptr, Node* nptr)
 
 static EntitiesArray* initEntitiesArray(void)
 {
+	//--------------------------------------------------
+	// Init array where arrays of node without relations
+	// and this arrays sorted by EntityType
+	//--------------------------------------------------
+	
 	EntitiesArray* tmpArr = (EntitiesArray*) malloc(sizeof(EntitiesArray));
 
 	if ( !tmpArr ) return NULL;
 
-	tmpArr->size       = 1;
+	tmpArr->size       = 0;
 	tmpArr->noRelArray = (EntityTypeArray**) malloc(sizeof(EntityTypeArray*));
 
 	if ( !tmpArr ) return NULL;
@@ -125,12 +190,16 @@ static EntitiesArray* initEntitiesArray(void)
 
 static EntityTypeArray* initEntityTypeArray(EntityType* etptr)
 {
+	//---------------------------------------
+	// Init Array with nodes without relation
+	//---------------------------------------
+	
 	EntityTypeArray* etaptr = (EntityTypeArray*)malloc(sizeof(EntityTypeArray));
 
 	if ( !etaptr ) return NULL;
 
 	etaptr->etptr = etptr;	
-	etaptr->size  = 1;
+	etaptr->size  = 0;
 	etaptr->array = (Node**) malloc(sizeof(Node*));
 
 	if ( !etaptr->array ) return NULL;
@@ -138,29 +207,74 @@ static EntityTypeArray* initEntityTypeArray(EntityType* etptr)
 	return etaptr; 
 }
 
-
-void linkNodes (Graph* gptr, Node* source, Node* dest, const char* relName)
-{
-	if (gptr->head == source) 
-		return linkNodes_iml(source, dest, relName);
-				
-	if ( !dfs(gptr->head, gptr->head, source) ) return;
-
-	linkNodes_iml(source, dest, relName);
-
-	gptr->nodes++;
-	gptr->rels++;
-}
-
-
 static void linkNodes_iml (Node* source, Node* destination, const char* relName)
 {
+	//--------------------------------
+	// linkNodes implementation
+	// create relation beetween  nodes
+	//--------------------------------
+	
 	Relation* rel = relationConstruct(relName, destination);
 	
 	if ( !rel ) return;	
 	
 	addRelation(source, rel);		
 }
+
+
+static Node* isNodeExist (Graph* gptr, Node* target)
+{
+	Node* tmpNode;	
+	
+	if ( !(tmpNode = dfs(gptr->head, gptr->head, target)) )
+		return NULL;
+
+	if ( !(tmpNode = nodeSearchArray(gptr->array, target)) ) 
+		return NULL;
+	
+
+	//free(nptr)
+	
+	return tmpNode;	
+}
+
+
+
+static Node* nodeSearchArray (EntitiesArray* arr, Node* target)
+{
+	//----------------------------------------
+	// Search node in no relations node array
+	//----------------------------------------
+
+	if ( !arr || !target ) return NULL;	
+	
+	Node*  tmpNode;
+	Node** tmpArray;
+	int8_t index;	
+	
+	index = binsearch((void**)arr->noRelArray,
+	                arr->size,
+                    (void*)target,
+                    bsENTITY_TYPE);
+
+	if ( index < 0 ) return NULL;
+
+	tmpArray = arr->noRelArray[index]->array; 
+	
+    index = binsearch((void**)arr->noRelArray[index]->array,
+                      arr->noRelArray[index]->size,
+                      (void*)target,
+                      bsNODE); 	
+
+	if ( index < 0 ) return NULL;
+
+	tmpNode = tmpArray[index];
+
+	if ( !nodeCompare(tmpNode, target) ) return NULL;	
+	
+	return tmpNode;
+}
+
 
 
 //TODO write bfs it work faster
@@ -171,15 +285,13 @@ static Node* dfs (Node* base, Node* cur, Node* target)
 	// Function to check
 	// exist target in gptr or not
 	//----------------------------
-	
+	if ( !base || !cur ) return NULL;	
+
 	Relation** rels = cur->relations;
 	uint8_t    size = cur->rsize;
 	Node*      dest;
 
-	// cur == base
-	if ( !cur ) return NULL;
-
-	if ( cur == target ) return cur;
+	if ( nodeCompare(cur, target) ) return cur;
 
 	if ( !size ) return NULL;
 
@@ -191,3 +303,13 @@ static Node* dfs (Node* base, Node* cur, Node* target)
 
 	return NULL;
 }
+
+
+static inline bool nodeCompare(Node* source, Node* target)
+{
+	if ( !source || !target ) return false;
+	if ( source->type != target->type )	return false;
+
+	return dataCompare(source->data, target->data);
+}
+

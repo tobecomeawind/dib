@@ -87,7 +87,7 @@ static inline int stringCompare (char* targetWord, char* bufWord)
 	// skip SIGSEGV
 	//-----------------------------------------------
 	
-	if ( !bufWord ) return -1;
+	//if ( !bufWord ) return -1;
 	
 	return strcmp(targetWord, bufWord);	
 }
