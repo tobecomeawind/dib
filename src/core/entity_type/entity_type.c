@@ -9,7 +9,6 @@
 
 static EntityType* entityTypeNew (const char* typeName, uint64_t hashValue);
 
-
 static HashTable* NodeEntitiesTempTable;
 
 extern char* createPath(const char* subdir);
@@ -53,7 +52,6 @@ static EntityType* entityTypeNew (const char* typeName, uint64_t hashValue)
 }
 
 
-
 EntityType* entityTypeConstruct (const char* typeName, uint64_t hashValue)
 {
 	return entityTypeNew(typeName, hashValue);	
@@ -65,28 +63,18 @@ EntityType* searchByHashNodeEntitiesTempTable (uint64_t hashValue)
 	return hashTableSearchByHash(NodeEntitiesTempTable, hashValue);	
 }	
 
-EntityType* entityTypeConstructTmp (const char* typeName, uint64_t hashValue)
+
+EntityType* nodeEntityTypeConstructTmp (const char* typeName,
+                                        uint64_t    hashValue,
+                                        const char* subdir)
 {
-	//------------------------------------------------
-	// Create new Entity and push in Entities Tmp File
-	// or
-	// get entitity ptr from Entities Temp Table 
-	//------------------------------------------------
+    return entityTypeConstructTmp(NodeEntitiesTempTable,
+                                  typeName,
+                                  hashValue,
+                                  subdir);
+}
 
 
-	EntityType* etptr;
-	char* path = createPath(NODE_TEMP_FILE);
-
-	if ( !(etptr = hashTableSearchByHash(NodeEntitiesTempTable, hashValue)) ) {
-		etptr = entityTypeNew(typeName, hashValue);
-		hashTableInsert(NodeEntitiesTempTable, etptr);
-		hashTableSerialize(NodeEntitiesTempTable, path);
-	}
-
-	free(path);	
-	
-	return etptr;
-}	
 
 
 

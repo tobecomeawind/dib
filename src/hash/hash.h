@@ -23,6 +23,10 @@ typedef struct {
 					  
 } HashTable;
 
+EntityType* entityTypeConstructTmp (HashTable*  table,
+                                    const char* typeName,
+                                    uint64_t    hashValue,
+                                    const char* subdir);
 
 uint64_t    hash                  (const char* word);
 HashTable*  hashTableInit         (uint8_t size);

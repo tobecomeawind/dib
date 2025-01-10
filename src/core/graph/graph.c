@@ -8,7 +8,8 @@
 #include "algs.h"
 #include "data.h"
 #include "hash.h"
-
+#include "deserialization.h"
+#include "serialization.h"
 
 static Node* dfs (Node* base, Node* nptr, Node* target);
 static void linkNodes_iml (Node* source, Node* destination,const char* relName);
@@ -24,11 +25,26 @@ static void insertNode (EntityTypeArray* etaptr, Node* nptr);
 static inline bool nodeCompare(Node* source, Node* target);
 static Node* isNodeExist (Graph* gptr, Node* target);
 
+
+extern char* createPath(const char* filename);
 // этот файл пахнет говном
 
 
 // Relation Entities Temp Table
 static HashTable* RelEntitiesTempTable;
+
+
+void initRelEntitiesTempTable (void)
+{
+	char* path = createPath(REL_TEMP_FILE);
+	RelEntitiesTempTable = initTableFromFile(path);
+	free(path);
+}
+
+void destructRelEntitiesTempTable (void)
+{
+	hashTableDestruct(RelEntitiesTempTable);
+}
 
 
 Graph* graphInit(Node* head)
@@ -82,6 +98,17 @@ void addNode (Graph* gptr, Node* nptr)
 }
 
 
+EntityType* relEntityTypeConstructTmp (const char* typeName,
+                                       uint64_t    hashValue,
+                                       const char* subdir)
+{
+    return entityTypeConstructTmp(RelEntitiesTempTable,
+                                  typeName,
+                                  hashValue,
+                                  subdir);
+}
+
+
 void linkNodes (Graph* gptr, Node* source, Node* dest, const char* relName)
 {
 	//-------------------------------------------
@@ -123,12 +150,20 @@ static void insertNewEntityType (EntitiesArray*    arr,
 	
 	if ( !arr || !etptr) return;
 	
-	EntityTypeArray* newEntityType = initEntityTypeArray(etptr); 	
+	EntityTypeArray*  newEntityType = initEntityTypeArray(etptr);
+	EntityTypeArray** tmpArr;
 
 	if ( !newEntityType ) return;
+	
+	tmpArr = (EntityTypeArray**) realloc(arr->noRelArray,
+                                      sizeof(EntityTypeArray*)*((arr->size)+1));	
+	
+	if ( !tmpArr ) {
+		free(newEntityType);	
+		return; 
+	}	
 
-	arr->noRelArray = (EntityTypeArray**) realloc(arr->noRelArray, arr->size+1);			
-	if ( !arr->noRelArray ) return; 		
+	arr->noRelArray = tmpArr;
 	arr->size += 1;
 	
 	for (uint8_t i = arr->size; i > index; --i)
@@ -159,7 +194,8 @@ static void insertNode (EntityTypeArray* etaptr, Node* nptr)
 
 	if ( index >= 0 ) return; // nptr already exists
 			
-	etaptr->array = (Node**) realloc(etaptr->array, etaptr->size+1);			
+	etaptr->array = (Node**) realloc(etaptr->array,
+                                     sizeof(Node*) * ((etaptr->size)+1));			
 	
 	if ( !etaptr->array ) return; 		
 	etaptr->size += 1;
@@ -218,7 +254,7 @@ static void linkNodes_iml (Node* source, Node* destination, const char* relName)
 	// create relation beetween  nodes
 	//--------------------------------
 	
-	Relation* rel = relationConstruct(relName, destination);
+	Relation* rel = relationConstructTmp(relName, destination);
 	
 	if ( !rel ) return;	
 	
@@ -230,16 +266,16 @@ static Node* isNodeExist (Graph* gptr, Node* target)
 {
 	Node* tmpNode;	
 	
-	if ( !(tmpNode = dfs(gptr->head, gptr->head, target)) )
-		return NULL;
+	if ( tmpNode = dfs(gptr->head, gptr->head, target) ) 
+		return tmpNode;
 
-	if ( !(tmpNode = nodeSearchArray(gptr->array, target)) ) 
-		return NULL;
+	if ( tmpNode = nodeSearchArray(gptr->array, target) ) 
+		return tmpNode;
 	
 
 	//free(nptr)
 	
-	return tmpNode;	
+	return NULL;	
 }
 
 
@@ -258,7 +294,7 @@ static Node* nodeSearchArray (EntitiesArray* arr, Node* target)
 	
 	index = binsearch((void**)arr->noRelArray,
 	                arr->size,
-                    (void*)target,
+                    (void*)(target->type),
                     bsENTITY_TYPE);
 
 	if ( index < 0 ) return NULL;

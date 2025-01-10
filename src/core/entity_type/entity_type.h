@@ -11,7 +11,9 @@ typedef struct entity_type_t{ // Entity = Node || Relation
 } EntityType;
 
 EntityType* entityTypeConstruct(const char* typeName, uint64_t hash);
-EntityType* entityTypeConstructTmp (const char* typeName, uint64_t hashValue);
+EntityType* nodeEntityTypeConstructTmp (const char* typeName,
+                                        uint64_t    hashValue,
+                                        const char* subdir);
 void        entityTypeDestruct (EntityType* fuckYou);
 
 void printEntities (void);

@@ -16,6 +16,7 @@ typedef struct relation_t{
 } Relation;
 
 Relation* relationConstruct(const char* name, Node* destination);
+Relation* relationConstructTmp(const char* name, Node* destination);
 void      relationDestruct (Relation* rptr);
 
 #endif

@@ -1,22 +1,27 @@
-#include "node.h"
-#include "hash.h"
-
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
+
+#include "node.h"
+#include "hash.h"
+#include "files.h"
 
 static Node* nodeConstruct_iml (EntityType* etptr, Data* dptr, Relation** rptr);
 
 // TODO как вариант в nodeConstruct_iml передавать ссылки на функции
 
-Node* nodeConstructCli(char* name, char *data, Tokens dataTypeToken)
+extern char* createPath(const char* filename);
+
+Node* nodeConstructTmp(char* name, char *data, Tokens dataTypeToken)
 {
 	Node* nptr; 
 
 	void*    voidData  = (void*) data;
 	uint64_t hashValue = hash(name);
-
-	EntityType* etptr = entityTypeConstructTmp(name, hashValue);	
+	
+	EntityType* etptr = nodeEntityTypeConstructTmp(name,
+                                                   hashValue,
+                                                   NODE_TEMP_FILE);	
 	Data*       dptr  = dataConstruct(data, dataTypeToken, true);
 
 	Relation**  rptr  = (Relation**) malloc(sizeof(Relation*)); 

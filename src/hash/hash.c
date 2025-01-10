@@ -5,6 +5,7 @@
 #include <stdbool.h>
 
 #include "hash.h"
+#include "serialization.h"
 #include "deserialization.h"
 
 static uint8_t     hashNodeIndex    (HashNode*   hnptr,   uint8_t size);
@@ -16,6 +17,8 @@ static void        hashTableDelete  (HashTable*  table,   uint64_t hashVal);
 static void        hashTableRealloc (HashTable*  table);
 static inline uint64_t getHash(HashNode* hashNode);
 
+
+extern char* createPath(const char* filename);
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // In this folder
@@ -126,6 +129,32 @@ HashTable* initTableFromFile (const char* filename)
 	return table;	
 }
 
+
+EntityType* entityTypeConstructTmp (HashTable*  table,
+                                    const char* typeName,
+                                    uint64_t    hashValue,
+                                    const char* subdir)
+{
+	//------------------------------------------------
+	// Create new Entity and push in Entities Tmp File
+	// or
+	// get entitity ptr from Entities Temp Table 
+	//------------------------------------------------
+
+
+	EntityType* etptr;
+	char* path = createPath(subdir);
+
+	if ( !(etptr = hashTableSearchByHash(table, hashValue)) ) {
+		etptr = entityTypeConstruct(typeName, hashValue);
+		hashTableInsert(table, etptr);
+		hashTableSerialize(table, path);
+	}
+
+	free(path);
+	
+	return etptr;
+}	
 
 
 void hashTableDestruct (HashTable* htptr)
@@ -261,7 +290,6 @@ static void hashTableDelete (HashTable* table, uint64_t hashVal)
 	}
 
 }
-
 
 
 static uint8_t hashNodeIndex (HashNode* hnptr, uint8_t size)

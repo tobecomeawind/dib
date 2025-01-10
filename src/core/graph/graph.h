@@ -53,7 +53,12 @@ typedef struct graph_t {
 
 
 
+void initRelEntitiesTempTable (void);
+void destructRelEntitiesTempTable (void);
 
+EntityType* relEntityTypeConstructTmp (const char* typeName,
+                                       uint64_t    hashValue,
+                                       const char* subdir);
 
 Graph* graphInit(Node* head);
 void linkNodes  (Graph* gptr, Node* source, Node* dest, const char* relName);

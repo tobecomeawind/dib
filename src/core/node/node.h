@@ -19,7 +19,7 @@ typedef struct node_t{
 } Node;
 
 
-Node* nodeConstructCli(char* name, char *data, Tokens dataTypeToken);
+Node* nodeConstructTmp(char* name, char *data, Tokens dataTypeToken);
 Node* nodeConstruct(char*    name,
                     uint64_t hashValue,
                     void*    data,
