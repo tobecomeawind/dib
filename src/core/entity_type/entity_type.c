@@ -10,15 +10,16 @@
 static EntityType* entityTypeNew (const char* typeName, uint64_t hashValue);
 
 
-static HashTable* EntitiesTempTable;
+static HashTable* NodeEntitiesTempTable;
 
+extern char* createPath(const char* subdir);
 
 void printEntities (void)
 {
-	HashNode** entities = EntitiesTempTable->array;
+	HashNode** entities = NodeEntitiesTempTable->array;
 	HashNode* tmpNode;
 
-	for (uint8_t i = 0; i < EntitiesTempTable->size; ++i) {
+	for (uint8_t i = 0; i < NodeEntitiesTempTable->size; ++i) {
 		tmpNode = entities[i];	
 		while (tmpNode) {
 			printf("%s\n", tmpNode->data->typeName);	
@@ -27,19 +28,16 @@ void printEntities (void)
 	}
 }
 
-void initEntitiesTempTable (void)
+void initNodeEntitiesTempTable (void)
 {
-	HashTable* table;
-	if ( !(table = hashTableDeserialize()) ) 
-		table = hashTableInit(1); // if no data in file,
-								  // create new file
-	
-	EntitiesTempTable = table;
+	char* path = createPath(NODE_TEMP_FILE);	
+	NodeEntitiesTempTable = initTableFromFile(path);
+	free(path);
 }
 
-void destructEntitiesTempTable (void)
+void destructNodeEntitiesTempTable (void)
 {
-	hashTableDestruct(EntitiesTempTable);
+	hashTableDestruct(NodeEntitiesTempTable);
 }
 
 static EntityType* entityTypeNew (const char* typeName, uint64_t hashValue)
@@ -62,9 +60,9 @@ EntityType* entityTypeConstruct (const char* typeName, uint64_t hashValue)
 }
 
 
-EntityType* entitiesTempTableSearchByHash (uint64_t hashValue)
+EntityType* searchByHashNodeEntitiesTempTable (uint64_t hashValue)
 {
-	return hashTableSearchByHash(EntitiesTempTable, hashValue);	
+	return hashTableSearchByHash(NodeEntitiesTempTable, hashValue);	
 }	
 
 EntityType* entityTypeConstructTmp (const char* typeName, uint64_t hashValue)
@@ -77,12 +75,15 @@ EntityType* entityTypeConstructTmp (const char* typeName, uint64_t hashValue)
 
 
 	EntityType* etptr;
+	char* path = createPath(NODE_TEMP_FILE);
 
-	if ( !(etptr = hashTableSearchByHash(EntitiesTempTable, hashValue)) ) {
+	if ( !(etptr = hashTableSearchByHash(NodeEntitiesTempTable, hashValue)) ) {
 		etptr = entityTypeNew(typeName, hashValue);
-		hashTableInsert(EntitiesTempTable, etptr);
-		hashTableSerialize(EntitiesTempTable);
-	}	
+		hashTableInsert(NodeEntitiesTempTable, etptr);
+		hashTableSerialize(NodeEntitiesTempTable, path);
+	}
+
+	free(path);	
 	
 	return etptr;
 }	

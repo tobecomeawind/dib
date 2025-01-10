@@ -6,14 +6,13 @@
 #include "serialization.h"
 #include "entity_type.h"
 #include "node.h"
-#include "files.h"
 #include "types.h"
 
 static void hashNodeSerialize (HashNode*   tableNode, FILE* tmpfp);
 static void entitySerialize   (EntityType* entity,    FILE* fp);
 
 
-void hashTableSerialize (HashTable* table)
+void hashTableSerialize (HashTable* table, const char* filename)
 {
 	//-----------------------
 	// Serialize a hash table
@@ -22,7 +21,7 @@ void hashTableSerialize (HashTable* table)
 	
 	FILE* tmpfp;
 	
-	tmpfp = fopen(TEMP_FILE, "w");
+	tmpfp = fopen(filename, "w");
 
 	fputc(table->size, tmpfp);
 

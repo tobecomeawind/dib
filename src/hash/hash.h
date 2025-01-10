@@ -32,5 +32,6 @@ EntityType* hashTableSearchByName (HashTable*  table, const char* name);
 EntityType* hashTableSearchByHash (HashTable*  table, uint64_t hashVal);
 void        hashTableDeleteByName (HashTable*  table, char* name); 
 HashNode*   hashNodeConstruct     (EntityType* etptr);
+HashTable*  initTableFromFile     (const char* filename);
 
 #endif

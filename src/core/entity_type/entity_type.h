@@ -16,9 +16,9 @@ void        entityTypeDestruct (EntityType* fuckYou);
 
 void printEntities (void);
 
-void initEntitiesTempTable     (void);
-void destructEntitiesTempTable (void);
+void initNodeEntitiesTempTable     (void);
+void destructNodeEntitiesTempTable (void);
 
-EntityType* entitiesTempTableSearchByHash (uint64_t hashValue);
+EntityType* searchByHashNodeEntitiesTempTable (uint64_t hashValue);
 
 #endif

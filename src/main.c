@@ -1,6 +1,8 @@
-#include  <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <unistd.h>
+#include <string.h>
 
 #include "node.h"
 #include "hash.h"
@@ -8,13 +10,31 @@
 #include "serialization.h"
 #include "deserialization.h"
 
+char* createPath(const char* subDir);
+
+#define SOURCE_PATH_MAX_SIZE 255
+unsigned char SOURCE_PATH[SOURCE_PATH_MAX_SIZE];
+
+
+
+
 int main(void)
-{	
+{			
+	if ( !getcwd(SOURCE_PATH, SOURCE_PATH_MAX_SIZE) ) {
+		printf("\nInvalid source path\n");
+		return -1;
+	}
+		
+	printf("%s\n", createPath("/data/tmp/entities.tmp"));
+
+
 	Node *Tom, *Lucy;
 	Graph* g;	
 	//HashTable* table;
 
-	initEntitiesTempTable();	
+	
+
+	initNodeEntitiesTempTable();	
 
 	Tom  = nodeConstructCli("Personallity", "Tom",  K_CHAR);		
 	Lucy = nodeConstructCli("MustafaBlya", "Lucy",  K_CHAR);	
@@ -66,4 +86,20 @@ int main(void)
 	return 0;
 }
 
+
+
+char* createPath(const char* subDir)
+{	
+	if ( !subDir ) return NULL;
+	
+	uint8_t len = strlen(SOURCE_PATH) + strlen(subDir) + 1;
+	char*   res = malloc(len);
+	
+	if ( !res ) return NULL;
+
+	strcpy(res, SOURCE_PATH);
+	strcat(res, subDir);	
+
+	return res;
+}
 

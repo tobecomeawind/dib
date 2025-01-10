@@ -4,7 +4,6 @@
 #include <string.h>
 
 #include "deserialization.h"
-#include "files.h"
 #include "entity_type.h"
 #include "hash.h"
 
@@ -13,16 +12,19 @@ static HashNode*   hashNodeDeserialize (FILE* tmpfp);
 static EntityType* entityDeserialize   (FILE* fp);
 
 
-HashTable* hashTableDeserialize (void)
+HashTable* hashTableDeserialize (const char* filename)
 {
+	if ( !filename ) return NULL;
+	
 	FILE*      tmpfp;
 	int8_t     hashTableSize;
 	HashTable* table;
 	HashNode*  tableNode;
 
-	tmpfp = fopen(TEMP_FILE, "r");
+	tmpfp = fopen(filename, "r");
 
-	if ( !tmpfp ) return NULL;
+	if ( !tmpfp ) // if file not exist we create him
+		tmpfp = fopen(filename, "a+");
 	
 	hashTableSize = fgetc(tmpfp);
 

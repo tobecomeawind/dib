@@ -3,7 +3,8 @@
 
 #include "node.h"
 #include "hash.h"
+#include "files.h"
 
-HashTable* hashTableDeserialize (void);
+HashTable* hashTableDeserialize (const char* filename);
 
 #endif

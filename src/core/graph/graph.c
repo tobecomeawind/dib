@@ -7,6 +7,7 @@
 #include "relation.h"
 #include "algs.h"
 #include "data.h"
+#include "hash.h"
 
 
 static Node* dfs (Node* base, Node* nptr, Node* target);
@@ -25,6 +26,9 @@ static Node* isNodeExist (Graph* gptr, Node* target);
 
 // этот файл пахнет говном
 
+
+// Relation Entities Temp Table
+static HashTable* RelEntitiesTempTable;
 
 
 Graph* graphInit(Node* head)

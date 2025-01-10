@@ -5,6 +5,7 @@
 #include <stdbool.h>
 
 #include "hash.h"
+#include "deserialization.h"
 
 static uint8_t     hashNodeIndex    (HashNode*   hnptr,   uint8_t size);
 static uint8_t     hashIndex        (uint64_t    hashVal, uint8_t size);
@@ -111,6 +112,21 @@ HashTable* hashTableInit (uint8_t size)
 
 	return htptr;
 }
+
+
+HashTable* initTableFromFile (const char* filename)
+{
+	HashTable* table;
+
+	if ( !(table = hashTableDeserialize(filename)) ) 
+		table = hashTableInit(1); // if no data in file,
+								  // create new file	
+	if ( !table ) return NULL;
+		
+	return table;	
+}
+
+
 
 void hashTableDestruct (HashTable* htptr)
 {
