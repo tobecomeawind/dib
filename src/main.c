@@ -23,7 +23,7 @@ int main(void)
 		return -1;
 	}
 		
-	Node *Tom, *Lucy;
+	Node *Tom, *Lucy, *Tom1, *Tom2;
 	Graph* g;	
 	//HashTable* table;
 
@@ -31,7 +31,10 @@ int main(void)
 	initNodeEntitiesTempTable();	
 	initRelEntitiesTempTable();
 
-	Tom  = nodeConstructTmp("Personallity", "Tom",  K_CHAR);		
+	Tom  = nodeConstructTmp("Personallity", "CTom",  K_CHAR);		
+	Tom1  = nodeConstructTmp("Personallity", "ATom",  K_CHAR);		
+	Tom2  = nodeConstructTmp("Personallity", "BTom",  K_CHAR);		
+	
 	Lucy = nodeConstructTmp("MustafaBlya", "Lucy",  K_CHAR);	
 
 	Node* Node1 = nodeConstructTmp("test1", "Node", K_CHAR);
@@ -49,7 +52,8 @@ int main(void)
 	g = graphInit(Node1);
 	
 	addNode(g, Tom);
-	addNode(g, Tom);
+	addNode(g, Tom1);
+	addNode(g, Tom2);
 	addNode(g, Lucy);
 
 	addNode(g, Node1);
@@ -67,6 +71,8 @@ int main(void)
 
 
 	linkNodes(g, Node122, Tom, "empty");
+
+	debug_printFreeEntitiesArray(g);
 
 	// Tree
 	/*

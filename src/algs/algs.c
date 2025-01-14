@@ -19,7 +19,7 @@ int8_t binsearch(void** buf, uint8_t size, void* target, bstypes type)
 
 
 	uint8_t low, high, mid;
-	uint8_t mediateResult;
+	int8_t mediateResult;
 
 	low  = 0;
 	high = size - 1;

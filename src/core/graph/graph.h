@@ -60,6 +60,8 @@ EntityType* relEntityTypeConstructTmp (const char* typeName,
                                        uint64_t    hashValue,
                                        const char* subdir);
 
+void debug_printFreeEntitiesArray (Graph* gptr);
+
 Graph* graphInit(Node* head);
 void linkNodes  (Graph* gptr, Node* source, Node* dest, const char* relName);
 void addNode    (Graph* gptr, Node* nptr);

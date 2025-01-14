@@ -46,6 +46,31 @@ void destructRelEntitiesTempTable (void)
 	hashTableDestruct(RelEntitiesTempTable);
 }
 
+void debug_printFreeEntitiesArray (Graph* gptr)
+{	
+	EntitiesArray*    eaptr = gptr->array;	
+	EntityTypeArray** arr   = eaptr->noRelArray;
+
+	EntityTypeArray*  tmpEntityTypeArray;
+	EntityType*       tmpEntity;
+	Node*             tmpNode;
+		
+	
+	for (uint8_t i = 0; i < eaptr->size; ++i) {
+		
+		tmpEntityTypeArray = arr[i];
+		tmpEntity = tmpEntityTypeArray->etptr;	
+		
+		printf("%i. %s\n", i + 1, (char*)tmpEntity->typeName);	
+		
+		for (uint8_t j = 0; j < tmpEntityTypeArray->size; ++j) {
+			tmpNode = tmpEntityTypeArray->array[j];
+			printf("\t%i. %s\n", j + 1, (char*)tmpNode->data->info);	
+		}
+		putc('\n', stdout);	
+	}	
+}
+
 
 Graph* graphInit(Node* head)
 {
@@ -80,7 +105,7 @@ void addNode (Graph* gptr, Node* nptr)
 	int8_t index;
 	
 	// check if array is empty	
-	if ( gptr->array->size == 0 ) {
+	if ( size == 0 ) {
 		index = 0;
 		insertNewEntityType(gptr->array, nptr->type, index);
 		goto insertNodePoint;
@@ -164,11 +189,12 @@ static void insertNewEntityType (EntitiesArray*    arr,
 	}	
 
 	arr->noRelArray = tmpArr;
-	arr->size += 1;
 	
 	for (uint8_t i = arr->size; i > index; --i)
 		arr->noRelArray[i] = arr->noRelArray[i - 1]; 	
 
+	arr->size += 1;
+	
 	arr->noRelArray[index] = newEntityType;
 }
 
