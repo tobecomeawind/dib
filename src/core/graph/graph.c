@@ -100,23 +100,26 @@ void addNode (Graph* gptr, Node* nptr)
 		
 	if ( !gptr || !nptr) return;	
 
-	EntityTypeArray** arr = gptr->array->noRelArray;
-	uint8_t           size = gptr->array->size;
-	int8_t index;
+	EntityTypeArray** arr   = gptr->array->noRelArray;
+	uint8_t           size  = gptr->array->size;
+	int8_t            index = 0;
 	
 	// check if array is empty	
 	if ( size == 0 ) {
-		index = 0;
 		insertNewEntityType(gptr->array, nptr->type, index);
 		goto insertNodePoint;
 	}
    
    	index = binsearch((void**)arr, size,(void*) nptr->type, bsENTITY_TYPE);
 	
-    if ( index < 0 ) {// if entity type not exists
+    if ( index > 0 ) {// if entity type not exists
+	
+		index -= 1;	 // skip 0 value
+					 // check algs.c file
+	} else {
 		index *= -1;	    
-		insertNewEntityType(gptr->array, nptr->type, index);
-	}	
+		insertNewEntityType(gptr->array, nptr->type, index);	
+	}
 	
 	insertNodePoint:
 		insertNode(gptr->array->noRelArray[index], nptr);	
@@ -208,27 +211,28 @@ static void insertNode (EntityTypeArray* etaptr, Node* nptr)
 	
 	if ( !etaptr || !nptr ) return;
 	
-	int8_t index;	
+	int8_t index = 0;	
 
 	if ( etaptr->size == 0 ) {
-		index = 0;
 		etaptr->size += 1;
 		goto insertPoint;
 	}
 
 	index = binsearch((void**)etaptr->array, etaptr->size, (void*)nptr, bsNODE);
 
-	if ( index >= 0 ) return; // nptr already exists
-			
+	if ( index > 0 ) return; // nptr already exists
+		
+	index *= -1;
+
 	etaptr->array = (Node**) realloc(etaptr->array,
                                      sizeof(Node*) * ((etaptr->size)+1));			
 	
 	if ( !etaptr->array ) return; 		
-	etaptr->size += 1;
 	
 	for (uint8_t i = etaptr->size; i > index; --i)
 		etaptr->array[i] = etaptr->array[i - 1]; 	
 	
+	etaptr->size += 1;
 
 	insertPoint:	
 		etaptr->array[index] = nptr;
@@ -314,9 +318,9 @@ static Node* nodeSearchArray (EntitiesArray* arr, Node* target)
 
 	if ( !arr || !target ) return NULL;	
 	
-	Node*  tmpNode;
-	Node** tmpArray;
-	int8_t index;	
+	Node*            tmpNode;
+	EntityTypeArray* tmpArray;
+	int8_t           index;	
 	
 	index = binsearch((void**)arr->noRelArray,
 	                arr->size,
@@ -325,16 +329,16 @@ static Node* nodeSearchArray (EntitiesArray* arr, Node* target)
 
 	if ( index < 0 ) return NULL;
 
-	tmpArray = arr->noRelArray[index]->array; 
+	tmpArray = arr->noRelArray[index - 1]; 
 	
-    index = binsearch((void**)arr->noRelArray[index]->array,
-                      arr->noRelArray[index]->size,
+    index = binsearch((void**)tmpArray->array,
+                      tmpArray->size,
                       (void*)target,
                       bsNODE); 	
 
 	if ( index < 0 ) return NULL;
 
-	tmpNode = tmpArray[index];
+	tmpNode = tmpArray->array[index - 1];
 
 	if ( !nodeCompare(tmpNode, target) ) return NULL;	
 	

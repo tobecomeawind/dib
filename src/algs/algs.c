@@ -5,8 +5,8 @@
 #include "entity_type.h"
 #include "graph.h"
 
-static int compare(void* target, void** buffer, int index, bstypes type);
-static inline int stringCompare (char* targetWord, char* bufWord);
+static int8_t compare(void* target, void** buffer, int index, bstypes type);
+static inline int8_t debug_stringCompare (char* targetWord, char* bufWord);
 
 
 int8_t binsearch(void** buf, uint8_t size, void* target, bstypes type)
@@ -18,7 +18,7 @@ int8_t binsearch(void** buf, uint8_t size, void* target, bstypes type)
 	if ( !buf || !target ) return -1;
 
 
-	uint8_t low, high, mid;
+	int8_t low, high, mid;
 	int8_t mediateResult;
 
 	low  = 0;
@@ -34,30 +34,23 @@ int8_t binsearch(void** buf, uint8_t size, void* target, bstypes type)
 		} else if ( mediateResult < 0 ) { // left
 			high = mid - 1; 
 		} else {
-			switch ( type ) {
-				case( bsTOKEN ):
-				case( bsENTITY_TYPE ):
-					//if word in keywords
-					return mid;
-			}
+			//if word in keywords
+			return mid + 1; // to skip zero value error
+							// when low == 0 and mid == 0
 
 			//for another case
-			return 1;
+			//return 1;
 		}
 	}
 
-	switch ( type ) {
-		case( bsTOKEN ):
-		case( bsENTITY_TYPE ):
-			//if no word in keywords
-			//we return insert position
-			return -1 * low;
-	}
+	//if no word in keywords
+	//we return insert position
+	return -1 * low;
 
-	return 0;
+	//return 0;
 }
 
-static int compare(void* target, void** buffer, int index, bstypes type)
+static int8_t compare(void* target, void** buffer, int index, bstypes type)
 {
 	//----------------------	
 	//compare for binsearch
@@ -73,14 +66,14 @@ static int compare(void* target, void** buffer, int index, bstypes type)
 		case ( bsFLOAT ):	
 			return (int) (*((float*) target) - (( (float*)buffer )[index]));
 		case ( bsENTITY_TYPE ):
-			return stringCompare((char*)(( (EntityType*) target )->typeName ), (char*)(( (EntityTypeArray**)buffer )[index])->etptr->typeName);
+			return debug_stringCompare((char*)(( (EntityType*) target )->typeName ), (char*)(( (EntityTypeArray**)buffer )[index])->etptr->typeName);
 		case ( bsNODE ):
-			return stringCompare((char*)(((Node*)target)->data->info), (char*)(((Node**)buffer)[index])->data->info);		
+			return debug_stringCompare((char*)(((Node*)target)->data->info), (char*)(((Node**)buffer)[index])->data->info);		
 	}	
 }
  
 
-static inline int stringCompare (char* targetWord, char* bufWord)
+static inline int8_t debug_stringCompare (char* targetWord, char* bufWord)
 {
 	//-----------------------------------------------
 	// strcmp(), but we check if value not initialise
