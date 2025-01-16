@@ -80,12 +80,20 @@ void nodeDestruct(Node* node)
 
 void addRelation(Node* node, Relation* rel)
 {	
+	Relation** tmpRels;
+
 	// TODO rework to chech if rel alread in relations
-	Relation** relrealloc(Relation** rmptr, size_t nsize);	
+		
 	
-	node->relations[node->rsize++] = rel;
-	
-	node->relations = relrealloc(node->relations, node->rsize);
+	tmpRels = (Relation**) realloc(node->relations,
+                                 sizeof(Relation*) * ((node->rsize) + 1));	
+
+	if ( !tmpRels ) return;
+
+	node->relations = tmpRels;
+
+	node->relations[node->rsize] = rel;
+	node->rsize += 1;	
 }
 
 
