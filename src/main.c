@@ -63,6 +63,9 @@ int main(void)
 	addNode(g, Node112);
 	addNode(g, Node121);
 	addNode(g, Node122);
+	
+	debug_printFreeEntitiesArray(g);
+
 
 	linkNodes(g, Node1, Node11, "empty");
 	linkNodes(g, Node11, Node111, "empty");
@@ -72,7 +75,6 @@ int main(void)
 
 	linkNodes(g, Node122, Tom, "empty");
 
-	debug_printFreeEntitiesArray(g);
 
 	// Tree
 	/*

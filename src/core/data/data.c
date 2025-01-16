@@ -42,11 +42,11 @@ bool dataCompare (Data* source, Data* target)
 	if ( source->type != target->type )	 return false;
 	
 	switch ( source->type ) {
-		case ( K_INT ):
+		case ( INT ):
 			return *((int*)(source->info)) > *((int*)(target->info)); 
-		case ( K_FLOAT ):
+		case ( FLOAT ):
 			return *((double*)(source->info)) > *((double*)(target->info)); 
-		case ( K_CHAR ):
+		case ( CHAR | FLOAT ):
 			if ( strcmp(((char*)(source->info)), ((char*)(target->info))) == 0)
 			   return true;	
 	}
