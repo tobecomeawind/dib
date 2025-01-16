@@ -23,12 +23,18 @@ HashTable* hashTableDeserialize (const char* filename)
 
 	tmpfp = fopen(filename, "r");
 
-	if ( !tmpfp ) // if file not exist we create him
-		tmpfp = fopen(filename, "a+");
+	if ( !tmpfp ) { // if file not exist we create him
+		tmpfp = fopen(filename, "w");
+		fclose(tmpfp);
+		return NULL;
+	}
 	
 	hashTableSize = fgetc(tmpfp);
 
-	if (hashTableSize == EOF) return NULL;
+	if ( hashTableSize == EOF ) {  // if file without data
+		fclose(tmpfp);	
+		return NULL;
+	}
 
 	table = hashTableInit(hashTableSize);
 
