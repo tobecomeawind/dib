@@ -23,11 +23,11 @@ bool analyze_line(char* lptr, int size)
 	initTokensBuf();
 
 	while( *lptr != '\0' ) {
-		if ( isAlNum(lptr) ) {
+		if ( isAlNum(*lptr) ) {
 		
 			do{
 				*twptr++ = *lptr;
-			} while( isAlNum(++lptr) );
+			} while( isAlNum(*++lptr) );
 			
 			*twptr = '\0';
 			
@@ -57,9 +57,8 @@ bool analyze_line(char* lptr, int size)
 		} else { // last symbol jump fix
 			
 			*twptr    = *lptr;
-			*++twptr  = '\0'; 	
 
-			if (isParenses(lptr)) {
+			if (isParenses(*lptr)) {
 	
 				switch (*lptr){
 					case ')':
@@ -75,23 +74,36 @@ bool analyze_line(char* lptr, int size)
 							
 				};
 	
-			} else if(isColon(lptr)){
+			} else if(isColon(*lptr)){
 
 				appendToken(CLETTERS,
 							COLON, 
 							tokenWord);		
 					
-			} else if(isComma(lptr)){
+			} else if(isComma(*lptr)){
 
 				appendToken(CLETTERS,
 							COMMA,
 						    tokenWord);	
+
+			} else if (isLink(*lptr)) {
 			
+				appendToken(CLETTERS,
+							LINK,
+						    tokenWord);	
+
+			} else if (isDoubleLink(*lptr, *(lptr + 1))) {
+				
+				appendToken(CLETTERS,
+							DLINK,
+						    tokenWord);	
+
 			} else {
-				if(!isWhiteSpace(lptr))	
+				if(!isWhiteSpace(*lptr))	
 					printf("\n\"Undefined char - %c\"\n", *lptr);		
 			}
 		
+			*++twptr  = '\0'; 	
 			twptr = tokenWord;
 
 			lptr++; // last symbol jump fix

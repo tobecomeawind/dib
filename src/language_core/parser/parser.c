@@ -6,7 +6,7 @@
 #include "tokens.h"
 #include "parser.h"
 #include "node.h"
-
+#include "graph.h"
 
 static void mainParsing (void);
 static void parseKeyword(void);
@@ -14,7 +14,9 @@ static void parseKeyword(void);
 
 static void borderWrapper(bordersType btype, bool (*func)(void));
 
-static bool parseEntity  (void);
+static Node* parseEntity_iml(parseEntityArg args);
+static bool parseEntity (void);
+static bool parseLink   (void);
 
 static Token* isNextToken(Tokens         majorType,
 						  Tokens         minorType, 
@@ -23,7 +25,7 @@ static Token* isNextToken(Tokens         majorType,
 extern void invokeCliError(char*);
 static void errorCall (Token* token, Tokens expectedType);
 
-#define checkErrorCall(X, point) \
+#define ASSERT_JUMP(X, point) \
 if(!(X)) {             \
 	goto point;        \
 }                      \
@@ -94,6 +96,7 @@ static void parseKeyword(void)
 			break;	
 		case (K_LINK):
 			printf("\nLink check\n");
+			borderWrapper(PARENSES, &parseLink);
 			break;	
 	}	
 }
@@ -103,40 +106,9 @@ static void parseKeyword(void)
 
 static bool parseEntity(void)
 {	
-	//ENTITY	
-
-	Token* tmpToken;	
-	char*  Entity, *Data;
-	Tokens DataType;
 	
-	// Person
-	checkErrorCall(tmpToken = isNextToken(NAME, NAME, MINOR|ERROR), errorPoint);
-	Entity = tmpToken->data;	
-	//         (...., true,  ....)
-	//         if we`ll check entity type	
-	//checkEntityType())	
-	
-	// :	
-	checkErrorCall(isNextToken(CLETTERS, COLON, MINOR|ERROR), errorPoint);
-	
-	// Vasya	
-	checkErrorCall(tmpToken = isNextToken(NAME, NAME, MINOR|ERROR), errorPoint);
-	Data = tmpToken->data;
-
-	// :	
-	checkErrorCall(isNextToken(CLETTERS, COLON, MINOR|ERROR), errorPoint);
-	
-	// CHAR
-	checkErrorCall(tmpToken = isNextToken(DATATYPE, 0,  ERROR), errorPoint);
-	DataType = tmpToken->minorType;	
-	//check type and name
-					  //
-					  // ENTITY (Person:Vasya:CHAR)
-					  //
-	
-
-	nodeConstructTmp(Entity, Data, DataType);	
-	
+	if ( !parseEntity_iml( E_ENTITY | E_DATA | E_DATATYPE ) )
+		return false;	
 	// multiply add entity
 	//
 	// Example
@@ -148,9 +120,83 @@ static bool parseEntity(void)
 
 	getToken();    // skip "," token
 	parseEntity(); 	
+}
 
-	errorPoint:		
+static bool parseLink (void)
+{
+	// LINK	(Man:Vasya <> Women:Masha, LOVED_IN)
+	Node *source, *target;
+	char* relName;	
+	bool doubleLink = false;
+
+	Token* tmpToken;
+	
+	// Man:Vasya
+	ASSERT_JUMP(source = parseEntity_iml( E_ENTITY | E_DATA ),  errorPoint);  
+	// <>
+	if ( !isNextToken(CLETTERS, LINK, MINOR|ERROR) ) { // if next token != LINK
+													   // we check dlink 
+		ASSERT_JUMP(isNextToken(CLETTERS, DLINK, MINOR|ERROR),  errorPoint);
+		doubleLink = true;
+	}
+	// Women:Masha	
+	ASSERT_JUMP(target = parseEntity_iml( E_ENTITY | E_DATA ),  errorPoint); 
+   	// ,	
+	ASSERT_JUMP(isNextToken(CLETTERS, COMMA, TEMP|MINOR),       errorPoint);	
+	// LOVED_IN	
+	ASSERT_JUMP(tmpToken = isNextToken(NAME, NAME, MINOR|ERROR),errorPoint);
+	relName = tmpToken->data;
+
+	if ( linkNodes(source, target, relName) )
+		return true;
+
+	errorPoint:
 		return false;
+}
+
+
+static Node* parseEntity_iml(parseEntityArg args)
+{
+	//ENTITY (Person:Vasya:CHAR)	
+
+	Token* tmpToken = NULL;	
+	char*  Entity   = NULL;
+	char*  Data     = NULL;
+	Tokens DataType = 0;
+
+	Node*  tmpNode; 
+
+	if ( args & E_ENTITY ) {
+		// Person
+		ASSERT_JUMP(tmpToken = isNextToken(NAME, NAME, MINOR|ERROR),errorPoint);
+		Entity = tmpToken->data;
+	} else 
+		goto errorPoint;	
+	
+	if ( args & E_DATA ) {
+		// :	
+		ASSERT_JUMP(isNextToken(CLETTERS, COLON, MINOR|ERROR), errorPoint);			
+		// Vasya	
+		ASSERT_JUMP(tmpToken = isNextToken(NAME, NAME, MINOR|ERROR),errorPoint);
+		Data = tmpToken->data;
+	}
+	
+	if (args & E_DATATYPE) {
+		// :	
+		ASSERT_JUMP(isNextToken(CLETTERS, COLON, MINOR|ERROR), errorPoint);
+		
+		// CHAR
+		ASSERT_JUMP(tmpToken = isNextToken(DATATYPE, 0,  ERROR), errorPoint);
+		DataType = tmpToken->minorType;		
+	}	
+
+
+	tmpNode = nodeConstructTmp(Entity, Data, DataType);
+	return tmpNode;
+
+
+	errorPoint:
+		return NULL;
 }
 
 
@@ -180,7 +226,6 @@ static void borderWrapper(bordersType btype, bool (*func)(void))
 	if ( !func() ) return;	
 	isNextToken(BORDERS, closeBorder, MINOR|ERROR);        // )
 }
-
 
 
 
@@ -242,20 +287,3 @@ static void errorCall (Token* token, Tokens expectedType)
 
 	free(errorString);
 }
-
-
-//if tokenTempBuf not null
-//------------------------------------------
-//Tokens get and unget
-//Purpose - check the next token with get
-//And unget him for putting in tokensTempBuf
-//------------------------------------------
-//else
-//-----------------------------
-//Get token from token buf
-//
-//buf != token temp buf
-//buf = buf from startParsing()
-//-----------------------------
-
-

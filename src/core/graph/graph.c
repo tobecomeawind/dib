@@ -12,16 +12,24 @@
 #include "serialization.h"
 #include "files.h"
 
-static Node* dfs (Node* base, Node* nptr, Node* target);
+static Node* dfs (Node* base, Node* cur, Node* target);
 static void linkNodes_iml (Node* source, Node* destination,const char* relName);
-static EntitiesArray* initEntitiesArray(void);
+
+static EntitiesArray* initEntitiesArray (void);
+static void       destructEntitiesArray (EntitiesArray* arrptr);
+
 static Node* nodeSearchArray (EntitiesArray* arr, Node* target);
 
 static EntityTypeArray* initEntityTypeArray(EntityType* etptr);
+static void         destructEntityTypeArray(EntityTypeArray* etaptr);
+
 static void insertNewEntityType (EntitiesArray*    arr,
                                  EntityType*       etptr,
                                  uint8_t           index);
-static void insertNode (EntityTypeArray* etaptr, Node* nptr);
+static void   insertNode (EntityTypeArray* etaptr, Node* nptr);
+
+static Graph* graphInit_iml    (void);
+static void   graphDestruct_iml(Graph* gptr);
 
 static inline bool nodeCompare(Node* source, Node* target);
 static Node* isNodeExist (Graph* gptr, Node* target);
@@ -37,6 +45,7 @@ static void nodeDeleteFromArray (EntityTypeArray* etaptr, uint8_t index);
 // Relation Entities Temp Table
 static HashTable* RelEntitiesTempTable;
 
+static Graph*     MainGraph;
 
 void initRelEntitiesTempTable (void)
 {
@@ -76,8 +85,17 @@ void debug_printFreeEntitiesArray (Graph* gptr)
 	}	
 }
 
+void initMainGraph (void)
+{
+	MainGraph = graphInit_iml();
+}
 
-Graph* graphInit(Node* head)
+void destructMainGraph (void)
+{
+	graphDestruct_iml(MainGraph);
+}
+
+static Graph* graphInit_iml(void)
 {
 	//--------------------------------------------------
 	// init graph
@@ -85,33 +103,40 @@ Graph* graphInit(Node* head)
 	// init array of arrays with nodes without relations
 	//--------------------------------------------------
 
+	//TODO graph serialization
+
 	Graph* gptr = (Graph*) malloc(sizeof(Graph));	
 	
-	gptr->nodes = 1;	
-	gptr->rels  = head->rsize;	
-	gptr->head  = head;
+	gptr->nodes = 0;	
+	gptr->rels  = 0;	
+	gptr->head  = NULL;
 	
 	gptr->array = initEntitiesArray();
 
 	return gptr;
 }
 
+static void graphDestruct_iml(Graph* gptr)
+{
+	destructEntitiesArray(gptr->array);	
+	free(gptr);					
+}
 
-void addNode (Graph* gptr, Node* nptr)
+void addNode (Node* nptr)
 {
 	//---------------------------------------------
 	// Add node to array of nodes without relations
 	//---------------------------------------------
 		
-	if ( !gptr || !nptr) return;	
+	if ( !nptr ) return;	
 
-	EntityTypeArray** arr   = gptr->array->noRelArray;
-	uint8_t           size  = gptr->array->size;
+	EntityTypeArray** arr   = MainGraph->array->noRelArray;
+	uint8_t           size  = MainGraph->array->size;
 	int8_t            index = 0;
 	
 	// check if array is empty	
 	if ( size == 0 ) {
-		insertNewEntityType(gptr->array, nptr->type, index);
+		insertNewEntityType(MainGraph->array, nptr->type, index);
 		goto insertNodePoint;
 	}
    
@@ -123,11 +148,11 @@ void addNode (Graph* gptr, Node* nptr)
 					 // check algs.c file
 	} else {
 		index *= -1;	    
-		insertNewEntityType(gptr->array, nptr->type, index);	
+		insertNewEntityType(MainGraph->array, nptr->type, index);	
 	}
 	
 	insertNodePoint:
-		insertNode(gptr->array->noRelArray[index], nptr);	
+		insertNode(arr[index], nptr);	
 }
 
 
@@ -142,7 +167,7 @@ EntityType* relEntityTypeConstructTmp (const char* typeName,
 }
 
 
-void linkNodes (Graph* gptr, Node* source, Node* dest, const char* relName)
+bool linkNodes (Node* source, Node* dest, const char* relName)
 {
 	//-------------------------------------------
 	// Create relation beetween two nodes
@@ -156,18 +181,24 @@ void linkNodes (Graph* gptr, Node* source, Node* dest, const char* relName)
 	
 	//TODO need free(source) and free(dest) cause this temp values 	
 
-	if ( !gptr || !source || !dest || !relName ) return;
+
+	if ( !source || !dest || !relName ) return false;
 	
 			
-	// check if source exist in graph or source exists in no rel array		
-	if ( !(source = isNodeExist(gptr, source)) ) return;	
-	
-	if ( !(dest   = isNodeExist(gptr, dest)) ) return;
+	if ( !MainGraph->head ) 
+		MainGraph->head = source;
 
-	gptr->nodes++;
-	gptr->rels++;
+	
+	// check if source exist in graph or source exists in no rel array		
+	if ( !(source = isNodeExist(MainGraph, source)) ) return false;	
+		
+	if ( !(dest   = isNodeExist(MainGraph, dest)) ) return false;
+
+	MainGraph->nodes++;
+	MainGraph->rels++;
 		
 	linkNodes_iml(source, dest, relName);
+	return true;
 }
 
 
@@ -259,6 +290,14 @@ static EntitiesArray* initEntitiesArray(void)
 	return tmpArr;
 }
 
+static void destructEntitiesArray (EntitiesArray* arrptr)
+{
+	for (uint8_t i = 0; i < arrptr->size; ++i) 
+		destructEntityTypeArray(arrptr->noRelArray[i]);	
+	free(arrptr);	
+}
+
+
 static EntityTypeArray* initEntityTypeArray(EntityType* etptr)
 {
 	//---------------------------------------
@@ -277,6 +316,16 @@ static EntityTypeArray* initEntityTypeArray(EntityType* etptr)
 
 	return etaptr; 
 }
+
+static void destructEntityTypeArray(EntityTypeArray* etaptr)
+{
+	for (uint8_t i = 0; i < etaptr->size; ++i)	
+		nodeDestruct(etaptr->array[i]);
+
+	free(etaptr->etptr);
+	free(etaptr);
+}
+
 
 static void linkNodes_iml (Node* source, Node* destination, const char* relName)
 {
@@ -304,7 +353,7 @@ static Node* isNodeExist (Graph* gptr, Node* target)
 		return tmpNode;
 	
 
-	//free(nptr)
+	free(target);
 	
 	return NULL;	
 }
@@ -392,8 +441,7 @@ static void shiftArray (void** array, uint8_t size, uint8_t index, bool right)
 	}
 }
 
-
-//TODO write bfs it work faster
+// TODO write bfs it work faster
 // depth first search 
 static Node* dfs (Node* base, Node* cur, Node* target)
 {

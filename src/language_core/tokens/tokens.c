@@ -221,27 +221,37 @@ bool isKeyword(char *word, Token* tptr)
 }
 
 
-bool isParenses(char *c)
+bool isParenses(const char c)
 {
-	return *c == '(' || *c == ')';
+	return c == '(' || c == ')';
 }
 
-bool isColon(char *c)
+bool isColon(const char c)
 {
-	return *c == ':';
+	return c == ':';
 }
 
-bool isComma(char *c)
+bool isComma(const char c)
 {
-	return *c == ',';
+	return c == ',';
 }
 
-bool isWhiteSpace(char *c)
+bool isWhiteSpace(const char c)
 {
-	return *c == ' ' || *c == '\t';
+	return c == ' ' || c == '\t';
 }
 
-bool isAlNum(char *c)
+bool isAlNum(const char c)
 {
-	return isalnum(*c) || *c == '.';
+	return isalnum(c) || c == '.';
+}
+
+bool isLink(const char c)
+{
+	return c == '>';	
+}
+
+bool isDoubleLink(const char c1, const char c2)
+{
+	return c1 == '<' && isLink(c2);
 }

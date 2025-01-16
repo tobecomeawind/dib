@@ -11,8 +11,6 @@
 #include "deserialization.h"
 #include "language_core.h"
 
-char* createPath(const char* subDir);
-
 static inline void initBuffers (void); 
 static inline void destructBuffers (void);
 
@@ -46,11 +44,13 @@ static inline void initBuffers (void)
 {
 	initNodeEntitiesTempTable();	
 	initRelEntitiesTempTable();
+	initMainGraph();
 }
 
 static inline void destructBuffers (void)
 {
 	destructNodeEntitiesTempTable();	
 	destructRelEntitiesTempTable();
+	destructMainGraph();	
 }
 

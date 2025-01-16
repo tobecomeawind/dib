@@ -10,19 +10,6 @@ target_sources(${LIBRARY_NAME}
 )
 
 
-#[[
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../algs 
-	             ${CMAKE_CURRENT_BINARY_DIR}/algs)
-
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../hash
-	             ${CMAKE_CURRENT_BINARY_DIR}/hash)
-
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../core
-                 ${CMAKE_CURRENT_BINARY_DIR}/core)
-
-
-]]
-
 target_include_directories(${LIBRARY_NAME}
 	PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}	

@@ -33,9 +33,10 @@ typedef enum
 	COLON,         // :
 	COMMA,         // ,
 	WHITE_SPACE,   // 
+	LINK,          // link
+	DLINK,         // double link
 
-	
-	
+		
 	//OTHERS
 	NAME, 
 	
@@ -67,12 +68,14 @@ void shiftTokensBufPointer (void);
 
 
 
-bool   isKeyword   (char *word, Token* tptr);
-bool   isParenses  (char *c);
-bool   isColon     (char *c);
-bool   isWhiteSpace(char *c);
-bool   isComma     (char *c);
-bool   isAlNum     (char *c);
+bool isKeyword   (char *word, Token* tptr);
+bool isParenses  (const char c);
+bool isColon     (const char c);
+bool isWhiteSpace(const char c);
+bool isComma     (const char c);
+bool isAlNum     (const char c);
+bool isLink      (const char c);
+bool isDoubleLink(const char c1, const char c2);
 
 char*  convertTokenToString(Tokens token);
 

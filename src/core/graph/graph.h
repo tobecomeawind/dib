@@ -62,8 +62,9 @@ EntityType* relEntityTypeConstructTmp (const char* typeName,
 
 void debug_printFreeEntitiesArray (Graph* gptr);
 
-Graph* graphInit(Node* head);
-void linkNodes  (Graph* gptr, Node* source, Node* dest, const char* relName);
-void addNode    (Graph* gptr, Node* nptr);
+void initMainGraph    (void);
+void destructMainGraph(void);
+bool linkNodes  (Node* source, Node* dest, const char* relName);
+void addNode    (Node* nptr);
 
 #endif

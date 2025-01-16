@@ -10,7 +10,7 @@ typedef enum {
 
 } bordersType;
 
-typedef enum isNextTokenCheck_t {
+typedef enum is_next_token_check_t {
 	
 	NO_ARGS = 0x00,
     TEMP    = 0x01, // add    token in temp buf
@@ -18,6 +18,14 @@ typedef enum isNextTokenCheck_t {
     ERROR   = 0x04, // invoke error
 
 } isNextTokenArg;
+
+typedef enum parse_entity_check_t {
+	
+	E_ENTITY   = 0x01,
+	E_DATA     = 0x02,
+	E_DATATYPE = 0x04,
+
+} parseEntityArg;
 
 
 #endif
