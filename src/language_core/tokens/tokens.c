@@ -211,7 +211,8 @@ bool isKeyword(char *word, Token* tptr)
 	if( index < 0 ) {
 		tptr = NULL;
 		return false;
-	}
+	} else 
+		index -= 1;
 
 	keyword = keywords[index];
 	memcpy(tptr, &keyword, sizeof(keyword));

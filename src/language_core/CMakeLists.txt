@@ -1,10 +1,16 @@
-cmake_minimum_required(VERSION 3.28)
+set(LIBRARY_NAME language_core)
 
-project(cli)
+add_library(${LIBRARY_NAME} "")
 
-set(CMAKE_BUILD_TYPE Debug)
-#set(CMAKE_VERBOSE_MAKEFILE ON) # to check debuf info
+target_sources(${LIBRARY_NAME}
+	PRIVATE
+		${CMAKE_CURRENT_LIST_DIR}/language_core.c
+	PUBLIC
+		${CMAKE_CURRENT_LIST_DIR}/language_core.h
+)
 
+
+#[[
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../algs 
 	             ${CMAKE_CURRENT_BINARY_DIR}/algs)
 
@@ -14,14 +20,19 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../hash
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../core
                  ${CMAKE_CURRENT_BINARY_DIR}/core)
 
+
+]]
+
+target_include_directories(${LIBRARY_NAME}
+	PUBLIC
+		${CMAKE_CURRENT_LIST_DIR}	
+)
+
+add_subdirectory(parser)
 add_subdirectory(tokens)
 add_subdirectory(lexer)
-add_subdirectory(parser)
 
-add_executable(${PROJECT_NAME} main.c)
-
-
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${LIBRARY_NAME}
 	PUBLIC		
 		hash
 		core

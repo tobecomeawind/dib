@@ -6,12 +6,11 @@
 #include "hash.h"
 #include "deserialization.h"
 #include "serialization.h"
+#include "files.h"
 
 static EntityType* entityTypeNew (const char* typeName, uint64_t hashValue);
 
 static HashTable* NodeEntitiesTempTable;
-
-extern char* createPath(const char* subdir);
 
 void printEntities (void)
 {
@@ -37,6 +36,7 @@ void initNodeEntitiesTempTable (void)
 void destructNodeEntitiesTempTable (void)
 {
 	hashTableDestruct(NodeEntitiesTempTable);
+	clearFile(NODE_TEMP_FILE);
 }
 
 static EntityType* entityTypeNew (const char* typeName, uint64_t hashValue)

@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(main)
 
 set(CMAKE_BUILD_TYPE Debug)
+#set(CMAKE_VERBOSE_MAKEFILE ON) # to check debuf info
 
 add_subdirectory(src)
 

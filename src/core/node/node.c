@@ -10,8 +10,6 @@ static Node* nodeConstruct_iml (EntityType* etptr, Data* dptr, Relation** rptr);
 
 // TODO как вариант в nodeConstruct_iml передавать ссылки на функции
 
-extern char* createPath(const char* filename);
-
 Node* nodeConstructTmp(char* name, char *data, Tokens dataTypeToken)
 {
 	Node* nptr; 

@@ -10,6 +10,7 @@
 #include "hash.h"
 #include "deserialization.h"
 #include "serialization.h"
+#include "files.h"
 
 static Node* dfs (Node* base, Node* nptr, Node* target);
 static void linkNodes_iml (Node* source, Node* destination,const char* relName);
@@ -30,7 +31,6 @@ static void shiftArray (void** array, uint8_t size, uint8_t index, bool right);
 static void nodeDeleteFromArray (EntityTypeArray* etaptr, uint8_t index);
 
 
-extern char* createPath(const char* filename);
 // этот файл пахнет говном
 
 
@@ -48,6 +48,7 @@ void initRelEntitiesTempTable (void)
 void destructRelEntitiesTempTable (void)
 {
 	hashTableDestruct(RelEntitiesTempTable);
+	clearFile(REL_TEMP_FILE);
 }
 
 void debug_printFreeEntitiesArray (Graph* gptr)

@@ -1,2 +1,3 @@
-add_subdirectory(deserialization)
+add_subdirectory(files)
 add_subdirectory(serialization)
+add_subdirectory(deserialization)

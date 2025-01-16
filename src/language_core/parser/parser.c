@@ -135,7 +135,7 @@ static bool parseEntity(void)
 					  //
 	
 
-	nodeConstructCli(Entity, Data, DataType);	
+	nodeConstructTmp(Entity, Data, DataType);	
 	
 	// multiply add entity
 	//

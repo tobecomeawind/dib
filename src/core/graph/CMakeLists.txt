@@ -12,11 +12,13 @@ target_sources(${LIBRARY_NAME}
 
 target_include_directories(${LIBRARY_NAME}
 	PUBLIC
+		${hash_SOURCE_DIR}
+		${algs_SOURCE_DIR}
 		${CMAKE_CURRENT_LIST_DIR}
-		${CMAKE_CURRENT_LIST_DIR}/../../algs
 )
 
 
 target_link_libraries(${LIBRARY_NAME}
-	algs
+	hash
+	algs	
 )

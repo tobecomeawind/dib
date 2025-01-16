@@ -7,6 +7,7 @@
 #include "hash.h"
 #include "serialization.h"
 #include "deserialization.h"
+#include "files.h"
 
 static uint8_t     hashNodeIndex    (HashNode*   hnptr,   uint8_t size);
 static uint8_t     hashIndex        (uint64_t    hashVal, uint8_t size);
@@ -17,8 +18,6 @@ static void        hashTableDelete  (HashTable*  table,   uint64_t hashVal);
 static void        hashTableRealloc (HashTable*  table);
 static inline uint64_t getHash(HashNode* hashNode);
 
-
-extern char* createPath(const char* filename);
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // In this folder

@@ -19,7 +19,7 @@ void invokeCliError(char*);
 static char   lineBuf[MAX_LINE_SIZE]; // command line
 static size_t lineBufIndex = 0;
 
-int main(void)
+int languageCoreStart (void)
 {
 	//---------------------//
 	//The main CLI process //
@@ -27,20 +27,15 @@ int main(void)
 	//---------------------//
 	
 	
-	initEntitiesTempTable();
-
 	Token *ptr;
 
 	hello_message();
 
 	for(;;) {
 		if ( !invokeCliIteration() ) { // if critical error or "q" command
-			destructEntitiesTempTable();
-			return 0;
+			return -1;
 		}		
 	}
-
-	return -1;
 }
 
 
