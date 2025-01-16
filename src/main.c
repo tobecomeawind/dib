@@ -66,12 +66,14 @@ int main(void)
 	
 	debug_printFreeEntitiesArray(g);
 
-
+	
+	linkNodes(g, Tom1, Lucy, "Loved_IN");
 	linkNodes(g, Node1, Node11, "empty");
 	linkNodes(g, Node11, Node111, "empty");
 	linkNodes(g, Node111, Node122, "empty");
 	linkNodes(g, Node122, Node1, "empty");
 
+	debug_printFreeEntitiesArray(g);
 
 	linkNodes(g, Node122, Tom, "empty");
 

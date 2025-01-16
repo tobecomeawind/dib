@@ -26,6 +26,10 @@ static inline bool nodeCompare(Node* source, Node* target);
 static Node* isNodeExist (Graph* gptr, Node* target);
 
 
+static void shiftArray (void** array, uint8_t size, uint8_t index, bool right);
+static void nodeDeleteFromArray (EntityTypeArray* etaptr, uint8_t index);
+
+
 extern char* createPath(const char* filename);
 // этот файл пахнет говном
 
@@ -192,11 +196,9 @@ static void insertNewEntityType (EntitiesArray*    arr,
 	}	
 
 	arr->noRelArray = tmpArr;
-	
-	for (uint8_t i = arr->size; i > index; --i)
-		arr->noRelArray[i] = arr->noRelArray[i - 1]; 	
-
 	arr->size += 1;
+	
+	shiftArray((void**)arr->noRelArray, arr->size, index, true);
 	
 	arr->noRelArray[index] = newEntityType;
 }
@@ -228,11 +230,9 @@ static void insertNode (EntityTypeArray* etaptr, Node* nptr)
                                      sizeof(Node*) * ((etaptr->size)+1));			
 	
 	if ( !etaptr->array ) return; 		
-	
-	for (uint8_t i = etaptr->size; i > index; --i)
-		etaptr->array[i] = etaptr->array[i - 1]; 	
-	
 	etaptr->size += 1;
+
+	shiftArray((void**)etaptr->array, etaptr->size, index, true);
 
 	insertPoint:	
 		etaptr->array[index] = nptr;
@@ -340,11 +340,56 @@ static Node* nodeSearchArray (EntitiesArray* arr, Node* target)
 
 	tmpNode = tmpArray->array[index - 1];
 
-	if ( !nodeCompare(tmpNode, target) ) return NULL;	
-	
+	if ( !nodeCompare(tmpNode, target) ) return NULL;			
+
+	nodeDeleteFromArray(tmpArray, index - 1);
+
 	return tmpNode;
 }
 
+
+static void nodeDeleteFromArray (EntityTypeArray* etaptr, uint8_t index)
+{
+	if ( !etaptr ) return;
+	
+	Node** tmpArray = NULL; 
+
+	shiftArray((void**) etaptr->array, etaptr->size, index, false);
+	
+	if ( etaptr->size - 1 > 0) {
+		tmpArray = (Node**) realloc(etaptr->array,
+       	                         sizeof(Node*) * ((etaptr->size) - 1));
+		if ( !tmpArray ) return;
+	}
+
+	etaptr->array = tmpArray;
+	etaptr->size -= 1; 	
+}
+
+
+static void shiftArray (void** array, uint8_t size, uint8_t index, bool right)
+{
+	//--------------------------------
+	// Shift all values off array by 1
+	// to left or right
+	// start on index
+	//
+	// Example array = [1, 2, 3, 4] 
+	// size = 3
+	// index = 1
+	// right = true
+	//
+	// result = [1, NULL, 2, 3]
+	//--------------------------------
+
+	if ( right ) {
+		for (uint8_t i = size - 1; i > index; --i)
+			array[i] = array[i - 1];	
+	} else {
+		for (uint8_t i = index; i < size; ++i)
+			array[i] = array[i + 1];	
+	}
+}
 
 
 //TODO write bfs it work faster
