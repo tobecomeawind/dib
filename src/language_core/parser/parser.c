@@ -133,9 +133,12 @@ static bool parseLink (void)
 	
 	// Man:Vasya
 	ASSERT_JUMP(source = parseEntity_iml( E_ENTITY | E_DATA ),  errorPoint);  
-	// <>
-	if ( !isNextToken(CLETTERS, LINK, MINOR|ERROR) ) { // if next token != LINK
-													   // we check dlink 
+	// >
+	if ( !(tmpToken = isNextToken(CLETTERS, LINK, MINOR|ERROR)) ) {
+		// if next token != LINK
+	    // we check dlink 
+		ungetToken(tmpToken);		
+		// <>	
 		ASSERT_JUMP(isNextToken(CLETTERS, DLINK, MINOR|ERROR),  errorPoint);
 		doubleLink = true;
 	}
@@ -147,8 +150,15 @@ static bool parseLink (void)
 	ASSERT_JUMP(tmpToken = isNextToken(NAME, NAME, MINOR|ERROR),errorPoint);
 	relName = tmpToken->data;
 
-	if ( linkNodes(source, target, relName) )
-		return true;
+
+	if ( !linkNodes(source, target, relName) )
+		goto errorPoint;
+	
+	if ( !(doubleLink && linkNodes(target, source, relName)) ) 
+		goto errorPoint;
+
+
+	return true;	
 
 	errorPoint:
 		return false;
@@ -190,6 +200,8 @@ static Node* parseEntity_iml(parseEntityArg args)
 		DataType = tmpToken->minorType;		
 	}	
 
+	if ( !DataType && Data )
+		DataType = getTypeOfData(Data);
 
 	tmpNode = nodeConstructTmp(Entity, Data, DataType);
 	return tmpNode;

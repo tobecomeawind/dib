@@ -5,7 +5,6 @@
 #include <ctype.h>
 
 static vtypes DataToVarType(Tokens, void*);
-static Tokens getTypeOfData(char*);
 
 bool DataCliCheck = false;
 
@@ -87,7 +86,7 @@ void dataDestruct(Data* dptr)
 }
 
 
-static Tokens getTypeOfData(char* data)
+Tokens getTypeOfData(char* data)
 {
 	Tokens dataType = K_CHAR;		
 
@@ -106,8 +105,7 @@ static Tokens getTypeOfData(char* data)
 					dataType = K_CHAR;
 					break;
 			}
-		}
-	
+		}	
 	}
 
 	return dataType;	

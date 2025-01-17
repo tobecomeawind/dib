@@ -16,5 +16,6 @@ Data*   dataConstruct(void* data, Tokens type, bool isFromCli);
 void    dataDestruct (Data* dptr);
 uint8_t getDataSize  (Data* dptr);
 bool    dataCompare  (Data* source, Data* target);
+Tokens  getTypeOfData(char* data);
 
 #endif
