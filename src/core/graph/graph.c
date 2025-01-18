@@ -344,18 +344,17 @@ static void linkNodes_iml (Node* source, Node* destination, const char* relName)
 
 static Node* isNodeExist (Graph* gptr, Node* target)
 {
-	Node* tmpNode;	
+	Node* tmpNode = NULL;	
 	
 	if ( tmpNode = dfs(gptr->head, gptr->head, target) ) 
-		return tmpNode;
+		goto exit;
 
 	if ( tmpNode = nodeSearchArray(gptr->array, target) ) 
-		return tmpNode;
+		goto exit;
 	
-
-	free(target);
-	
-	return NULL;	
+	exit:
+		free(target);
+		return tmpNode;	
 }
 
 
@@ -377,7 +376,7 @@ static Node* nodeSearchArray (EntitiesArray* arr, Node* target)
                     (void*)(target->type),
                     bsENTITY_TYPE);
 
-	if ( index < 0 ) return NULL;
+	if ( index <= 0 ) return NULL;
 
 	tmpArray = arr->noRelArray[index - 1]; 
 	
@@ -386,7 +385,7 @@ static Node* nodeSearchArray (EntitiesArray* arr, Node* target)
                       (void*)target,
                       bsNODE); 	
 
-	if ( index < 0 ) return NULL;
+	if ( index <= 0 ) return NULL;
 
 	tmpNode = tmpArray->array[index - 1];
 

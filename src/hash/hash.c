@@ -162,7 +162,7 @@ void hashTableDestruct (HashTable* htptr)
 	// Hash Table Destructor
 	//----------------------
 	
-	if (!htptr) return;
+	if ( !htptr ) return;
 
 	for (uint8_t i = 0; i < htptr->size; i++) {
 		HashNode* tmp = htptr->array[i];	
@@ -186,8 +186,6 @@ void hashTableInsert (HashTable* table, EntityType* data)
 	// Insert data in hash table bucket
 	//---------------------------------
 
-	hashTableRealloc(table); // realloc array with size+1
-
 	HashNode* hnptr       = hashNodeInit(data);	
 	uint8_t   insertIndex = hashNodeIndex(hnptr, table->size);
 	HashNode* tmp         = table->array[insertIndex];	
@@ -205,13 +203,21 @@ void hashTableInsert (HashTable* table, EntityType* data)
 													// node with equal hash
 													// exists	
 	tmp->next = hnptr; // add last value
+	
+	hashTableRealloc(table); // realloc array with size+1
 }
 
 
 static void hashTableRealloc (HashTable* table)
 {
+	HashNode** tmpArray;
+
+	tmpArray = realloc(table->array, sizeof(HashNode*) * ((table->size) + 1));	
+
+	if ( !tmpArray ) return;
+
+	table->array = tmpArray;
 	table->size += 1;
-	table->array = realloc(table->array, sizeof(HashNode*) * table->size);	
 }
 
 

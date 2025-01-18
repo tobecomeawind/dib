@@ -29,7 +29,7 @@ EntityType* entityTypeConstructTmp (HashTable*  table,
                                     const char* subdir);
 
 uint64_t    hash                  (const char* word);
-HashTable*  hashTableInit         (uint8_t size);
+HashTable*  hashTableInit         (uint8_t     size);
 void        hashTableInsert       (HashTable*  table, EntityType* data);
 void        hashTableDestruct     (HashTable*  htptr);
 EntityType* hashTableSearchByName (HashTable*  table, const char* name);

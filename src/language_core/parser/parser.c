@@ -145,7 +145,7 @@ static bool parseLink (void)
 	// Women:Masha	
 	ASSERT_JUMP(target = parseEntity_iml( E_ENTITY | E_DATA ),  errorPoint); 
    	// ,	
-	ASSERT_JUMP(isNextToken(CLETTERS, COMMA, TEMP|MINOR),       errorPoint);	
+	ASSERT_JUMP(isNextToken(CLETTERS, COMMA, ERROR|MINOR),       errorPoint);	
 	// LOVED_IN	
 	ASSERT_JUMP(tmpToken = isNextToken(NAME, NAME, MINOR|ERROR),errorPoint);
 	relName = tmpToken->data;
