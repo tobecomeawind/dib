@@ -122,7 +122,7 @@ static void graphDestruct_iml(Graph* gptr)
 	free(gptr);					
 }
 
-void addNode (Node* nptr)
+void appendNode (Node* nptr)
 {
 	//---------------------------------------------
 	// Add node to array of nodes without relations
@@ -184,15 +184,13 @@ bool linkNodes (Node* source, Node* dest, const char* relName)
 
 	if ( !source || !dest || !relName ) return false;
 	
-			
-	if ( !MainGraph->head ) 
-		MainGraph->head = source;
-
-	
 	// check if source exist in graph or source exists in no rel array		
-	if ( !(source = isNodeExist(MainGraph, source)) ) return false;	
-		
-	if ( !(dest   = isNodeExist(MainGraph, dest)) ) return false;
+	
+	// if no head we add head and dont check source to exists	
+	if ( !MainGraph->head ) MainGraph->head = source;
+	else if ( !(source = isNodeExist(MainGraph, source)) ) return false;	
+			
+	if ( !(dest = isNodeExist(MainGraph, dest)) ) return false;
 
 	MainGraph->nodes++;
 	MainGraph->rels++;
@@ -353,7 +351,7 @@ static Node* isNodeExist (Graph* gptr, Node* target)
 		goto exit;
 	
 	exit:
-		free(target);
+		nodeDestruct(target);
 		return tmpNode;	
 }
 
@@ -371,7 +369,7 @@ static Node* nodeSearchArray (EntitiesArray* arr, Node* target)
 	EntityTypeArray* tmpArray;
 	int8_t           index;	
 	
-	index = binsearch((void**)arr->noRelArray,
+	index = binsearch((void**)( arr->noRelArray ),
 	                arr->size,
                     (void*)(target->type),
                     bsENTITY_TYPE);
@@ -380,7 +378,7 @@ static Node* nodeSearchArray (EntitiesArray* arr, Node* target)
 
 	tmpArray = arr->noRelArray[index - 1]; 
 	
-    index = binsearch((void**)tmpArray->array,
+    index = binsearch((void**)( tmpArray->array ),
                       tmpArray->size,
                       (void*)target,
                       bsNODE); 	
@@ -473,6 +471,6 @@ static inline bool nodeCompare(Node* source, Node* target)
 	if ( !source || !target ) return false;
 	if ( source->type != target->type )	return false;
 
-	return dataCompare(source->data, target->data);
+	return dataCompare(source->data, target->data) == 0;
 }
 

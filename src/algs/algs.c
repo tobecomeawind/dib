@@ -29,18 +29,17 @@ int8_t binsearch(void** buf, uint8_t size, void* target, bstypes type)
 		
 		mediateResult = compare(target, buf, mid, type);
 
-		if ( mediateResult > 0 ) {       // right
+		if ( mediateResult > 0 )      // right
 			low  = mid + 1;	
-		} else if ( mediateResult < 0 ) { // left
+		else if ( mediateResult < 0 ) // left
 			high = mid - 1; 
-		} else {
+		else
 			//if word in keywords
 			return mid + 1; // to skip zero value error
 							// when low == 0 and mid == 0
 
 			//for another case
 			//return 1;
-		}
 	}
 
 	//if no word in keywords
@@ -68,7 +67,9 @@ static int8_t compare(void* target, void** buffer, int index, bstypes type)
 		case ( bsENTITY_TYPE ):
 			return debug_stringCompare((char*)(( (EntityType*) target )->typeName ), (char*)(( (EntityTypeArray**)buffer )[index])->etptr->typeName);
 		case ( bsNODE ):
-			return debug_stringCompare((char*)(((Node*)target)->data->info), (char*)(((Node**)buffer)[index])->data->info);		
+			return dataCompare(((Node**)buffer)[index]->data,
+                               ((Node*)target)->data);
+			//return debug_stringCompare((char*)(((Node*)target)->data->info), (char*)(((Node**)buffer)[index])->data->info);		
 	}	
 }
  

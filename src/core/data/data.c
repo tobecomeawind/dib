@@ -24,33 +24,27 @@ Data* dataConstruct(void* data, Tokens type, bool isFromCli)
 
 uint8_t getDataSize(Data* dptr)
 {
-	switch (dptr->type) {
-		case (INT):
+	switch ( dptr->type ) {
+		case ( INT ):
 			return sizeof(int);
-		case (FLOAT):
+		case ( FLOAT ):
 			return sizeof(double);	
 		default: // case only with constants cause we use if	
-			if (dptr->type & CHAR) // CHAR
+			if ( dptr->type & CHAR ) // CHAR
 				return dptr->type;	
 	}	
 }
 
-bool dataCompare (Data* source, Data* target)
-{
-	if ( !source || !target ) return false;
-	if ( source->type != target->type )	 return false;
-	
+int8_t dataCompare (Data* source, Data* target)
+{	
 	switch ( source->type ) {
 		case ( INT ):
-			return *((int*)(source->info)) > *((int*)(target->info)); 
+			return *((int*)(source->info)) - *((int*)(target->info)); 
 		case ( FLOAT ):
-			return *((double*)(source->info)) > *((double*)(target->info)); 
+			return *((double*)(source->info)) - *((double*)(target->info)); 
 		case ( CHAR | FLOAT ):
-			if ( strcmp(((char*)(source->info)), ((char*)(target->info))) == 0)
-			   return true;	
+			return strcmp(((char*)(source->info)), ((char*)(target->info)));
 	}
-	
-	return false;
 }	
 
 static vtypes DataToVarType(Tokens dataType, void* data)

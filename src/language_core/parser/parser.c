@@ -106,17 +106,19 @@ static void parseKeyword(void)
 
 static bool parseEntity(void)
 {	
-	
-	if ( !parseEntity_iml( E_ENTITY | E_DATA | E_DATATYPE ) )
-		return false;	
+	Node* tmpNode;
+
+	if ( !(tmpNode = parseEntity_iml( E_ENTITY | E_DATA | E_DATATYPE )) )
+		return false;
+
+	appendNode(tmpNode);
 	// multiply add entity
 	//
 	// Example
 	// ENTITY (Person:Vasya:CHAR, Person:Sonya:CHAR)
 	//
-	if( !isNextToken(CLETTERS, COMMA, TEMP|MINOR) ){
-		return true;
-	}
+	if( !isNextToken(CLETTERS, COMMA, TEMP|MINOR) )
+		return true;	
 
 	getToken();    // skip "," token
 	parseEntity(); 	

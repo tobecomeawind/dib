@@ -64,7 +64,7 @@ void debug_printFreeEntitiesArray (Graph* gptr);
 
 void initMainGraph    (void);
 void destructMainGraph(void);
-bool linkNodes  (Node* source, Node* dest, const char* relName);
-void addNode    (Node* nptr);
+bool linkNodes        (Node* source, Node* dest, const char* relName);
+void appendNode       (Node* nptr);
 
 #endif
