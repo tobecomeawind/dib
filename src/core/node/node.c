@@ -10,7 +10,7 @@ static Node* nodeConstruct_iml (EntityType* etptr, Data* dptr, Relation** rptr);
 
 // TODO как вариант в nodeConstruct_iml передавать ссылки на функции
 
-Node* nodeConstructTmp(char* name, char *data, Tokens dataTypeToken)
+Node* nodeConstructTmp(char* name, char* data, Tokens dataTypeToken)
 {
 	Node* nptr; 
 
@@ -71,7 +71,6 @@ void nodeDestruct(Node* node)
 	for(size_t i = 0; i < node->rsize; i++)
 		relationDestruct(node->relations[i]);	
 	
-	//entityTypeDestruct(node->type);	
 	free(node->relations);
 	free(node);
 }

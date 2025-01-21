@@ -13,7 +13,7 @@ typedef struct Data{
 } Data;
 
 Data*   dataConstruct(void* data, Tokens type, bool isFromCli);
-void    dataDestruct (Data* dptr);
+inline void    dataDestruct (Data* dptr);
 uint8_t getDataSize  (Data* dptr);
 int8_t  dataCompare  (Data* source, Data* target);
 Tokens  getTypeOfData(char* data);

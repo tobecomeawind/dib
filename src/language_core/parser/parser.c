@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "lexer.h"
 #include "tokens.h"
@@ -181,7 +182,8 @@ static Node* parseEntity_iml(parseEntityArg args)
 	if ( args & E_ENTITY ) {
 		// Person
 		ASSERT_JUMP(tmpToken = isNextToken(NAME, NAME, MINOR|ERROR),errorPoint);
-		Entity = tmpToken->data;
+		Entity = (char*)malloc(strlen(tmpToken->data) + 1);	
+		strcpy(Entity, tmpToken->data);
 	} else 
 		goto errorPoint;	
 	
@@ -190,7 +192,8 @@ static Node* parseEntity_iml(parseEntityArg args)
 		ASSERT_JUMP(isNextToken(CLETTERS, COLON, MINOR|ERROR), errorPoint);			
 		// Vasya	
 		ASSERT_JUMP(tmpToken = isNextToken(NAME, NAME, MINOR|ERROR),errorPoint);
-		Data = tmpToken->data;
+		Data = (char*)malloc(strlen(tmpToken->data) + 1);	
+		strcpy(Data, tmpToken->data);
 	}
 	
 	if (args & E_DATATYPE) {

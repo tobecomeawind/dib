@@ -74,8 +74,11 @@ static vtypes DataToVarType(Tokens dataType, void* data)
 }
 
 
-void dataDestruct(Data* dptr)
+inline void dataDestruct(Data* dptr)
 {
+	if ( !dptr ) return;
+	if ( dptr->info ) free(dptr->info);	
+	
 	free(dptr);	
 }
 
