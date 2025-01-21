@@ -38,7 +38,6 @@ static Node* isNodeExist (Graph* gptr, Node* target);
 static void shiftArray (void** array, uint8_t size, uint8_t index, bool right);
 static void nodeDeleteFromArray (EntityTypeArray* etaptr, uint8_t index);
 
-
 // этот файл пахнет говном
 
 
@@ -79,7 +78,9 @@ void debug_printFreeEntitiesArray (Graph* gptr)
 		
 		for (uint8_t j = 0; j < tmpEntityTypeArray->size; ++j) {
 			tmpNode = tmpEntityTypeArray->array[j];
-			printf("\t%i. %s\n", j + 1, (char*)tmpNode->data->info);	
+			printf("\t%i(%i). %s\n", j + 1,
+                                     tmpNode->id,
+                                     (char*)tmpNode->data->info);	
 		}
 		putc('\n', stdout);	
 	}	
@@ -105,6 +106,8 @@ static Graph* graphInit_iml(void)
 
 	//TODO graph serialization
 
+	static uint8_t id = 0;
+	
 	Graph* gptr = (Graph*) malloc(sizeof(Graph));	
 	
 	gptr->nodes = 0;	
@@ -127,7 +130,7 @@ void appendNode (Node* nptr)
 	//---------------------------------------------
 	// Add node to array of nodes without relations
 	//---------------------------------------------
-		
+
 	if ( !nptr ) return;	
 
 	EntityTypeArray** arr   = MainGraph->array->noRelArray;
@@ -152,7 +155,7 @@ void appendNode (Node* nptr)
 	}
 	
 	insertNodePoint:
-		insertNode(arr[index], nptr);
+		insertNode(arr[index], nptr);		
 }
 
 
@@ -238,6 +241,8 @@ static void insertNode (EntityTypeArray* etaptr, Node* nptr)
 	// to array 
 	//------------------------------
 	
+	static uint8_t id;
+
 	if ( !etaptr || !nptr ) return;
 	
 	int8_t index = 0;	
@@ -261,7 +266,8 @@ static void insertNode (EntityTypeArray* etaptr, Node* nptr)
 
 	shiftArray((void**)etaptr->array, etaptr->size, index, true);
 
-	insertPoint:	
+	insertPoint:
+		nptr->id = id++;	
 		etaptr->array[index] = nptr;
 }
 

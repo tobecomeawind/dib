@@ -83,3 +83,4 @@ static void entitySerialize(EntityType* entity, FILE* fp)
 	
 	fprintf(fp, data);
 }
+

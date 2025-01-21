@@ -7,13 +7,12 @@
 #include "node.h"
 
 
-
 // Array of nodes without relations
 // [Node1, Node2, Node3, ...]
 typedef struct entity_type_array_t {
 
 	EntityType* etptr;	
-	Node**      array;
+	Node** array;
 	uint8_t     size;
 
 } EntityTypeArray; 
@@ -50,7 +49,6 @@ typedef struct graph_t {
 	EntitiesArray* array;
 	
 } Graph;
-
 
 
 void initRelEntitiesTempTable (void);
