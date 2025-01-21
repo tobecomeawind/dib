@@ -12,7 +12,7 @@
 typedef struct entity_type_array_t {
 
 	EntityType* etptr;	
-	Node** array;
+	Node**      array;
 	uint8_t     size;
 
 } EntityTypeArray; 
@@ -35,8 +35,6 @@ typedef struct no_relations_entities_array_t {
 	EntityTypeArray** noRelArray;
 
 } EntitiesArray;
-
-
 
 
 typedef struct graph_t {
