@@ -137,18 +137,24 @@ static bool parseLink (void)
 	// Man:Vasya
 	ASSERT_JUMP(source = parseEntity_iml( E_ENTITY | E_DATA ),  errorPoint);  
 	// >
-	if ( !(tmpToken = isNextToken(CLETTERS, LINK, MINOR|ERROR)) ) {
+	if ( !(tmpToken = isNextToken(CLETTERS, LINK, TEMP|MINOR)) ) {
 		// if next token != LINK
 	    // we check dlink 
-		ungetToken(tmpToken);		
 		// <>	
-		ASSERT_JUMP(isNextToken(CLETTERS, DLINK, MINOR|ERROR),  errorPoint);
+		if ( !(tmpToken = isNextToken(CLETTERS, DLINK, MINOR)) ) {
+			errorCall(tmpToken, DLINK);
+			goto errorPoint;
+		}	
+		
 		doubleLink = true;
-	}
+	} else 
+		getToken();	// skip '>'	
+
+
 	// Women:Masha	
 	ASSERT_JUMP(target = parseEntity_iml( E_ENTITY | E_DATA ),  errorPoint); 
    	// ,	
-	ASSERT_JUMP(isNextToken(CLETTERS, COMMA, ERROR|MINOR),       errorPoint);	
+	ASSERT_JUMP(isNextToken(CLETTERS, COMMA, ERROR|MINOR),      errorPoint);	
 	// LOVED_IN	
 	ASSERT_JUMP(tmpToken = isNextToken(NAME, NAME, MINOR|ERROR),errorPoint);
 	relName = tmpToken->data;
@@ -160,10 +166,15 @@ static bool parseLink (void)
 	if ( !(doubleLink && linkNodes(target, source, relName)) ) 
 		goto errorPoint;
 
+	// TODO rework this shit yopta
 
+	nodeDestruct(source);	
+	nodeDestruct(target);	
 	return true;	
 
 	errorPoint:
+		nodeDestruct(source);	
+		nodeDestruct(target);	
 		return false;
 }
 
@@ -182,16 +193,21 @@ static Node* parseEntity_iml(parseEntityArg args)
 	if ( args & E_ENTITY ) {
 		// Person
 		ASSERT_JUMP(tmpToken = isNextToken(NAME, NAME, MINOR|ERROR),errorPoint);
+	
 		Entity = (char*)malloc(strlen(tmpToken->data) + 1);	
 		strcpy(Entity, tmpToken->data);
+
 	} else 
 		goto errorPoint;	
-	
+
+
 	if ( args & E_DATA ) {
 		// :	
 		ASSERT_JUMP(isNextToken(CLETTERS, COLON, MINOR|ERROR), errorPoint);			
+
 		// Vasya	
 		ASSERT_JUMP(tmpToken = isNextToken(NAME, NAME, MINOR|ERROR),errorPoint);
+
 		Data = (char*)malloc(strlen(tmpToken->data) + 1);	
 		strcpy(Data, tmpToken->data);
 	}
@@ -202,15 +218,15 @@ static Node* parseEntity_iml(parseEntityArg args)
 		
 		// CHAR
 		ASSERT_JUMP(tmpToken = isNextToken(DATATYPE, 0,  ERROR), errorPoint);
+	
 		DataType = tmpToken->minorType;		
-	}	
 
-	if ( !DataType && Data )
+	} else if ( Data )	
 		DataType = getTypeOfData(Data);
+
 
 	tmpNode = nodeConstructTmp(Entity, Data, DataType);
 	return tmpNode;
-
 
 	errorPoint:
 		return NULL;

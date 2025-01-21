@@ -69,7 +69,6 @@ static int8_t compare(void* target, void** buffer, int index, bstypes type)
 		case ( bsNODE ):
 			return dataCompare(((Node**)buffer)[index]->data,
                                ((Node*)target)->data);
-			//return debug_stringCompare((char*)(((Node*)target)->data->info), (char*)(((Node**)buffer)[index])->data->info);		
 	}	
 }
  

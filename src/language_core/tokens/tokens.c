@@ -115,7 +115,6 @@ void appendToken(Tokens majType, // majorType
 	//-------------------------
 	//Append token in tokensBuf
 	//-------------------------
-
 	if (tbptr - tokensBuf > MAX_TOKEN_BUF_SIZE){
 		printf("\nError: TokensBuf are is full!\n");	
 	}	
@@ -143,35 +142,39 @@ char* convertTokenToString(Tokens token)
 {	
 	char* stringToken;
 
-	switch(token){
-		case(OPEN_PARENS):
+	switch ( token ) {
+		case ( LINK ):
+		case ( DLINK ):
+			stringToken = "> or <>";
+			break;
+		case ( OPEN_PARENS ):
 			stringToken = "(";
 			break;	
-		case(CLOSE_PARENS):
+		case ( CLOSE_PARENS ):
 			stringToken = ")";
 			break;	
-		case(NAME):
+		case ( NAME ):
 			stringToken = "Name";
 			break;
-		case(COLON):
+		case ( COLON ):
 			stringToken = ":";
 			break;
-		case(K_ENTITY):
+		case ( K_ENTITY ):
 			stringToken = "Entity";
 			break;
-		case(K_CHAR):
+		case ( K_CHAR ):
 			stringToken = "CHAR";
 			break;
-		case(K_FLOAT):
+		case ( K_FLOAT ):
 			stringToken = "FLOAT";
 			break;
-		case(K_INT):
+		case ( K_INT ):
 			stringToken = "INT";
 			break;
-		case(DATATYPE):
+		case ( DATATYPE ):
 			stringToken = "Data Type";
 			break;
-		case(KEYWORDS):
+		case ( KEYWORDS ):
 			stringToken = "Keyword";
 			break;
 	}

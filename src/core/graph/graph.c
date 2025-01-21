@@ -153,9 +153,6 @@ void appendNode (Node* nptr)
 	
 	insertNodePoint:
 		insertNode(arr[index], nptr);
-
-
-	debug_printFreeEntitiesArray(MainGraph);
 }
 
 
@@ -182,10 +179,6 @@ bool linkNodes (Node* source, Node* dest, const char* relName)
 	// relName = LOVED_IN
 	//-------------------------------------------
 	
-	//TODO need free(source) and free(dest) cause this temp values 	
-
-
-	debug_printFreeEntitiesArray(MainGraph);
 	if ( !source || !dest || !relName ) return false;
 	
 	// check if source exist in graph or source exists in no rel array		
@@ -355,7 +348,6 @@ static Node* isNodeExist (Graph* gptr, Node* target)
 		goto exit;
 	
 	exit:
-		nodeDestruct(target);
 		return tmpNode;	
 }
 
