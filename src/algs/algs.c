@@ -86,5 +86,65 @@ static inline int8_t debug_stringCompare (char* targetWord, char* bufWord)
 }
 
 
+typedef struct queue_node_t {
 
+	void*         data;
+	queue_node_t* next;
+
+} QueueNode;
+
+
+typedef struct queue_t {
+
+	uint8_t    size;
+	QueueNode* head;
+	QueueNode* tail;
+
+} Queue;
+
+
+
+QueueNode* queueNodeConstruct (void)
+{
+	QueueNode* qnptr = (QueueNode*) malloc(sizeof(QueueNode));
+	
+	if ( !qnptr ) return NULL;
+	
+	qnptr->data = NULL;
+	qnptr->next = NULL;
+
+	return qptr;	
+}
+
+void queueNodeDestruct (QueueNode* qnptr)
+{
+	if ( !qnptr ) return;
+	free(qnptr);
+}
+
+Queue* queueConstruct (void)
+{
+	Queue* qptr = (Queue*) malloc(sizeof(Queue));
+	
+	if ( !qptr ) return NULL;
+	
+	qptr->size = 0;
+	qptr->head = NULL;
+	qptr->tail = NULL;
+
+	return qptr;	
+}
+
+
+void queueDestruct (Queue* qptr)
+{
+	if ( !qptr ) return;
+
+	QueueNode* cur = qptr->head;
+
+	while ( cur ) {
+		cur = cur->next;	
+		free(cur);
+	}	
+}
 
