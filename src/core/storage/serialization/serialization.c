@@ -7,12 +7,16 @@
 #include "entity_type.h"
 #include "node.h"
 #include "types.h"
+#include "graph.h"
+#include "algs.h"
 
 static void hashNodeSerialize (HashNode*   tableNode, FILE* tmpfp);
 static void entitySerialize   (EntityType* entity,    FILE* fp);
 
 static inline void hashSerialize (uint64_t hash, FILE* fp);
 static void nodeSerialize (Node* nptr, FILE* tmpfp);
+
+static void relationSerialize (Relation* rptr, FILE* tmpfp);
 
 void hashTableSerialize (HashTable* table, const char* filename)
 {
@@ -57,7 +61,7 @@ static void hashNodeSerialize (HashNode* tableNode, FILE* tmpfp)
 }
 
 
-static void graphSerialize (Graph* gptr)
+void graphSerialize (Graph* gptr, const char* filename)
 {
 	//------------------
 	// Serialize a graph
@@ -65,8 +69,27 @@ static void graphSerialize (Graph* gptr)
 	
 	if ( !gptr ) return;		
 	
-	// TODO queue
+	FILE* fp = fopen(filename, "r");
+	if ( !fp ) return;
 
+	Queue* qptr = queueConstruct();
+	if ( !qptr ) return;
+
+	Node* cur = gptr->head;
+			
+	do {	
+		nodeSerialize(cur, fp);
+		
+		for (uint8_t i = 0; i < cur->rsize; ++i)
+			queuePush(qptr, (void*)(cur->relations[i]));
+
+		cur = queuePop(qptr);
+
+	} while (cur);
+
+	queueDestruct(qptr);
+
+	fclose(fp);
 }
 
 
@@ -85,21 +108,21 @@ static void nodeSerialize (Node* nptr, FILE* tmpfp)
 	uint8_t dataSize = 0;
 
 	// |id|
-	fputc(nptr->id);
+	fputc(nptr->id, tmpfp);
 	
 	// |entity hash size|entity hash|	
-	hashSerialize(nptr->type->hashVal);	
+	hashSerialize(nptr->type->hashVal, tmpfp);	
 	
 	// |data type|
-	fputc(nptr->data->vtypes)
+	fputc(nptr->data->type, tmpfp);
 	// |data size|	
-	fputc(dataSize = getDataSize(nptr->data));
+	fputc(dataSize = getDataSize(nptr->data), tmpfp);
 	// |data|	
 	fwrite(nptr->data, 1, dataSize, tmpfp);	
 	
 	if ( nptr->rsize > 0 ) {
 		// |rsize|
-		fputc(nptr->rsize);
+		fputc(nptr->rsize, tmpfp);
 
 		// |relations|
 		for (uint8_t i = 0; i < nptr->rsize; ++i)
@@ -119,9 +142,9 @@ static void relationSerialize (Relation* rptr, FILE* tmpfp)
 	if ( !rptr || !tmpfp ) return;
 
 	// |entity hash size|entity hash|
-	entitySerialize(rprt->type);
+	entitySerialize(rptr->type, tmpfp);
 
-	fputc(rptr->dest->id);
+	fputc(rptr->dest->id, tmpfp);
 }
 
 

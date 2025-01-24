@@ -6,9 +6,9 @@
 
 #include "hash.h"
 #include "files.h"
+#include "graph.h"
 
-//void entitySerialize     (Node* node, FILE* fp);
 void hashTableSerialize  (HashTable* table, const char* filename);
-//void entityArraySerialize(Node** nodeArray, size_t arraySize);
+void graphSerialize      (Graph*     gptr,  const char* filename);
 
 #endif

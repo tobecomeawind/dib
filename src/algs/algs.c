@@ -86,44 +86,41 @@ static inline int8_t debug_stringCompare (char* targetWord, char* bufWord)
 }
 
 
-typedef struct queue_node_t {
-
-	void*         data;
-	queue_node_t* next;
-
-} QueueNode;
 
 
-typedef struct queue_t {
-
-	uint8_t    size;
-	QueueNode* head;
-	QueueNode* tail;
-
-} Queue;
-
-
-
-QueueNode* queueNodeConstruct (void)
+// Queue
+QueueNode* queueNodeConstruct (void* data)
 {
+	//---------------------
+	// Queue Node Construct
+	//---------------------
+	
 	QueueNode* qnptr = (QueueNode*) malloc(sizeof(QueueNode));
 	
 	if ( !qnptr ) return NULL;
 	
-	qnptr->data = NULL;
+	qnptr->data = data;
 	qnptr->next = NULL;
 
-	return qptr;	
+	return qnptr;	
 }
 
 void queueNodeDestruct (QueueNode* qnptr)
 {
+	//----------------------
+	// Queue Node Destructor
+	//----------------------
+	
 	if ( !qnptr ) return;
 	free(qnptr);
 }
 
 Queue* queueConstruct (void)
 {
+	//-----------------
+	// Queue Constructor
+	//-----------------
+	
 	Queue* qptr = (Queue*) malloc(sizeof(Queue));
 	
 	if ( !qptr ) return NULL;
@@ -138,13 +135,65 @@ Queue* queueConstruct (void)
 
 void queueDestruct (Queue* qptr)
 {
+	//-----------------
+	// Queue Destructor
+	//-----------------
+
 	if ( !qptr ) return;
 
 	QueueNode* cur = qptr->head;
 
 	while ( cur ) {
 		cur = cur->next;	
-		free(cur);
+		queueNodeDestruct(cur);
 	}	
+
+	free(qptr);
 }
 
+void queuePush (Queue* qptr, void* data)
+{
+	//------------------------------
+	// Push data in the end of queue
+	//------------------------------
+	
+	if ( !qptr || !data ) return;
+
+	QueueNode* qnptr = queueNodeConstruct(data);
+
+	if ( !qnptr ) return;
+	
+	qptr->size += 1;
+
+	if ( !qptr->head ) {
+		qptr->head = qnptr;
+		qptr->tail = qnptr;
+		return;
+	}
+
+	qptr->tail->next = qnptr; 
+	qptr->tail       = qnptr;
+}
+
+void* queuePop (Queue* qptr)
+{
+	//------------------------
+	// Pop data from queue
+	// pop head
+	// shift head to head->next
+	//-------------------------
+
+	if ( !qptr || !qptr->head ) return NULL;
+	
+	QueueNode* qnptr = qptr->head;
+	void*      data  = qnptr->data;
+
+	qptr->size -= 1;
+
+	if ( qptr->head != qptr->tail )
+		qptr->head = qptr->head->next;
+
+	queueNodeDestruct(qnptr);	
+	
+	return data;
+}
