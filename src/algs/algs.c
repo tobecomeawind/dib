@@ -112,6 +112,7 @@ void queueNodeDestruct (QueueNode* qnptr)
 	//----------------------
 	
 	if ( !qnptr ) return;
+
 	free(qnptr);
 }
 
@@ -142,10 +143,12 @@ void queueDestruct (Queue* qptr)
 	if ( !qptr ) return;
 
 	QueueNode* cur = qptr->head;
+	QueueNode* tmp = cur;
 
 	while ( cur ) {
 		cur = cur->next;	
-		queueNodeDestruct(cur);
+		queueNodeDestruct(tmp);
+		tmp = cur;
 	}	
 
 	free(qptr);
@@ -184,14 +187,18 @@ void* queuePop (Queue* qptr)
 	//-------------------------
 
 	if ( !qptr || !qptr->head ) return NULL;
-	
+
+	if ( qptr->size == 0 ) return NULL;
+
 	QueueNode* qnptr = qptr->head;
 	void*      data  = qnptr->data;
 
 	qptr->size -= 1;
-
-	if ( qptr->head != qptr->tail )
-		qptr->head = qptr->head->next;
+	
+	// if 1 element in queue we null him
+	// else free head and shift head
+	if ( qptr->head == qptr->tail ) qnptr = qptr->head = qptr->tail = NULL;
+	else                            qptr->head = qptr->head->next;
 
 	queueNodeDestruct(qnptr);	
 	

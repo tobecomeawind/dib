@@ -136,7 +136,7 @@ void appendNode (Node* nptr)
 	EntityTypeArray** arr   = MainGraph->array->noRelArray;
 	uint8_t           size  = MainGraph->array->size;
 	int8_t            index = 0;
-	
+
 	// check if array is empty	
 	if ( size == 0 ) {
 		insertNewEntityType(MainGraph->array, nptr->type, index);
@@ -155,7 +155,7 @@ void appendNode (Node* nptr)
 	}
 	
 	insertNodePoint:
-		insertNode(arr[index], nptr);		
+		insertNode(arr[index], nptr);	
 }
 
 
@@ -183,7 +183,9 @@ bool linkNodes (Node* source, Node* dest, const char* relName)
 	//-------------------------------------------
 	
 	if ( !source || !dest || !relName ) return false;
-	
+
+	char* filepath;
+
 	// check if source exist in graph or source exists in no rel array		
 	
 	// if no head we add head and dont check source to exists	
@@ -196,6 +198,11 @@ bool linkNodes (Node* source, Node* dest, const char* relName)
 	MainGraph->rels++;
 		
 	linkNodes_iml(source, dest, relName);
+	
+	filepath = createPath(DATA_TEMP_FILE);
+	graphSerialize(MainGraph, filepath);
+	free(filepath);		
+
 	return true;
 }
 

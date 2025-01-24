@@ -81,11 +81,11 @@ void graphSerialize (Graph* gptr, const char* filename)
 		nodeSerialize(cur, fp);
 		
 		for (uint8_t i = 0; i < cur->rsize; ++i)
-			queuePush(qptr, (void*)(cur->relations[i]));
+			queuePush(qptr, (void*)(cur->relations[i]->dest));
 
-		cur = queuePop(qptr);
+		cur = (Node*) queuePop(qptr);
 
-	} while (cur);
+	} while ( cur );
 
 	queueDestruct(qptr);
 
