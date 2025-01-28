@@ -120,9 +120,11 @@ static Graph* graphInit_iml(void)
 }
 
 static void graphDestruct_iml(Graph* gptr)
-{
+{	
+	if ( !gptr ) return;	
+	
 	destructEntitiesArray(gptr->array);	
-	free(gptr);					
+	free(gptr);			
 }
 
 void appendNode (Node* nptr)

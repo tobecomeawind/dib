@@ -177,6 +177,9 @@ char* convertTokenToString(Tokens token)
 		case ( KEYWORDS ):
 			stringToken = "Keyword";
 			break;
+		default:
+			stringToken = "undefined";
+			break;
 	}
 
 	return stringToken;

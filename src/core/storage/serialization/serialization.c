@@ -76,19 +76,25 @@ void graphSerialize (Graph* gptr, const char* filename)
 	if ( !qptr ) return;
 
 	Node* cur = gptr->head;
+	Node* tmp;
 			
 	do {	
 		nodeSerialize(cur, fp);
 		
 		for (uint8_t i = 0; i < cur->rsize; ++i)
 			queuePush(qptr, (void*)(cur->relations[i]->dest));
-
-		cur = (Node*) queuePop(qptr);
+		
+		
+		do {
+			tmp = cur;
+			cur = (Node*) queuePop(qptr);
+		} while ( tmp->id != cur->id );
 
 	} while ( cur );
 
 	queueDestruct(qptr);
 
+	fputc(EOF, fp);
 	fclose(fp);
 }
 
