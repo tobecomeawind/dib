@@ -69,7 +69,7 @@ void graphSerialize (Graph* gptr, const char* filename)
 	
 	if ( !gptr ) return;		
 	
-	FILE* fp = fopen(filename, "r");
+	FILE* fp = fopen(filename, "w");
 	if ( !fp ) return;
 
 	Queue* qptr = queueConstruct();
