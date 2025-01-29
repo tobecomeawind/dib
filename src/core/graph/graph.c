@@ -203,7 +203,7 @@ bool linkNodes (Node* source, Node* dest, const char* relName)
 	
 	filepath = createPath(DATA_TEMP_FILE);
 	graphSerialize(MainGraph, filepath);
-	free(filepath);		
+	free(filepath);
 
 	return true;
 }
@@ -414,9 +414,9 @@ static void nodeDeleteFromArray (EntityTypeArray* etaptr, uint8_t index)
 
 	shiftArray((void**) etaptr->array, etaptr->size, index, false);
 	
-	if ( etaptr->size - 1 > 0) {
+	if ( etaptr->size > 0 ) {
 		tmpArray = (Node**) realloc(etaptr->array,
-       	                         sizeof(Node*) * ((etaptr->size) - 1));
+       	                         sizeof(Node*) * (etaptr->size));
 		if ( !tmpArray ) return;
 	}
 

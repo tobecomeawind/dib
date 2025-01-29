@@ -80,8 +80,7 @@ void addRelation(Node* node, Relation* rel)
 	Relation** tmpRels;
 
 	// TODO rework to chech if rel alread in relations
-		
-	
+			
 	tmpRels = (Relation**) realloc(node->relations,
                                  sizeof(Relation*) * ((node->rsize) + 1));	
 

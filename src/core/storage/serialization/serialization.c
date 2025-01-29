@@ -88,7 +88,7 @@ void graphSerialize (Graph* gptr, const char* filename)
 		do {
 			tmp = cur;
 			cur = (Node*) queuePop(qptr);
-		} while ( tmp->id != cur->id );
+		} while ( cur && (tmp->id != cur->id) );
 
 	} while ( cur );
 
